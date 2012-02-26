@@ -1,4 +1,7 @@
 <h1>Accounts</h1><br/>
+<% if @accounts.empty? %>
+    You don't own any accounts at this point. <br/><br/>
+<%else%>
 <table class="table table-striped">
  <thead>
   <tr>
@@ -22,7 +25,7 @@
       <%= link_to image_tag("delicon.png"), account_path(account), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}" %>
     </td>
     </tr>
-    <% end -%>
+    <% end end -%>
    </tbody>
 </table>
 

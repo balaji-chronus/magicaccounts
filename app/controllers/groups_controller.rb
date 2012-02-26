@@ -88,7 +88,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     
     respond_to do |format|
-      if Group.find_all_by_user_id(session[:user_id]).include(@group)
+      if Group.find_all_by_user_id(session[:user_id]).include?(@group)
         @group.destroy
         format.html { redirect_to groups_url }
         format.json { head :ok }

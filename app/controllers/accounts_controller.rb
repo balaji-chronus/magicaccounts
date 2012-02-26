@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   # GET /accounts
   # GET /accounts.json
   def index
-    @accounts = Account.all
+    @accounts = Account.find_all_by_user_id(session[:user_id])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,8 +16,13 @@ class AccountsController < ApplicationController
     @account = Account.find(params[:id])
 
     respond_to do |format|
+    if Account.find_all_by_user_id(session[:user_id]).include?(@account)
       format.html # show.html.erb
       format.json { render json: @account }
+    else
+      format.html { render action: "index" }
+      format.json { render json: @account.errors, status: :unprocessable_entity }
+    end
     end
   end
 
@@ -35,6 +40,15 @@ class AccountsController < ApplicationController
   # GET /accounts/1/edit
   def edit
     @account = Account.find(params[:id])
+    respond_to do |format|
+      if Account.find_all_by_user_id(session[:user_id]).include?(@account)
+        format.html # edit.html.erb
+        format.json { render json: @account }
+      else
+        format.html { render action: "index" }
+        format.json { render json: @account.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # POST /accounts
@@ -72,12 +86,17 @@ class AccountsController < ApplicationController
   # DELETE /accounts/1
   # DELETE /accounts/1.json
   def destroy
-    @account = Account.find(params[:id])
-    @account.destroy
+    @account = Account.find(params[:id])    
 
     respond_to do |format|
-      format.html { redirect_to accounts_url }
-      format.json { head :ok }
+      if Group.find_all_by_user_id(session[:user_id]).include?(@account)
+        @account.destroy
+        format.html { redirect_to accounts_url }
+        format.json { head :ok }
+      else
+        format.html { render action: "index" }
+        format.json { render json: @account.errors, status: :unprocessable_entity }
+      end
     end
   end
 end
