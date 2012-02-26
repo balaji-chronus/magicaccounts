@@ -1,0 +1,62 @@
+
+<div class="clearfix">
+   <%= f.label :txndate, t("activerecord.attributes.transaction.txndate", :default => "Txn Date"), :class => :label %>
+  <div class="input">
+    <%= f.date_select :txndate, :class => 'date_select' %>
+  </div>
+</div>
+
+<div class="clearfix">
+   <%= f.label :account_id, t("activerecord.attributes.transaction.account_id", :default => "Account"), :class => :label %>
+  <div class="input">
+  <%= f.select  :account_id,
+                Account.find(:all, :order => 'code').collect {|account| [account.name + ' (' +  account.code + ')',account.id]},
+                {:prompt => "Select Account"},
+                {:class=> 'selectwidth'} %>
+  </div>
+</div>
+
+<div class="clearfix">
+   <%= f.label :user_id, t("activerecord.attributes.transaction.user_id", :default => "Investor"), :class => :label %>
+  <div class="input">
+    <%= f.select  :user_id,
+                  User.find(:all,:order => 'name').collect {|user| [user.name,user.id]},
+                  { :prompt => 'Select Investor'},
+                  { :class => 'selectwidth' } %>
+  </div>
+</div>
+
+<div class="clearfix">
+   <%= f.label :beneficiary_id, t("activerecord.attributes.transaction.beneficiary_id", :default => "Beneficiary"), :class => :label %>
+  <div class="input">
+    <%= f.select  :beneficiary_id,
+                  User.find(:all,:order => 'name').collect {|user| [user.name,user.id]},
+                  { :prompt => false },
+                  { :multiple => 'true', :size => 5, :class => 'selectwidth' } %>
+  </div>
+</div>
+
+<div class="clearfix">
+   <%= f.label :amount, t("activerecord.attributes.transaction.amount", :default => "Amount"), :class => :label %>
+  <div class="input">
+    <%= f.text_field :amount, :class => 'text_field' %>
+  </div>
+</div>
+
+<div class="clearfix">
+   <%= f.label :category, t("activerecord.attributes.transaction.category", :default => "Category"), :class => :label %>
+  <div class="input">
+    <%= f.select :category, Transaction::CATEGORIES, {:prompt => false }, {:default => 'General', :class => 'selectwidth'} %>
+  </div>
+</div>
+
+<div class="clearfix">
+   <%= f.label :remarks, t("activerecord.attributes.transaction.remarks", :default => "Remarks"), :class => :label %>
+  <div class="input">
+    <%= f.text_area :remarks, :class => 'text_area', :rows => 5  %>
+  </div>
+</div>
+<div class="form-actions">
+  <button class="btn primary" type="submit">Save</button> or
+	<%= link_to "Cancel", transactions_path %>
+</div>

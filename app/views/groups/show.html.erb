@@ -1,0 +1,18 @@
+
+<label class="label"><%= t("activerecord.attributes.group.name", :default => t("activerecord.labels.name", :default => "Name")) %>:</label>
+<p><%= @group.name %></p>
+
+<label class="label"><%= t("activerecord.attributes.group.status", :default => t("activerecord.labels.status", :default => "Status")) %>:</label>
+<p><%= @group.status %></p>
+
+<label class="label"><%= t("activerecord.attributes.group.user_id", :default => t("activerecord.labels.user_id", :default => "Owner")) %>:</label>
+<p><%= User.find(@group.user_id).name %></p>
+
+<label class="label"><%= t("activerecord.attributes.group.code", :default => t("activerecord.labels.code", :default => "Group Code")) %>:</label>
+<p><%= @group.code %></p>
+
+<div class="form-actions">
+<%= link_to "Back", groups_path, :class => 'btn'  %>
+<%= link_to "Edit", edit_group_path(@group), :class => 'btn' %>
+<%= link_to "Delete", group_path(@group), :method => "delete", :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}", :class => 'btn' %>
+</div>

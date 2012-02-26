@@ -1,0 +1,4 @@
+<h1> Add User </h1><br></br>
+<%= form_for @user, :validate => true, :url => users_path, :html => { :class => :form } do |f| -%>
+  <%= render :partial => "form", :locals => {:f => f} %>
+<% end -%>

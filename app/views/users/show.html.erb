@@ -1,0 +1,24 @@
+
+<label class="label"><%= t("activerecord.attributes.user.name", :default => t("activerecord.labels.name", :default => "Name")) %>:</label>
+<p><%= @user.name %></p>
+
+<label class="label"><%= t("activerecord.attributes.user.email", :default => t("activerecord.labels.email", :default => "Email")) %>:</label>
+<p><%= @user.email %></p>
+
+<label class="label"><%= t("activerecord.attributes.user.phone", :default => t("activerecord.labels.phone", :default => "Phone")) %>:</label>
+<p><%= @user.phone %></p>
+
+<label class="label"><%= t("activerecord.attributes.user.address", :default => t("activerecord.labels.address", :default => "Address")) %>:</label>
+<p><%= @user.address %></p>
+
+<label class="label"><%= t("activerecord.attributes.user.company", :default => t("activerecord.labels.company", :default => "Company")) %>:</label>
+<p><%= @user.company %></p>
+
+<label class="label"><%= t("activerecord.attributes.user.user_type", :default => t("activerecord.labels.user_type", :default => "Type")) %>:</label>
+<p><%= @user.user_type %></p>
+
+<div class="form-actions">
+<%= link_to "Back", users_path, :class => 'btn'  %>
+<%= link_to "Edit", edit_user_path(@user), :class => 'btn' %>
+<%= link_to "Delete", user_path(@user), :method => "delete", :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}", :class => 'btn' %>
+</div>
