@@ -2,6 +2,8 @@ Magicaccounts::Application.routes.draw do
   root :to => 'profile#index'
   get 'profile' => 'profile#index'
   match 'groups/:code/adduser' => 'groups#adduser'
+  match 'transactions/new/:accountid' => 'transactions#new'
+  
 
   resources :groups
 

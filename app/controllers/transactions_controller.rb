@@ -25,6 +25,7 @@ class TransactionsController < ApplicationController
   # GET /transactions/new.json
   def new
     @transaction = Transaction.new
+    @transaction.account_id = params[:accountid]
 
     respond_to do |format|
       format.html # new.html.erb

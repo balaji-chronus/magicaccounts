@@ -86,17 +86,13 @@ class AccountsController < ApplicationController
   # DELETE /accounts/1
   # DELETE /accounts/1.json
   def destroy
-    @account = Account.find(params[:id])    
-
-    respond_to do |format|
-      if Group.find_all_by_user_id(session[:user_id]).include?(@account)
+    @account = Account.find(params[:id])
+    if Account.find_all_by_user_id(session[:user_id]).include?(@account)
         @account.destroy
+    end
+    respond_to do |format|      
         format.html { redirect_to accounts_url }
-        format.json { head :ok }
-      else
-        format.html { render action: "index" }
-        format.json { render json: @account.errors, status: :unprocessable_entity }
-      end
+        format.json { head :ok }      
     end
   end
 end

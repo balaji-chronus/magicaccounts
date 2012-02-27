@@ -19,8 +19,7 @@ class Transaction < ActiveRecord::Base
 
 
   validates_numericality_of :amount, :greater_than => 0.01
-  validates :amount, :txndate, :remarks, :presence => {:message => "Cannot be blank"}
-  validate :amount_greater_than_one_paise
+  validates :amount, :txndate, :remarks, :presence => {:message => "Cannot be blank"}  
   validates_inclusion_of :category, :in => CATEGORIES.map {|name,val| val}
   validates_inclusion_of :user_id, :in => User.find(:all).map {|user| user.id}, :message => 'Select an investor from the list'
   validates_inclusion_of :beneficiary_id, :in => User.find(:all).map {|user| user.id}, :message => 'Select a Beneficiary from the list'
