@@ -1,3 +1,4 @@
+<h3>New Transaction <%= " for '" + Account.find(@transaction.account_id).name + "' " if @transaction.account_id %> </h3><br/>
 <%= form_for @transaction, :validate => true, :url => transactions_path, :html => { :class => :form } do |f| -%>
   <%= render :partial => "form", :locals => {:f => f} %>
 <% end -%>

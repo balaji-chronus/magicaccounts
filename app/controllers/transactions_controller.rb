@@ -2,11 +2,13 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @transactions }
+     @balance = Transaction.balance     
+     @uniqueaccounts = @balance.collect { |b| { :accountname => b.account_name, :groupname => b.group_name}}.inject([]) { |result,h| result << h unless result.include?(h); result }
+     @uniquegroups = @balance.collect { |b| {:groupname => b.group_name} }.inject([]) { |result,h| result << h unless result.include?(h); result }
+     
+      respond_to do |format|
+      format.html
+      format.json { render json: @balance }
     end
   end
 
@@ -24,12 +26,15 @@ class TransactionsController < ApplicationController
   # GET /transactions/new
   # GET /transactions/new.json
   def new
-    @transaction = Transaction.new
-    @transaction.account_id = params[:accountid]
-
+    @transaction = Transaction.new        
+    
     respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @transaction }
+      if @transaction.account_id = params[:accountid]
+        format.html # new.html.erb
+        format.json { render json: @transaction }
+      else
+        format.html { redirect_to @transaction, notice: 'Page not found' }
+      end      
     end
   end
 
@@ -81,4 +86,15 @@ class TransactionsController < ApplicationController
       format.json { head :ok }
     end
   end
+
+  def view
+    @transactions = Transaction.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @transactions }
+    end
+  end
+
+  
 end
