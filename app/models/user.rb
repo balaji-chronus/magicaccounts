@@ -2,7 +2,7 @@ require 'digest/sha2'
 class User < ActiveRecord::Base
   USERTYPES = ["Admin","User"]
   has_many :transactions
-  has_and_belongs_to_many :groups
+  has_and_belongs_to_many :groups, :uniq => true
   
   validates :name, :presence => {:message => 'Name cannot be blank'}
   
@@ -59,8 +59,7 @@ class User < ActiveRecord::Base
       end
     end
     user
-  end
-
+  end  
 
   private
   def password_not_blank

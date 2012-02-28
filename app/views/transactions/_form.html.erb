@@ -6,9 +6,10 @@
   </div>
 </div>
 
-<div class="clearfix">   
-  <div class="input">
-    <%= f.hidden_field :account_id %>
+<div class="clearfix">
+  <%= f.label :account_id, t("activerecord.attributes.transaction.account_id", :default => "Account"), :class => :label %>
+  <div class="input">    
+    <%= f.select :account_id, @accounts.collect {|acc| [acc.name, acc.id]}, {:prompt => 'Select Account' }, { :selected => @defaultaccount, :class => 'selectwidth' } %>
   </div>
 </div>
 
@@ -16,7 +17,7 @@
    <%= f.label :user_id, t("activerecord.attributes.transaction.user_id", :default => "Investor"), :class => :label %>
   <div class="input">
     <%= f.select  :user_id,
-                  User.find(:all,:order => 'name').collect {|user| [user.name,user.id]},
+                  @accountusers.collect {|user| [user.user_name,user.user_id]},
                   { :prompt => 'Select Investor'},
                   { :class => 'selectwidth' } %>
   </div>
@@ -26,7 +27,7 @@
    <%= f.label :beneficiary_id, t("activerecord.attributes.transaction.beneficiary_id", :default => "Beneficiary"), :class => :label %>
   <div class="input">
     <%= f.select  :beneficiary_id,
-                  User.find(:all,:order => 'name').collect {|user| [user.name,user.id]},
+                  @accountusers.collect {|user| [user.user_name,user.user_id]},
                   { :prompt => 'Select Beneficiary' },
                   { :class => 'selectwidth' } %>
   </div>

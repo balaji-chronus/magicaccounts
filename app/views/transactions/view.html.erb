@@ -1,11 +1,14 @@
+<div class="group_header wellblue">
+    <h3> Showing Transactions for <%=  @transactions.first.account.name %></h3>
+    <strong><%= link_to "New Transaction", { :controller => 'transactions', :action => 'new', :accountid => @transactions.first.account.id }, :method => "get", :class => 'btn primary' %></strong>
+</div>
 <table class="table table-striped">
  <thead>
   <tr>
     <th>ID</th>
-        <th>
-      <%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>
-    </th>
-        <th>Created at</th>
+    <th><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>    </th>
+    <th>Details</th>
+    <th>Created at</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -13,11 +16,10 @@
   <% @transactions.each do |transaction| -%>
    <tr>
     <td><%= transaction.id %></td>
-        <td><%= link_to transaction.remarks, transaction_path(transaction) %>
-    </td>
-        <td><%= transaction.created_at %></td>
+    <td><%= link_to transaction.remarks, transaction_path(transaction) %></td>
+    <td><%= transaction.user_id == session[:user_id] ? "Spent " + transaction.amount.to_s  + " with " + User.find(transaction.beneficiary_id).name : "Received " + transaction.amount.to_s  + " from " + transaction.user.name  %> </td>
+    <td><%= transaction.created_at %></td>
     <td>
-
       <%= link_to image_tag('edit_16x16.png', :class => 'imglink'), edit_transaction_path(transaction) %>
       <%= link_to image_tag('delicon.png', :class => 'imglink'), transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}" %>
     </td>
@@ -25,5 +27,3 @@
     <% end -%>
    </tbody>
 </table>
-
-<%= button_to "New", new_transaction_path, :method => "get", :class => 'btn primary' %>

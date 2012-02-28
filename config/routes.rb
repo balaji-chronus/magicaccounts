@@ -3,7 +3,8 @@ Magicaccounts::Application.routes.draw do
   get 'profile' => 'profile#index'
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:accountid' => 'transactions#new'
-  
+  get   'transactions/view/:accountid' => 'transactions#view'
+  match 'accounts/new/:groupid' => 'accounts#new'  
 
   resources :groups
 

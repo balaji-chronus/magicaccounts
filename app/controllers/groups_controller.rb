@@ -2,7 +2,7 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.json
   def index
-    @groups = Group.find_all_by_user_id(session[:user_id])
+    @groups = get_user_owned_groups
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @groups }

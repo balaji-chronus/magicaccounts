@@ -1,13 +1,36 @@
 <h1>My Profile</h1><br/>
 <% @uniquegroups.each do |group| -%>
-<div class="group_header well">
-    <h4> <%=  group[:groupname] %> </h4><%=  link_to "View", {:action => 'index'}, {:class => 'headerlinks'} %><%=  link_to "Manage", {:action => 'index'}, {:class => 'headerlinks'} %>
+<div class="group_header wellblue">
+    <h4> <%=  Group.find(group[:groupid]).name %> </h4>
+    <% if Group.find(group[:groupid]).user_id == session[:user_id] %>
+    <h5>(Owner)</h5>
+    <%else%>
+    <h5>(Member)</h5>
+    <%end%>
+    
+    <%= link_to "Create Account", { :controller => 'accounts', :action => 'new', :groupid => group[:groupid] },:method => "get", :class => 'btn primary' %>
+    <% if Group.find(group[:groupid]).user_id == session[:user_id] %>
+      <%=  link_to "Manage Group", {:controller => 'groups', :action => 'index'}, {:class => 'headerlinks'} %>
+    <%end%>
+    
 </div>
 
-<% @uniqueaccounts.collect { |account| account if group[:groupname] == account[:groupname]}.each do |account| -%>
+<% @uniqueaccounts.collect { |account| account if group[:groupid] == account[:groupid]}.each do |account| -%>
 <% if account  %>
-<div class="group_header well">
-    <h4> <%=  account[:accountname] %></h4><%=  link_to "View", {:action => 'index'}, {:class => 'headerlinks'} %><%=  link_to "Manage", {:action => 'index'}, {:class => 'headerlinks'} %>
+<div class="group_header wellgreen">
+    <h4> <%=  Account.find(account[:accountid]).name %></h4>
+    <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
+    <h5>(Owner)</h5>
+    <%else%>
+    <h5>(Member)</h5>
+    <%end%>
+    <%= link_to "Enter Transaction", { :controller => 'transactions', :action => 'new', :accountid => account[:accountid] }, :accountid => group[:accountid],:method => "get", :class => 'btn success' %>
+    <%=  link_to "View Transactions", {:controller => 'transactions', :action => 'view', :accountid => account[:accountid]}, {:class => 'btn success'} %>
+    <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
+    <%=  link_to "Manage Account", {:controller => 'accounts', :action => 'index'}, {:class => 'headerlinks'} %>
+    <%end%>
+    
+    
 </div>
 
 <table class="table table-striped">
@@ -15,24 +38,23 @@
   <tr>
     <th>User</th>
     <th>Investments</th>
-    <th>Expenditures</th>
-    <th>Balance</th>
+    <th>Expenditures</th>    
     <th>Actions</th>
   </tr>
   </thead>
   <tbody>
-  <% @balance.collect {|bal| bal if (account[:groupname] == bal.group_name && account[:accountname] == bal.account_name) }.each do |balance| -%>
+  <% @balance.collect {|bal| bal if (account[:groupid] == bal.group_id && account[:accountid] == bal.account_id) }.each do |balance| -%>
    <% if balance %>
     <tr>
     <td><%= balance.user_name %></td>
     <td><%= balance.investments %></td>
     <td><%= balance.expenditures %></td>
-    <td><%= balance.investments - balance.expenditures %></td>
+    
     <td>
-      <% if balance.investments - balance.expenditures > 0 -%>
-        <%= link_to "Request Payment" %>
-      <%else%>
-        <%= link_to "Make Payment" %>
+      <% if balance.investments - balance.expenditures < 0 -%>
+      Pay <%= balance.user_name %> Rs. <%= balance.expenditures - balance.investments %> 
+      <% elsif balance.investments - balance.expenditures > 0  %>
+      Request <%= balance.user_name %> Rs. <%= balance.investments - balance.expenditures %> 
       <% end -%>
     </td>
     </tr>

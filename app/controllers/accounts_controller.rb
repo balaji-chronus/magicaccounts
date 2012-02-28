@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   # GET /accounts
   # GET /accounts.json
   def index
-    @accounts = Account.find_all_by_user_id(session[:user_id])
+    @accounts = get_user_owned_accounts
 
     respond_to do |format|
       format.html # index.html.erb
@@ -30,6 +30,11 @@ class AccountsController < ApplicationController
   # GET /accounts/new.json
   def new
     @account = Account.new
+    @usergroups = get_groups_for_current_user
+    if params[:groupid] && @usergroups.find {|grp| grp.id == params[:groupid].to_i}
+      @account.group_id = params[:groupid]
+      @defaultgroup = Group.find(params[:groupid]).name
+    end    
 
     respond_to do |format|
       format.html # new.html.erb
@@ -42,6 +47,7 @@ class AccountsController < ApplicationController
     @account = Account.find(params[:id])
     respond_to do |format|
       if Account.find_all_by_user_id(session[:user_id]).include?(@account)
+        @usergroups = get_groups_for_current_user
         format.html # edit.html.erb
         format.json { render json: @account }
       else

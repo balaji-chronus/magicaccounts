@@ -1,4 +1,7 @@
-<h1>Users</h1><br/>
+<div class="group_header wellblue">
+    <h3> Users </h3>
+    <strong><%= link_to "Create User", new_user_path, :method => "get", :class => 'btn primary' %></strong>
+</div>
 <% if @users.empty? %>
     You don't own any accounts at this point. <br/><br/>
 <%else%>
@@ -28,6 +31,3 @@
     <% end end -%>
    </tbody>
 </table>
-
-<%= button_to "New", new_user_path, :method => "get", :class => 'btn primary' %>
-

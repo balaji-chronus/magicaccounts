@@ -13,14 +13,9 @@
   </div>
 </div>
 
-<div class="clearfix">
-  <%= f.label :user_id, t("activerecord.attributes.group.user_id", :default => "Owner"), :class => :label %>
+<div class="clearfix">  
   <div class="input">
-    <%= f.select  :user_id,
-                  User.find(:all).map {|user| [user.name,user.id]},
-                  { :prompt => false },
-                  { :default => User.find(session[:user_id]).name,
-                  :class => 'selectwidth' } %>
+    <%= f.hidden_field  :user_id, :value => session[:user_id] %>
   </div>
 </div>
 <div class="clearfix">

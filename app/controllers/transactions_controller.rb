@@ -2,9 +2,9 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-     @balance = Transaction.balance     
-     @uniqueaccounts = @balance.collect { |b| { :accountname => b.account_name, :groupname => b.group_name}}.inject([]) { |result,h| result << h unless result.include?(h); result }
-     @uniquegroups = @balance.collect { |b| {:groupname => b.group_name} }.inject([]) { |result,h| result << h unless result.include?(h); result }
+     @balance = Transaction.balance(session[:user_id])
+     @uniqueaccounts = @balance.collect { |b| { :accountid => b.account_id, :groupid => b.group_id}}.inject([]) { |result,h| result << h unless result.include?(h); result }
+     @uniquegroups = @balance.collect { |b| {:groupid => b.group_id} }.inject([]) { |result,h| result << h unless result.include?(h); result }
      
       respond_to do |format|
       format.html
@@ -26,21 +26,27 @@ class TransactionsController < ApplicationController
   # GET /transactions/new
   # GET /transactions/new.json
   def new
-    @transaction = Transaction.new        
+    @transaction = Transaction.new
+    @accounts     = get_accounts_for_current_user
+    @accountusers = get_userlist_for_current_user
+    if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
+      @transaction.account_id = params[:accountid]
+      @defaultaccount = Account.find(params[:accountid]).name
+    end
     
-    respond_to do |format|
-      if @transaction.account_id = params[:accountid]
+    
+    respond_to do |format|      
         format.html # new.html.erb
-        format.json { render json: @transaction }
-      else
-        format.html { redirect_to @transaction, notice: 'Page not found' }
-      end      
+        format.json { render json: @transaction }        
     end
   end
+  
 
   # GET /transactions/1/edit
   def edit
-    @transaction = Transaction.find(params[:id])
+    @transaction  = Transaction.find(params[:id])
+    @accounts     = get_accounts_for_current_user
+    @accountusers = get_userlist_for_current_user
   end
 
   # POST /transactions
@@ -88,8 +94,8 @@ class TransactionsController < ApplicationController
   end
 
   def view
-    @transactions = Transaction.all
-
+    @transactions = Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", session[:user_id], session[:user_id], params[:accountid])
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @transactions }

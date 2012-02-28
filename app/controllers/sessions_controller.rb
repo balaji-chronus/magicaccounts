@@ -20,6 +20,7 @@ skip_before_filter :authorize
     end
   end
 
+
   def destroy
     session[:user_id] = nil
     flash[:notice] = "You have been logged out"
