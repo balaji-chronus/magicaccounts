@@ -1,4 +1,8 @@
 <h1>My Profile</h1><br/>
+<% if @uniquegroups.empty? %>
+  New to Magic Accounts ? Start over ! <br/><br/>
+  <strong><%= link_to "Create New Group", new_group_path, :method => "get", :class => 'btn primary' %></strong> 
+<%else%>
 <% @uniquegroups.each do |group| -%>
 <div class="group_header wellblue">
     <h4> <%=  Group.find(group[:groupid]).name %> </h4>
@@ -62,6 +66,6 @@
    </tbody>
 </table>
 <% end end -%>
-<% end -%>
+<% end end -%>
 
 
