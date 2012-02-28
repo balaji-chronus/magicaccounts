@@ -94,7 +94,7 @@ class TransactionsController < ApplicationController
   end
 
   def view
-    @transactions = Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", session[:user_id], session[:user_id], params[:accountid])
+    @transactions = Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", session[:user_id], session[:user_id], params[:accountid]).page(params[:page]).per(2)
     
     respond_to do |format|
       format.html # index.html.erb

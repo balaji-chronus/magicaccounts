@@ -19,6 +19,7 @@ end
 
 gem 'jquery-rails'
 gem 'client_side_validations'
+gem 'kaminari'
 
 # Use unicorn as the web server
 # gem 'unicorn'
