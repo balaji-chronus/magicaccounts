@@ -17,7 +17,7 @@
    <tr>
     <td><%= transaction.id %></td>
     <td><%= link_to transaction.remarks, transaction_path(transaction) %></td>
-    <td><%= transaction.user_id == session[:user_id] ? "Spent " + transaction.amount.to_s  + " with " + User.find(transaction.beneficiary_id).name : "Received " + transaction.amount.to_s  + " from " + transaction.user.name  %> </td>
+    <td><%= transaction.user_id == session[:user_id] ? "Spent " + transaction.amount.to_s  + " for " + (transaction.beneficiary_id == session[:user_id] ? " Myself" : User.find(transaction.beneficiary_id).name) : "Received " + transaction.amount.to_s  + " from " + transaction.user.name  %> </td>
     <td><%= transaction.created_at %></td>
     <td>
       <%= link_to image_tag('edit_16x16.png', :class => 'imglink'), edit_transaction_path(transaction) %>

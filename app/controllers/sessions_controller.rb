@@ -12,7 +12,7 @@ skip_before_filter :authorize
         session[:user_id] = user.id
         uri = session[:request_uri]
         session[:request_uri] = nil
-        redirect_to (uri || profile_url)
+        redirect_to (uri || transactions_url)
       else
         flash.now[:notice] = "Incorrect Username/Password"
         redirect_to login_url

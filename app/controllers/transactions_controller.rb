@@ -3,9 +3,12 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
      @balance = Transaction.balance(session[:user_id])
-     @uniqueaccounts = @balance.collect { |b| { :accountid => b.account_id, :groupid => b.group_id}}.inject([]) { |result,h| result << h unless result.include?(h); result }
-     @uniquegroups = @balance.collect { |b| {:groupid => b.group_id} }.inject([]) { |result,h| result << h unless result.include?(h); result }
-     
+     if @balance
+      @uniqueaccounts = @balance.collect { |b| { :accountid => b.account_id, :groupid => b.group_id}}.inject([]) { |result,h| result << h unless result.include?(h); result }
+      @uniquegroups = @balance.collect { |b| {:groupid => b.group_id} }.inject([]) { |result,h| result << h unless result.include?(h); result }
+     end
+     @hasagroup = get_groups_for_current_user.empty? ? nil : 1
+     @hasanaccount = get_accounts_for_current_user.empty? ? nil : 1
       respond_to do |format|
       format.html
       format.json { render json: @balance }

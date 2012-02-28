@@ -1,8 +1,14 @@
 <h1>My Profile</h1><br/>
-<% if @uniquegroups.empty? %>
+<% if @hasagroup.nil? %>
   New to Magic Accounts ? Start over ! <br/><br/>
-  <strong><%= link_to "Create New Group", new_group_path, :method => "get", :class => 'btn primary' %></strong> 
-<%else%>
+  <strong><%= link_to "Create New Group", new_group_path, :method => "get", :class => 'btn primary' %></strong>
+<% elsif @hasanaccount.nil? %>
+  We see you are part of one or more groups. add an account to start tracking your transactions <br/><br/>
+  <strong><%= link_to "Create New Account", new_account_path, :method => "get", :class => 'btn primary' %></strong>
+<% elsif  @uniquegroups == [] %>
+  Add transactions and start tracking them now !<br/><br/>
+  <strong><%= link_to "Create New Transaction", new_transaction_path, :method => "get", :class => 'btn primary' %></strong>
+<% else %>
 <% @uniquegroups.each do |group| -%>
 <div class="group_header wellblue">
     <h4> <%=  Group.find(group[:groupid]).name %> </h4>
@@ -50,7 +56,7 @@
   <% @balance.collect {|bal| bal if (account[:groupid] == bal.group_id && account[:accountid] == bal.account_id) }.each do |balance| -%>
    <% if balance %>
     <tr>
-    <td><%= balance.user_name %></td>
+    <td><%= balance.user_name == User.find(session[:user_id]).name ? "Myself" : balance.user_name %></td>
     <td><%= balance.investments %></td>
     <td><%= balance.expenditures %></td>
     

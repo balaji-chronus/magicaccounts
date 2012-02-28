@@ -64,6 +64,7 @@
             <%= yield %>
             </div>
             <div class="span1">&nbsp;</div>
+            <% if session[:user_id] %>
             <div class="span3">
               <div class="well sidebar-nav">
                 <h3>Sidebar</h3>
@@ -75,6 +76,7 @@
                 </ul>
             </div>
            </div>
+            <%end%>
           </div>
         </div>
 

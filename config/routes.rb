@@ -1,5 +1,7 @@
 Magicaccounts::Application.routes.draw do
-  root :to => 'profile#index'
+  resources :comments
+
+  root :to => 'transactions#index'
   get 'profile' => 'profile#index'
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:accountid' => 'transactions#new'
@@ -9,9 +11,9 @@ Magicaccounts::Application.routes.draw do
   resources :groups
 
   controller :sessions do
-    get 'login' => :new
-    post 'login' => :create
-    delete 'logout' => :destroy
+    get   'login' => :new
+    post  'login' => :create
+    get   'logout' => :destroy
   end
 
 
