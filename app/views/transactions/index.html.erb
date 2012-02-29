@@ -1,4 +1,7 @@
-<h1>My Profile</h1><br/>
+<div class="group_header wellblue">
+    <h3> My Profile </h3>
+    <%= link_to "Create Group", new_group_path, :method => "get", :class => 'btn primary' %>
+</div>
 <% if @hasagroup.nil? %>
   New to Magic Accounts ? Start over ! <br/><br/>
   <strong><%= link_to "Create New Group", new_group_path, :method => "get", :class => 'btn primary' %></strong>

@@ -63,7 +63,9 @@ class AccountsController < ApplicationController
     @account = Account.new(params[:account])
 
     respond_to do |format|
-      if @account.save
+      if  @account.save
+          @comment = @account.comments.create( {:activity => " added ", :content => @account.name, :user_name => User.find(session[:user_id]).name})
+          @comment.save
         format.html { redirect_to @account, notice: 'Account was successfully created.' }
         format.json { render json: @account, status: :created, location: @account }
       else
@@ -80,7 +82,9 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       if @account.update_attributes(params[:account])
-        format.html { redirect_to @account, notice: 'Account was successfully updated.' }
+          @comment = @account.comments.create( {:activity => " changed ", :content => @account.name, :user_name => User.find(session[:user_id]).name})
+          @comment.save
+        format.html { redirect_to @account, notice: "Account was successfully updated" }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -94,7 +98,9 @@ class AccountsController < ApplicationController
   def destroy
     @account = Account.find(params[:id])
     if Account.find_all_by_user_id(session[:user_id]).include?(@account)
-        @account.destroy
+      @comment = @account.comments.create( {:activity => " removed ", :content => @account.name, :user_name => User.find(session[:user_id]).name})
+      @comment.save
+      @account.destroy
     end
     respond_to do |format|      
         format.html { redirect_to accounts_url }

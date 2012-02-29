@@ -1,6 +1,7 @@
 class Group < ActiveRecord::Base
   has_and_belongs_to_many :users, :uniq => true
   has_many :accounts
+  has_many :comments, :as => :commentable
   
   GROUPSTATUS = ["Enabled", "Disabled"]  
   

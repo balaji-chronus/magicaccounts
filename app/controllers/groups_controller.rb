@@ -57,6 +57,8 @@ class GroupsController < ApplicationController
     @group.users << User.find(session[:user_id]) if session[:user_id]
     respond_to do |format|
       if @group.save
+          @comment = @group.comments.create( {:activity => "create", :content => @group.name, :user_name => User.find(session[:user_id]).name})
+          @comment.save
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render json: @group, status: :created, location: @group }
       else
@@ -69,10 +71,11 @@ class GroupsController < ApplicationController
   # PUT /groups/1
   # PUT /groups/1.json
   def update
-    @group = Group.find(params[:id])
-    @group.users = User.find(session[:user_id]) if session[:user_id]
+    @group = Group.find(params[:id])    
     respond_to do |format|
       if @group.update_attributes(params[:group])
+          @comment = @group.comments.create( {:activity => "change", :content => @group.name, :user_name => User.find(session[:user_id]).name})
+          @comment.save
         format.html { redirect_to @group, notice: 'Group was successfully updated.' }
         format.json { head :ok }
       else
@@ -87,6 +90,8 @@ class GroupsController < ApplicationController
   def destroy
     @group = Group.find(params[:id])
     if Group.find_all_by_user_id(session[:user_id]).include?(@group)
+        @comment = @group.comments.create( {:activity => "remove", :content => @group.name, :user_name => User.find(session[:user_id]).name})
+        @comment.save
         @group.destroy
     end
     

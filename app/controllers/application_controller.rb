@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
-  before_filter :authorize
+  before_filter :authorize, :load_activities
   protect_from_forgery
+
+  helper_method :get_transaction_activity_for_current_user
 
   def get_user_owned_groups
       Group.where('user_id = ?', session[:user_id])
@@ -11,7 +13,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_userlist_for_current_user
-      User.joins("JOIN groups_users UG ON users.id = UG.user_id").joins("JOIN accounts A ON A.group_id = UG.group_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",session[:user_id]).select("users.id user_id,users.name user_name,A.id account_id,A.name account_name")
+      User.joins("JOIN groups_users UG ON users.id = UG.user_id").joins("JOIN accounts A ON A.group_id = UG.group_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",session[:user_id]).select("DISTINCT users.id user_id, users.name user_name")
   end
 
   def get_accounts_for_current_user
@@ -22,6 +24,10 @@ class ApplicationController < ActionController::Base
       Group.where(" id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",session[:user_id])
   end
 
+  def load_activities
+    @activitytran = Transaction.where("account_id IN (?) ", get_accounts_for_current_user.map {|acc| acc.id}).map {|tran| tran.comments}
+    @activityacc  = Account.where("id IN (?) ", get_accounts_for_current_user.map {|acc| acc.id}).map {|acc| acc.comments}
+  end
 
   protected
   def authorize
@@ -30,5 +36,5 @@ class ApplicationController < ActionController::Base
       flash[:notice] = "Please login to continue"
       redirect_to login_url
     end
-  end
+  end  
 end

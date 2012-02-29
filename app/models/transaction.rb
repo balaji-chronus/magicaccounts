@@ -1,6 +1,8 @@
 class Transaction < ActiveRecord::Base
   belongs_to :user
-  belongs_to :account
+  belongs_to :account  
+  has_many :comments, :as => :commentable
+  
   CATEGORIES = [
     ["General", 'general'],
     ["Food", 'food'],
@@ -14,6 +16,7 @@ class Transaction < ActiveRecord::Base
     ["Maintainance", "maintainance"],
     ["Entertainment", "entertainment"],
     ["Footwear", "footwear"],
+    ["Settlement", "settlement"],
     ["Miscellaneous", "miscellaneous"]
   ]
 

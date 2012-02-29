@@ -9,6 +9,7 @@ class TransactionsController < ApplicationController
      end
      @hasagroup = get_groups_for_current_user.empty? ? nil : 1
      @hasanaccount = get_accounts_for_current_user.empty? ? nil : 1
+     
       respond_to do |format|
       format.html
       format.json { render json: @balance }
@@ -58,7 +59,9 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(params[:transaction])
 
     respond_to do |format|
-      if @transaction.save
+      if  @transaction.save
+          @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_name => User.find(session[:user_id]).name})
+          @comment.save
         format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
         format.json { render json: @transaction, status: :created, location: @transaction }
       else
@@ -75,6 +78,8 @@ class TransactionsController < ApplicationController
 
     respond_to do |format|
       if @transaction.update_attributes(params[:transaction])
+         @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_name => User.find(session[:user_id]).name})
+         @comment.save
         format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
         format.json { head :ok }
       else
@@ -88,6 +93,8 @@ class TransactionsController < ApplicationController
   # DELETE /transactions/1.json
   def destroy
     @transaction = Transaction.find(params[:id])
+    @comment = @transaction.comments.create( {:activity => " removed ", :content => @transaction.remarks, :user_name => User.find(session[:user_id]).name})
+    @comment.save
     @transaction.destroy
 
     respond_to do |format|
@@ -97,7 +104,7 @@ class TransactionsController < ApplicationController
   end
 
   def view
-    @transactions = Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", session[:user_id], session[:user_id], params[:accountid]).page(params[:page]).per(2)
+    @transactions = Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", session[:user_id], session[:user_id], params[:accountid]).page(params[:page]).per(5)
     
     respond_to do |format|
       format.html # index.html.erb

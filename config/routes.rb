@@ -6,9 +6,7 @@ Magicaccounts::Application.routes.draw do
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:accountid' => 'transactions#new'
   get   'transactions/view/:accountid' => 'transactions#view'
-  match 'accounts/new/:groupid' => 'accounts#new'  
-
-  resources :groups
+  match 'accounts/new/:groupid' => 'accounts#new'    
 
   controller :sessions do
     get   'login' => :new
@@ -16,11 +14,18 @@ Magicaccounts::Application.routes.draw do
     get   'logout' => :destroy
   end
 
+  resources :groups do
+    resources :comments
+  end
 
-  resources :transactions
+  resources :transactions do
+    resources :comments
+  end
 
-  resources :accounts
-
+  resources :accounts do
+    resources :comments
+  end
+  
   resources :users
 
   # The priority is based upon order of creation:
