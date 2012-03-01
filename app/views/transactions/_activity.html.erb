@@ -1,3 +1,9 @@
-<% activity.each do |act|%>
-<li><strong><%=  act.user_name %></strong> <%= " " + act.activity + " " %><%= link_to truncate(act.content, :length => 15), :controller => type, :action => 'show', :id => act.commentable_id  %><span id="litetext"><%= " " + time_ago_in_words(Time.parse(act.created_at.to_s)) + " ago"    %></span> </li>
+<% activity.each_with_index do |at,index| break if index == limit  %>
+<% at.each_with_index do |act,index| %>
+  <li><strong><%=  act.user_name %></strong> <%= " " + act.activity + " " %><%= link_to truncate(act.content, :length => 15), :controller => type, :action => 'show', :id => act.commentable_id  %><span id="litetext"><%= " " + time_ago_in_words(Time.parse(act.created_at.to_s)) + " ago"    %></span> </li>
 <% end %>
+<% end %>
+
+
+
+

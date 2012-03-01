@@ -34,7 +34,7 @@
             <span class="i-bar"></span>
             <span class="i-bar"></span>
           </a>
-          <a class="brand" href="#">Magic Accounts</a>
+          <a class="brand" href="/.">Magic Accounts</a>
           <div class="container nav-collapse">
             <% if session[:user_id] %>
             <ul class="nav">
@@ -75,21 +75,21 @@
             <div class="span4">
               <div class="wellsidebar sidebar-nav">
                 <h3>Recent Activity</h3>
-                 <ul class="nav nav-list">
-                    <li class="nav-header">Transactions</li>
-                    <% if @activitytran.empty? %>
-                      <li>There is no activity for this section</li>
-                    <%else%>
-                      <%= render(:partial => 'transactions/activity', :collection => @activitytran, :locals =>  {:type => 'transactions'})  %>
-                    <% end%>
+                <ul id ="tranact" class="nav nav-list">
+                  <li class="nav-header">Transactions</li>
+                  <% if @activitytran.empty? %>
+                    <li>There is no activity for this section</li>
+                  <%else%>
+                    <%= render(:partial => 'transactions/activity', :object => @activitytran, :locals =>  {:type => 'transactions', :limit => 15})  %>
+                  <% end%>
                 </ul>
-                <ul class="nav nav-list">
-                    <li class="nav-header">Accounts</li>
-                    <% if @activityacc.empty? %>
-                      <li>There is no activity for this section</li>
-                    <%else%>
-                      <%= render(:partial => 'transactions/activity', :collection => @activityacc, :locals =>  {:type => 'accounts'})  %>
-                    <% end%>
+                <ul id ="accact" class="nav nav-list">
+                  <li class="nav-header">Accounts</li>
+                  <% if @activityacc.empty? %>
+                    <li>There is no activity for this section</li>
+                  <%else%>
+                    <%= render(:partial => 'transactions/activity', :object => @activityacc, :locals =>  {:type => 'accounts', :limit => 5})  %>
+                  <%end%>
                 </ul>
             </div>
            </div>
@@ -106,7 +106,7 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag "jquery","application" %>
+    <%= javascript_include_tag :defaults, "jquery","jquery-ui","application" %>
 
   </body>
 </html>

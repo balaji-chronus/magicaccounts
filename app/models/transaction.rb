@@ -68,7 +68,11 @@ class Transaction < ActiveRecord::Base
                             JOIN      users U
                             ON        X.user_id = U.id ", sessionuser,sessionuser,sessionuser,sessionuser])
 
-  end    
+  end
+
+  def self.view_transactions(user, account, page)
+    Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", user, user, account).order("created_at DESC").page(page).per(5)
+  end
 end
 
 

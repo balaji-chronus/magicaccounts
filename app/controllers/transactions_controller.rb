@@ -1,4 +1,6 @@
 class TransactionsController < ApplicationController
+  before_filter :initiate_account, :only => [:new, :view]
+
   # GET /transactions
   # GET /transactions.json
   def index
@@ -29,15 +31,11 @@ class TransactionsController < ApplicationController
 
   # GET /transactions/new
   # GET /transactions/new.json
-  def new
-    @transaction = Transaction.new
-    @accounts     = get_accounts_for_current_user
-    @accountusers = get_userlist_for_current_user
+  def new    
     if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
       @transaction.account_id = params[:accountid]
       @defaultaccount = Account.find(params[:accountid]).name
-    end
-    
+    end    
     
     respond_to do |format|      
         format.html # new.html.erb
@@ -62,10 +60,11 @@ class TransactionsController < ApplicationController
       if  @transaction.save
           @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_name => User.find(session[:user_id]).name})
           @comment.save
-        format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
-        format.json { render json: @transaction, status: :created, location: @transaction }
+          format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
+          format.json { render json: @transaction, status: :created, location: @transaction }
+          format.js
       else
-        format.html { render action: "new" }
+        format.html { redirect_to transactions_url, alert: "Unknown Error #{params[:transaction]}" }
         format.json { render json: @transaction.errors, status: :unprocessable_entity }
       end
     end
@@ -104,13 +103,27 @@ class TransactionsController < ApplicationController
   end
 
   def view
-    @transactions = Transaction.where("(user_id = ? OR beneficiary_id = ?) AND account_id = ?", session[:user_id], session[:user_id], params[:accountid]).page(params[:page]).per(5)
+    @transactions = Transaction.view_transactions(session[:user_id], params[:accountid], params[:page])
     
     respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @transactions }
+      if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
+        @transaction.account_id = params[:accountid]
+        @defaultaccount = Account.find(params[:accountid]).name
+        format.html # index.html.erb
+        format.json { render json: @transactions }
+      else
+        format.html {redirect_to transactions_url, error: 'Unknown Account'}
+        format.html { render }
+      end
     end
   end
 
+  private
+  def initiate_account
+      @disableaccount = action_name == 'view'
+      @transaction = Transaction.new
+      @accounts     = get_accounts_for_current_user
+      @accountusers = get_userlist_for_current_user
+  end
   
 end

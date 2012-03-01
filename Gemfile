@@ -15,11 +15,14 @@ group :assets do
   gem 'coffee-rails', "~> 3.1.0"
   gem 'uglifier'
   gem 'twitter-bootstrap-rails'
+  gem 'jquery-ui-rails'
+
 end
 
 gem 'jquery-rails'
 gem 'client_side_validations'
 gem 'kaminari'
+gem 'ruby-debug19'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -32,5 +35,7 @@ gem 'kaminari'
 
 group :test do
   # Pretty printed test output
-  gem 'turn', :require => false
+  gem 'turn', '0.8.2', :require => false
 end
+
+gem 'minitest'

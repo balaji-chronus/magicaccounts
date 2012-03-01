@@ -25,8 +25,9 @@ class ApplicationController < ActionController::Base
   end
 
   def load_activities
-    @activitytran = Transaction.where("account_id IN (?) ", get_accounts_for_current_user.map {|acc| acc.id}).map {|tran| tran.comments}
-    @activityacc  = Account.where("id IN (?) ", get_accounts_for_current_user.map {|acc| acc.id}).map {|acc| acc.comments}
+    @activitytran = Transaction.where("account_id IN (?) ", get_accounts_for_current_user.map {|acc| acc.id}).inject([]) {|result, tran| result << tran.comments unless tran.comments.empty?; result}.sort! {|t1,t2| t2.first.created_at <=> t1.first.created_at}
+
+    @activityacc  = Account.where("id IN (?) ", get_accounts_for_current_user.map {|acc| acc.id}).inject([]) {|result, acc| result << acc.comments unless acc.comments.empty?; result}.sort! {|t1,t2| t2.first.created_at <=> t1.first.created_at}
   end
 
   protected

@@ -1,3 +1,6 @@
 $("#viewacctran").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/tran',
-    :object => Transaction.view_transactions(session[:user_id],@transaction.account.id,1)))%>");    
+    :object => Transaction.view_transactions(session[:user_id],@transaction.account.id,1)))%>");
+
+
+

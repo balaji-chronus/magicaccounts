@@ -9,8 +9,8 @@ class CommentsController < ApplicationController
         format.html 
         format.json { render json: @comments }
       end
-    end
   end
+  
 
   # GET /comments/1
   # GET /comments/1.json
