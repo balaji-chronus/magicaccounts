@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
-one:
+john_locke:
   name: John Locke
   hashed_password: 14beb2636b8d6ef4afab27bf720470e3b7bfa299863322469a3c16472b76f56a
   salt: MyString
@@ -8,12 +8,34 @@ one:
   phone: 9887889989
   address: #1, Test Street, Test State, Test Country
   company: Test Company
+  user_type: User
 
-two:
+jack_shepard:
   name: Jack Shepard
   hashed_password: 31611159e7e6ff7843ea4627745e89225fc866621cfcfdbd40871af4413747cc
   salt: MyString
   email: MyString
   phone: MyString
   address: MyText
-  company: MyString
+  company: MyString'
+  user_type: User
+
+kate_austen:
+  name: Kate Austen
+  hashed_password: 31611159e7e6ff7843ea4627745e89225fc866621cfcfdbd40871af4413747cc
+  salt: MyString
+  email: kate.austen@gmail.com
+  phone: 9887889989
+  address: #1, Test Street, Test State, Test Country
+  company: Test Company
+  user_type: User
+
+one:
+  name: Kate Austen
+  hashed_password: 31611159e7e6ff7843ea4627745e89225fc866621cfcfdbd40871af4413747cc
+  salt: MyString
+  email: kate.austen@gmail.com
+  phone: 9887889989
+  address: #1, Test Street, Test State, Test Country
+  company: Test Company
+  user_type: User
