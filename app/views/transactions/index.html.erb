@@ -10,7 +10,7 @@
   <strong><%= link_to "Create New Account", new_account_path, :method => "get", :class => 'btn primary' %></strong>
 <% elsif  @uniquegroups == [] %>
   Add transactions and start tracking them now !<br/><br/>
-  <strong><%= link_to "Create New Transaction", new_transaction_path, :method => "get", :class => 'btn primary' %></strong>
+  <strong><%= link_to "Enter Transaction", new_transaction_path, :method => "get", :class => 'btn primary' %></strong>
 <% else %>
 <% @uniquegroups.each do |group| -%>
 <div class="group_header wellblue">
@@ -36,9 +36,8 @@
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
-    <%end%>
-    <%= link_to "Enter Transaction", { :controller => 'transactions', :action => 'new', :accountid => account[:accountid] }, :accountid => group[:accountid],:method => "get", :class => 'btn success' %>
-    <%=  link_to "View Transactions", {:controller => 'transactions', :action => 'view', :accountid => account[:accountid]}, {:class => 'btn success'} %>
+    <%end%>    
+    <%=  link_to "Transactions", {:controller => 'transactions', :action => 'view', :accountid => account[:accountid]}, {:class => 'btn success'} %>
     <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
     <%=  link_to "Manage Account", {:controller => 'accounts', :action => 'index'}, {:class => 'headerlinks'} %>
     <%end%>

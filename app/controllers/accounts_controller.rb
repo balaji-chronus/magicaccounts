@@ -2,11 +2,11 @@ class AccountsController < ApplicationController
   # GET /accounts
   # GET /accounts.json
   def index
-    @accounts = get_user_owned_accounts
+    @ownedaccounts = get_user_owned_accounts
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @accounts }
+      format.json { render json: @ownedaccounts }
     end
   end
 

@@ -20,11 +20,17 @@ $(document).ready(function() {
     $("#new_transaction").submit(function() {
         $.post($(this).attr("action"),  $(this).serialize(), null, "script");
         return false;
-    })         
-        
-       $('#newtranbtn').click(function(){
+    })
+
+    $('#newtranbtn').click(function(){
          $('#newacctran').slideToggle();
-         $(this).text($(this).text() == 'Hide' ? 'New Transaction' : 'Hide');
+         $(this).text($(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
        });
+       
+       $('#hidetranbtn').click(function(){
+         $('#newacctran').hide("blind", {direction : "vertical"}, 350);
+            $("#newtranbtn").text($("#newtranbtn").text() == 'Move up' ? 'New Transaction' : 'Move up');
+       });           
+
 })
 

@@ -1,0 +1,4 @@
+
+$("#viewacctran").replaceWith("<%= escape_javascript(render(
+    :partial => 'transactions/tran',
+    :object => @transactions))%>");

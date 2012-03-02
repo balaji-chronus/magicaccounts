@@ -74,23 +74,9 @@
             <% if session[:user_id] %>
             <div class="span4">
               <div class="wellsidebar sidebar-nav">
-                <h3>Recent Activity</h3>
-                <ul id ="tranact" class="nav nav-list">
-                  <li class="nav-header">Transactions</li>
-                  <% if @activitytran.empty? %>
-                    <li>There is no activity for this section</li>
-                  <%else%>
-                    <%= render(:partial => 'transactions/activity', :object => @activitytran, :locals =>  {:type => 'transactions', :limit => 15})  %>
-                  <% end%>
-                </ul>
-                <ul id ="accact" class="nav nav-list">
-                  <li class="nav-header">Accounts</li>
-                  <% if @activityacc.empty? %>
-                    <li>There is no activity for this section</li>
-                  <%else%>
-                    <%= render(:partial => 'transactions/activity', :object => @activityacc, :locals =>  {:type => 'accounts', :limit => 5})  %>
-                  <%end%>
-                </ul>
+                <h3>Recent Activity</h3>                
+                    <%= render(:partial => 'transactions/activitytransactions', :object => @activitytran, :locals =>  {:type => 'transactions', :limit => 15})  %>                                  
+                    <%= render(:partial => 'transactions/activityaccounts', :object => @activityacc, :locals =>  {:type => 'accounts', :limit => 5})  %>
             </div>
            </div>
             <%end%>

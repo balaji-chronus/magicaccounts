@@ -10,7 +10,7 @@ class TransactionsController < ApplicationController
       @uniquegroups = @balance.collect { |b| {:groupid => b.group_id} }.inject([]) { |result,h| result << h unless result.include?(h); result }
      end
      @hasagroup = get_groups_for_current_user.empty? ? nil : 1
-     @hasanaccount = get_accounts_for_current_user.empty? ? nil : 1
+     @hasanaccount = @accounts.empty? ? nil : 1
      
       respond_to do |format|
       format.html
@@ -46,8 +46,7 @@ class TransactionsController < ApplicationController
 
   # GET /transactions/1/edit
   def edit
-    @transaction  = Transaction.find(params[:id])
-    @accounts     = get_accounts_for_current_user
+    @transaction  = Transaction.find(params[:id])    
     @accountusers = get_userlist_for_current_user
   end
 
@@ -103,14 +102,17 @@ class TransactionsController < ApplicationController
   end
 
   def view
+    
     @transactions = Transaction.view_transactions(session[:user_id], params[:accountid], params[:page])
     
     respond_to do |format|
       if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
         @transaction.account_id = params[:accountid]
         @defaultaccount = Account.find(params[:accountid]).name
-        format.html # index.html.erb
-        format.json { render json: @transactions }
+        format.html 
+        format.json { render json: @transactions }        
+        format.js { render :content_type => 'text/javascript' }
+
       else
         format.html {redirect_to transactions_url, error: 'Unknown Account'}
         format.html { render }
@@ -121,8 +123,7 @@ class TransactionsController < ApplicationController
   private
   def initiate_account
       @disableaccount = action_name == 'view'
-      @transaction = Transaction.new
-      @accounts     = get_accounts_for_current_user
+      @transaction = Transaction.new      
       @accountusers = get_userlist_for_current_user
   end
   
