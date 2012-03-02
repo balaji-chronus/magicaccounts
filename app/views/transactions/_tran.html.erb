@@ -1,4 +1,8 @@
 <div id ="viewacctran">
+<div class="group_header wellblue">
+    <h3> Showing Transactions for <%=  @transaction.account.name %></h3>
+    <strong><%= link_to "New Transaction", "javascript:void(0)", {:class => 'btn primary', :id => 'newtranbtn'} %></strong>
+</div>
 <table class="table table-striped">
  <thead>
   <tr>

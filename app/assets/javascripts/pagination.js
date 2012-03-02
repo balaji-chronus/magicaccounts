@@ -1,7 +1,7 @@
 $(function() {
-  $(".pagination span.not('.page.current') a").live("click", function() {
+  $(".pagination a").live("click", function() {
     $(".pagination").html("Loading Transactions...");
-    $.post($(this).attr("action"),  $(this).serialize(), null, "script");
+    $.getScript(this.href);
     return false;
   });
 });

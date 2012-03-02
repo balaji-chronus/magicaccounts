@@ -1,6 +1,6 @@
 <div id="newacctran" style="display: none">
 <div class="group_header wellblue">
-  <h3> Create New Transaction for <%=  @transaction.account.name %></h3>
+  <h3> Create New Transaction </h3>
   <strong><%= link_to "Hide", "javascript:void(0)", :class => 'btn primary', :id => 'hidetranbtn' %></strong>
 </div>
 <%= form_for @transaction, :remote => true, :validate => true, :url => transactions_path, :html => { :class => :form } do |f| -%>
@@ -8,8 +8,4 @@
 <% end -%>
 </div>
 
-<div class="group_header wellblue">
-    <h3> Showing Transactions for <%=  @transaction.account.name %></h3>
-    <strong><%= link_to "New Transaction", "javascript:void(0)", {:class => 'btn primary', :id => 'newtranbtn'} %></strong>
-</div>
 <%= render(:partial => 'transactions/tran', :object => @transactions) -%>
