@@ -21,9 +21,9 @@ class ApplicationController < ActionController::Base
   end
 
   def load_activities  
-    @accounts =  Account.joins("JOIN groups G ON accounts.group_id = G.id").where("G.id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",session[:user_id]).select("accounts.*")
-    @activitytran = Transaction.where("account_id IN (?) ", @accounts.map {|acc| acc.id}).inject([]) {|result, tran| result << tran.comments unless tran.comments.empty?; result}.sort! {|t1,t2| t2.first.created_at <=> t1.first.created_at}
-    @activityacc  = Account.where("id IN (?) ", @accounts.map {|acc| acc.id}).inject([]) {|result, acc| result << acc.comments unless acc.comments.empty?; result}.sort! {|t1,t2| t2.first.created_at <=> t1.first.created_at}
+    @accounts =  Account.joins("JOIN groups G ON accounts.group_id = G.id").where("G.id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",session[:user_id]).select("accounts.*")   
+    @activitytran = Comment.joins("JOIN transactions t ON comments.commentable_id = t.id").where("commentable_type = 'Transaction'").select("comments.*").order("created_at DESC")
+    @activityacc  = Comment.joins("JOIN accounts a ON comments.commentable_id = a.id").where("commentable_type = 'Account'").select("comments.*").order("created_at DESC")
   end
 
   protected

@@ -7,6 +7,6 @@ class CreateGroupUserJoinTable < ActiveRecord::Migration
   end
 
   def down
-    drop table :groups_users
+    drop_table :groups_users
   end
 end

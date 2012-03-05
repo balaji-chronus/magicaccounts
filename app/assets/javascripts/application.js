@@ -10,6 +10,7 @@
 //= require twitter/bootstrap
 //= require_tree .
 //= require rails.validations
+//= require rails.validations.custom
 
 
 jQuery.ajaxSetup({
@@ -22,7 +23,7 @@ $(document).ready(function() {
         return false;
     })
 
-    $('#newtranbtn').click(function(){
+    $("#newtranbtn").live("click", function() {
          $('#newacctran').slideToggle();
          $(this).text($(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
        });

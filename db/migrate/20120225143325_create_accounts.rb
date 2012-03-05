@@ -1,5 +1,5 @@
 class CreateAccounts < ActiveRecord::Migration
-  def change
+  def up
     create_table :accounts do |t|
       t.string :name, :null => 'false'
       t.string :code, :null => 'false'
@@ -8,5 +8,8 @@ class CreateAccounts < ActiveRecord::Migration
 
       t.timestamps
     end
+  end
+  def down
+    drop_table :accounts;
   end
 end

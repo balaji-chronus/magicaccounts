@@ -8,6 +8,7 @@
   <tr>
     <th>ID</th>
     <th><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>    </th>
+    <th>Total Amount</th>
     <th>Details</th>
     <th>Created at</th>
     <th>Actions</th>
@@ -18,7 +19,8 @@
   <tr>
     <td><%= transaction.id %></td>
     <td><%= link_to transaction.remarks, transaction_path(transaction) %></td>
-    <td><%= transaction.user_id == session[:user_id] ? "Spent " + transaction.amount.to_s  + " for " + (transaction.beneficiary_id == session[:user_id] ? " Myself" : User.find(transaction.beneficiary_id).name) : "Received " + transaction.amount.to_s  + " from " + transaction.user.name  %> </td>
+    <td><%= transaction.amount %></td>
+    <td><%= transaction.details %> </td>
     <td><%= transaction.created_at %></td>
     <td>
       <%= link_to image_tag('edit_16x16.png', :class => 'imglink'), edit_transaction_path(transaction) %>

@@ -45,7 +45,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to transactions_path, notice: 'User was successfully created.' }
+        session[:user_id] = @user.id
+        format.html { redirect_to transactions_path, notice: "User '#{@user.name}' was successfully created." }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -61,7 +62,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to transactions_path, notice: "User '#{@user.name}' was successfully updated." }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

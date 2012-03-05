@@ -3,14 +3,13 @@
     <%= link_to "Create Group", new_group_path, :method => "get", :class => 'btn primary' %>
 </div>
 <% if @hasagroup.nil? %>
-  New to Magic Accounts ? Start over ! <br/><br/>
-  <strong><%= link_to "Create New Group", new_group_path, :method => "get", :class => 'btn primary' %></strong>
+<strong>New to Magic Accounts ? Start over by creating a Group ! </strong><br/><br/>
 <% elsif @hasanaccount.nil? %>
-  We see you are part of one or more groups. add an account to start tracking your transactions <br/><br/>
-  <strong><%= link_to "Create New Account", new_account_path, :method => "get", :class => 'btn primary' %></strong>
+<strong>We see you are part of one or more groups. add an account to start tracking your transactions </strong><br/><br/>
+  <%= link_to "Create New Account", new_account_path, :method => "get", :class => 'btn primary' %>
 <% elsif  @uniquegroups == [] %>
-  Add transactions and start tracking them now !<br/><br/>
-  <strong><%= link_to "Enter Transaction", new_transaction_path, :method => "get", :class => 'btn primary' %></strong>
+  <strong>Add transactions and start tracking them now !</strong><br/><br/>
+  <%= link_to "Enter Transaction", new_transaction_path, :method => "get", :class => 'btn primary' %>
 <% else %>
 <% @uniquegroups.each do |group| -%>
 <div class="group_header wellblue">
