@@ -12,13 +12,14 @@ class GroupsController < ApplicationController
   # GET /groups/1
   # GET /groups/1.json
   def show
-    @group = Group.find(params[:id])
+    @group = Group.find_by_id(params[:id])
     respond_to do |format|
       if Group.find_all_by_user_id(session[:user_id]).include?(@group)
         format.html # show.html.erb
         format.json { render json: @group }
       else
-        format.html { render action: "index" }
+        flash[:error] = "Group was not found"
+        format.html { redirect_to action: "index" }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
@@ -37,14 +38,15 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
-    @group = Group.find(params[:id])
+    @group = Group.find_by_id(params[:id])
 
     respond_to do |format|
       if Group.find_all_by_user_id(session[:user_id]).include?(@group)
         format.html # edit.html.erb
         format.json { render json: @group }
       else
-        format.html { render action: "index" }
+        flash[:error] = "Group was not found"
+        format.html { redirect_to action: "index" }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
@@ -54,12 +56,12 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = Group.new(params[:group])
-    @group.users << User.find(session[:user_id]) if session[:user_id]
+    @group.users << (User.find_by_id(session[:user_id]) if session[:user_id]) if @group
     respond_to do |format|
       if @group.save
-          @comment = @group.comments.create( {:activity => "create", :content => @group.name, :user_name => User.find(session[:user_id]).name})
+          @comment = @group.comments.create( {:activity => "create", :content => @group.name, :user_name => User.find_by_id(session[:user_id]).name})
           @comment.save
-        format.html { redirect_to @group, notice: 'Group was successfully created.' }
+        format.html { redirect_to groups_path, notice: "Group '#{@group.name}' was successfully created." }
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html { render action: "new" }
@@ -71,16 +73,22 @@ class GroupsController < ApplicationController
   # PUT /groups/1
   # PUT /groups/1.json
   def update
-    @group = Group.find(params[:id])    
+    @group = Group.find_by_id(params[:id])
+    
     respond_to do |format|
-      if @group.update_attributes(params[:group])
-          @comment = @group.comments.create( {:activity => "change", :content => @group.name, :user_name => User.find(session[:user_id]).name})
-          @comment.save
-        format.html { redirect_to @group, notice: 'Group was successfully updated.' }
-        format.json { head :ok }
+      if Group.find_all_by_user_id(session[:user_id]).include?(@group)
+          if @group.update_attributes(params[:group])
+              @comment = @group.comments.create( {:activity => "change", :content => @group.name, :user_name => User.find_by_id(session[:user_id]).name})
+              @comment.save
+            format.html { redirect_to groups_path, notice: "Group '#{@group.name}' was successfully updated." }
+            format.json { head :ok }
+          else
+            format.html { render action: "edit" }
+            format.json { render json: @group.errors, status: :unprocessable_entity }
+          end
       else
-        format.html { render action: "edit" }
-        format.json { render json: @group.errors, status: :unprocessable_entity }
+        flash[:error] = "Group was not found"
+        format.html { redirect_to action: "index" }
       end
     end
   end
@@ -88,11 +96,14 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-    @group = Group.find(params[:id])
+    @group = Group.find_by_id(params[:id])
     if Group.find_all_by_user_id(session[:user_id]).include?(@group)
-        @comment = @group.comments.create( {:activity => "remove", :content => @group.name, :user_name => User.find(session[:user_id]).name})
+        @comment = @group.comments.create( {:activity => "remove", :content => @group.name, :user_name => User.find_by_id(session[:user_id]).name})
         @comment.save
-        @group.destroy
+        flash[:notice] = "Group #{@group.name} was successfully removed"
+        @group.destroy        
+    else
+      flash[:error] = "Group was not found"      
     end
     
     respond_to do |format|      
@@ -102,14 +113,21 @@ class GroupsController < ApplicationController
   end
 
   def adduser
-    @group = Group.find_by_code(params[:code])
-    @group.users << User.find(session[:user_id]) if session[:user_id]
+    @group = Group.find_by_code(params[:code])    
     respond_to do |format|
-      if @group.save
-        format.html { redirect_to groups_url, notice: 'Group was successfully updated.' }
-        format.json { head :ok }
+      if @group
+        @group.users << (User.find_by_id(session[:user_id]) if session[:user_id]) 
+        if @group.save
+          format.html { redirect_to groups_url, notice: "You have been added to '#{@group.name}'" }
+          format.json { head :ok }
+        else
+          flash[:error] = "Cannot complete your request. Unknown Error"
+          format.html { redirect_to groups_url }
+          format.json { render json: @group.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { render groups_url }
+        flash[:error] = "Cannot complete your request. Attempt to access an Invalid page"
+        format.html { redirect_to groups_url }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end

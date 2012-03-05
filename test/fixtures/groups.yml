@@ -1,11 +1,25 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
 one:
-  name: MyString
-  status: MyString
-  user_id: 1
+  name: Coral_Arch
+  status: Enabled
+  user: one
+  code: b549f2c89597fcc810ff37491ae7e56b237f42eb
+  users: one
+
 
 two:
   name: MyString
   status: MyString
-  user_id: MyString
+  user: one
+  code: 81f0acb6d965690ee8e7f5477645ce046309d5dd
+  users: one
+
+three:
+  name: Hugo_Reyes
+  status: Enabled
+  user: john_locke
+  code: b549f2c89507fcc810ff37491ae7e56b237f42eb
+  users: john_locke
+
+

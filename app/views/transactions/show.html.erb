@@ -9,12 +9,12 @@
 <p><%= User.find_by_id(@transaction.user_id).name %></p>
 
 <label class="label"><%= t("activerecord.attributes.transaction.beneficiary_id", :default => t("activerecord.labels.beneficiary_id", :default => "Beneficiary")) %>:</label>
-<p><%= User.find_by_id(@transaction.beneficiary_id).name %></p>
+<p><%= @transaction.users.map(&:name).join(",") %></p>
 
 <label class="label"><%= t("activerecord.attributes.transaction.amount", :default => t("activerecord.labels.amount", :default => "Amount")) %>:</label>
 <p><%= @transaction.amount %></p>
 
-<label class="label"><%= t("activerecord.attributes.transaction.category", :default => t("activerecord.labels.category", :default => "Category")) %>:</label>
+<label class="label"><%= t("activerecord.attributes.transaction.cndategory", :default => t("activerecord.labels.category", :default => "Category")) %>:</label>
 <p><%= @transaction.category %></p>
 
 <label class="label"><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Remarks")) %>:</label>

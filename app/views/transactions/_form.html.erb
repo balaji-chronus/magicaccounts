@@ -24,12 +24,9 @@
 </div>
 
 <div class="clearfix">
-   <%= f.label :beneficiary_id, t("activerecord.attributes.transaction.beneficiary_id", :default => "Beneficiary"), :class => :label %>
+   <%= f.label :users, t("activerecord.attributes.transaction.users", :default => "Beneficiaries"), :class => :label %>
   <div class="input">
-    <%= f.select  :beneficiary_id,
-                  @accountusers.collect {|user| [user.user_name,user.user_id]},
-                  { :prompt => 'Select Beneficiary' },
-                  { :class => 'selectwidth' } %>
+    <%= f.collection_select :users, @accountusers, :user_id, :user_name, {:prompt => false},{ :selected => @transaction.users.map(&:name), :multiple => true, :class => 'selectwidth', :name => 'transaction[user_ids][]', :rows => 5 } -%>
   </div>
 </div>
 

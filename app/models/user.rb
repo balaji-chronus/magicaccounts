@@ -1,42 +1,44 @@
 require 'digest/sha2'
 class User < ActiveRecord::Base
   USERTYPES = ["Admin","User"]
+
   has_many :transactions
+  has_many :groups
+  has_many :accounts
   has_and_belongs_to_many :groups, :uniq => true
-  
-  validates :name, :presence => {:message => 'Name cannot be blank'}
-  
-  validates_uniqueness_of :name
-
-  validates_length_of :phone, 
-                      :maximum => 11,                      
-                      :too_long => "Phone cannot exceed 11 chars"
-
-  validates_length_of :phone,
-                      :minimum => 10,
-                      :too_short => "Phone cannot be less than 10 chars"
-
-  validates_format_of :phone,
-                      :with => /\d+/,
-                      :message => "Only numbers are allowed"
-
-  validates_format_of :email,
-                      :with => /.+@.+\..+/,
-                      :message => "Please enter a valid email. ex: johndoe@mail.com"
-                    
-  validate  :password_not_blank
+  has_and_belongs_to_many :transactions, :uniq => true
 
   attr_accessor :password_confirmation
-  validates_confirmation_of :password
-  validates :password, :presence => {:message => 'Password missing. Enter a minimum of 6 chars'},
-            :length => {:minimum => 6, :too_short => 'Enter a minimum of 6 chars'}
+  
+  validates :name,
+            :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must have at least one alphabet and contain only alphabets, digits, or underscores'},
+            :uniqueness => {:message => "Unavailable. Please choose another name"},
+            :length => {:in => 6..32, :message => "should be between 6 and 15 characters"}
 
-  validates :password_confirmation, :presence => {:message => 'Password missing. Enter a minimum of 6 chars'},
-            :length => {:minimum => 6, :too_short => 'Enter a minimum of 6 chars'}
+  validates :phone,
+            :length => { :in => 10..11, :message => "enter a phone number between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
+            :format => { :with => /^[0-9]+$/, :message => "Only numbers are allowed in this section", :allow_blank => true}            
 
-  validates_inclusion_of :user_type, :in => USERTYPES, :message => 'Select a user type from the list'
+  validates :password,            
+            :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'},
+            :confirmation => true
 
+  validates :password_confirmation,            
+            :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'}
+            
 
+  validates :user_type,
+            :inclusion => {:in => USERTYPES, :message => 'Select a user type from the list'}
+
+  validates :email,            
+            :email => {:message => "Please enter a valid email. ex: johndoe@mail.com"},
+            :length => {:maximum => 128, :message => "email should not exceed 128 characters"}
+
+  validates :company,
+            :length => {:maximum => 64, :message => "cannot exceed 64 charaters", :allow_blank => true}
+
+  validates :address,
+            :length => {:maximum => 512, :message => "cannot exceed 512 characters", :allow_blank => true}
 
   def password
     @password
@@ -47,8 +49,7 @@ class User < ActiveRecord::Base
     return if pwd.blank?
     create_new_salt
     self.hashed_password = User.encrypted_password(self.password, self.salt)
-  end
-  
+  end  
 
   def self.authenticate(username,password)
     user = User.find_by_name(username)
@@ -61,10 +62,7 @@ class User < ActiveRecord::Base
     user
   end  
 
-  private
-  def password_not_blank
-    errors.add(:password, "Password cannot be Empty") if hashed_password.blank?
-  end
+private  
 
   def create_new_salt
     self.salt = self.object_id.to_s + rand.to_s

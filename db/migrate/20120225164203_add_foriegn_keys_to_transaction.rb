@@ -8,12 +8,7 @@ class AddForiegnKeysToTransaction < ActiveRecord::Migration
     execute %{alter table transactions
               add constraint fk_transactions_user_id
               foreign key (user_id)
-              references users(id)}
-
-    execute %{alter table transactions
-              add constraint fk_transactions_beneficiary_id
-              foreign key (beneficiary_id)
-              references users(id)}
+              references users(id)}    
 
   end
 
@@ -23,8 +18,6 @@ class AddForiegnKeysToTransaction < ActiveRecord::Migration
 
     execute %{alter table transactions
               drop foreign key fk_transactions_user_id}
-
-    execute %{alter table transactions
-              drop foreign key fk_transactions_beneficiary_id}
+    
   end
 end
