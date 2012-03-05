@@ -4,4 +4,7 @@ $("#viewacctran").replaceWith("<%= escape_javascript(render(
 
 $("#tranact").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/activitytransactions',
-    :object => Transaction.where("account_id IN (?) ", @accounts.map {|acc| acc.id}).inject([]) {|result, tran| result << tran.comments unless tran.comments.empty?; result}.sort! {|t1,t2| t2.first.created_at <=> t1.first.created_at}, :locals =>  {:type => 'transactions', :limit => 15}))%>");
+    :object => Comment.joins("JOIN transactions t ON comments.commentable_id = t.id").where("commentable_type = 'Transaction'").select("comments.*").order("created_at DESC"), :locals =>  {:type => 'transactions', :limit => 15}))%>");
+
+$("#newacctran").slideToggle();
+$("#newtranbtn").text = 'New Transaction';

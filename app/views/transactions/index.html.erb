@@ -1,6 +1,6 @@
 <div class="group_header wellblue">
     <h3> My Profile </h3>
-    <%= link_to "Create Group", new_group_path, :method => "get", :class => 'btn primary' %>
+    <strong><%= link_to "Create Group", new_group_path, :method => "get", :class => 'btn primary' %></strong>
 </div>
 <% if @hasagroup.nil? %>
 <strong>New to Magic Accounts ? Start over by creating a Group ! </strong><br/><br/>
@@ -13,14 +13,14 @@
 <% else %>
 <% @uniquegroups.each do |group| -%>
 <div class="group_header wellblue">
-    <h4> <%=  Group.find(group[:groupid]).name %> </h4>
+    <h3> <%=  Group.find(group[:groupid]).name %> </h3>
     <% if Group.find(group[:groupid]).user_id == session[:user_id] %>
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
     <%end%>
     
-    <%= link_to "Create Account", { :controller => 'accounts', :action => 'new', :groupid => group[:groupid] },:method => "get", :class => 'btn primary' %>
+    <strong><%= link_to "Create Account", { :controller => 'accounts', :action => 'new', :groupid => group[:groupid] },:method => "get", :class => 'btn primary' %></strong>
     <% if Group.find(group[:groupid]).user_id == session[:user_id] %>
       <%=  link_to "Manage Group", {:controller => 'groups', :action => 'index'}, {:class => 'headerlinks'} %>
     <%end%>
@@ -30,13 +30,13 @@
 <% @uniqueaccounts.collect { |account| account if group[:groupid] == account[:groupid]}.each do |account| -%>
 <% if account  %>
 <div class="group_header wellgreen">
-    <h4> <%=  Account.find(account[:accountid]).name %></h4>
+    <h3> <%=  Account.find(account[:accountid]).name %></h3>
     <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
     <%end%>    
-    <%=  link_to "Transactions", {:controller => 'transactions', :action => 'view', :accountid => account[:accountid]}, {:class => 'btn success'} %>
+    <strong><%=  link_to "Transactions", {:controller => 'transactions', :action => 'view', :accountid => account[:accountid]}, {:class => 'btn success'} %></strong>
     <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
     <%=  link_to "Manage Account", {:controller => 'accounts', :action => 'index'}, {:class => 'headerlinks'} %>
     <%end%>

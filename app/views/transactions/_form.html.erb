@@ -1,3 +1,4 @@
+<input name="authenticity_token" type="hidden" value="transactionauthtoken" />
 
 <div class="clearfix">
    <%= f.label :txndate, t("activerecord.attributes.transaction.txndate", :default => "Txn Date"), :class => :label %>
@@ -26,7 +27,7 @@
 <div class="clearfix">
    <%= f.label :users, t("activerecord.attributes.transaction.users", :default => "Beneficiaries"), :class => :label %>
   <div class="input">
-    <%= f.collection_select :users, @accountusers, :user_id, :user_name, {:prompt => false},{ :selected => @transaction.users.map(&:name), :multiple => true, :class => 'selectwidth', :name => 'transaction[user_ids][]', :rows => 5 } -%>
+    <%= f.collection_select :users, @accountusers, :user_id, :user_name, {:prompt => false, :selected => @transaction.user_ids},{ :multiple => true, :class => 'selectwidth', :name => 'transaction[user_ids][]', :rows => 5 } -%>
   </div>
 </div>
 
