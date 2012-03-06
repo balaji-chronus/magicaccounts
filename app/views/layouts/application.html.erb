@@ -44,6 +44,7 @@
                 <li><%= link_to "My Profile", :controller => 'transactions', :action => 'index'  %></li>
             </ul>
             <ul class="nav navlast">
+                <li id="welcomeheader"><%= "Welcome " + User.find_by_id(session[:user_id]).name + " !" %></li>
                 <li><%= link_to "Logout", logout_url %></li>
             </ul>
             <%else%>
