@@ -32,7 +32,8 @@ class User < ActiveRecord::Base
 
   validates :email,            
             :email => {:message => "Please enter a valid email. ex: johndoe@mail.com"},
-            :length => {:maximum => 128, :message => "email should not exceed 128 characters"}
+            :length => {:maximum => 128, :message => "email should not exceed 128 characters"},
+            :uniqueness => {:message => "Already registered"}
 
   validates :company,
             :length => {:maximum => 64, :message => "cannot exceed 64 charaters", :allow_blank => true}
@@ -51,8 +52,8 @@ class User < ActiveRecord::Base
     self.hashed_password = User.encrypted_password(self.password, self.salt)
   end  
 
-  def self.authenticate(username,password)
-    user = User.find_by_name(username)
+  def self.authenticate(email,password)
+    user = User.find_by_email(email)
     if user
       expected_pwd = User.encrypted_password(password, user.salt)
       if expected_pwd != user.hashed_password

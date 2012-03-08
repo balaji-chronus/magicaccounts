@@ -7,14 +7,14 @@ skip_before_filter :authorize
   def create
     session[:user_id] = nil
     if request.post?
-       user = User.authenticate(params[:name], params[:password])
+       user = User.authenticate(params[:email], params[:password])
       if user
         session[:user_id] = user.id
         uri = session[:request_uri]
         session[:request_uri] = nil
         redirect_to (uri || transactions_url)
       else
-        flash.now[:notice] = "Incorrect Username/Password"
+        flash[:error] = "Incorrect Username/Password"
         redirect_to login_url
       end
     end
