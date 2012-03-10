@@ -23,7 +23,7 @@ end
 gem 'jquery-rails'
 gem 'client_side_validations'
 gem 'kaminari'
-gem 'ruby-debug19'
+
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -37,6 +37,7 @@ gem 'ruby-debug19'
 group :test do
   # Pretty printed test output
   gem 'turn', '0.8.2', :require => false
+  gem 'ruby-debug19'
 end
 
 gem 'minitest'
