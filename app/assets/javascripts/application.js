@@ -18,20 +18,27 @@ jQuery.ajaxSetup({
 })
 
 $(document).ready(function() {
-    $("#new_transaction").submit(function() {
-        $.post($(this).attr("action"),  $(this).serialize(), null, "script");
-        return false;
+    
+   jQuery.fn.submitWithAjax = function() {
+    this.submit(function() {
+    $.post(this.action, $(this).serialize(), null, "script");
+    return false;
     })
+    return this;
+   };
+    
+   $("#new_transaction").submitWithAjax();
+   $("#form_invite").submitWithAjax();
 
-    $("#newtranbtn").live("click", function() {
-         $('#newacctran').slideToggle();
-         $(this).text($(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
-       });
+   $("#newtranbtn").live("click", function() {
+     $('#newacctran').slideToggle();
+     $(this).text($(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
+   });
        
-       $('#hidetranbtn').click(function(){
-         $('#newacctran').hide("blind", {direction : "vertical"}, 350);
-            $("#newtranbtn").text($("#newtranbtn").text() == 'Move up' ? 'New Transaction' : 'Move up');
-       });           
+   $('#hidetranbtn').click(function(){
+     $('#newacctran').hide("blind", {direction : "vertical"}, 350);
+        $("#newtranbtn").text($("#newtranbtn").text() == 'Move up' ? 'New Transaction' : 'Move up');
+   });
 
 })
 

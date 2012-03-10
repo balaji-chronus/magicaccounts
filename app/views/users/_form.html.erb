@@ -59,9 +59,9 @@
 <%= f.label :user_type, t("activerecord.attributes.user.user_type", :default => "Type"), :class => :label %>
   <div class="input">
 <%= f.select  :user_type,
-              User::USERTYPES,
-              {:prompt => "Select Type"},
-              {:class => 'selectwidth'} %>
+              ["User"],
+              {:prompt => false},
+              {:class => 'selectwidth', :default => "User", :disabled => true} %>
 </div>
 
 </div>

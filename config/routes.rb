@@ -6,7 +6,8 @@ Magicaccounts::Application.routes.draw do
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:accountid' => 'transactions#new'
   get   'transactions/view/:accountid' => 'transactions#view'
-  match 'accounts/new/:groupid' => 'accounts#new'    
+  match 'accounts/new/:groupid' => 'accounts#new'
+  match 'groups/sendinvites' => 'groups#sendinvites'
 
   controller :sessions do
     get   'login' => :new

@@ -36,23 +36,32 @@
           </a>
           <a class="brand" href="/.">Magic Accounts</a>
           <div class="container nav-collapse">
-            <% if session[:user_id] %>
-            <ul class="nav">
-                <li><%= link_to "Users", :controller => 'users', :action => 'index'  %></li>
-                <li><%= link_to "Groups", :controller => 'groups', :action => 'index'  %></li>
-                <li><%= link_to "Accounts", :controller => 'accounts', :action => 'index'  %></li>
-                <li><%= link_to "My Profile", :controller => 'transactions', :action => 'index'  %></li>
-            </ul>
-            <ul class="nav navlast">
-                <li id="welcomeheader"><%= "Welcome " + User.find_by_id(session[:user_id]).name + " !" %></li>
-                <li><%= link_to "Logout", logout_url %></li>
-            </ul>
+           <% if session[:user_id] %>
+                <ul class="nav pills">
+                    <li><%= link_to "My Profile", :controller => 'transactions', :action => 'index'  %></li>
+                    <li class="dropdown" id="menu1">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                    Manage
+                    <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <% if User.find_by_id(session[:user_id]).user_type == "Admin" %>
+                        <li><%= link_to "Users", :controller => 'users', :action => 'index'  %></li>
+                      <%end%>
+                      <li><%= link_to "Groups", {:controller => 'groups', :action => 'index'}%></li>
+                      <li><%= link_to "Accounts", :controller => 'accounts', :action => 'index' %></li>
+                    </ul>
+                    </li>
+                </ul>
+                <ul class="nav navlast">
+                  <li id="welcomeheader"><%= "Welcome " + User.find_by_id(session[:user_id]).name + " !" %></li>
+                  <li><%= link_to "Logout", logout_url %></li>
+                </ul>
             <%else%>
               <ul class="nav navlast">
                 <li><%= link_to "Register", :controller => 'users', :action => 'new' %></li>
-            </ul>
-            <%end%>
-            
+              </ul>
+            <%end%>            
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -60,12 +69,7 @@
 
 
     <div class="container">
-      <%flash.each do |name,msg| %>
-        <div id ="flash" class="alert alert-<%= name == :notice ? 'success' : 'error' %>">
-          <a class="close" data-dismiss="alert">×</a>
-          <%= msg %>
-        </div>
-        <%end%>
+      <%= render(:partial => 'common/flashdisplay', :locals =>  {:flash => flash}) %>
         <div class="content">
           <div class="row">
             <div class="span8">
