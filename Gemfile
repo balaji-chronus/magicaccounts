@@ -40,4 +40,8 @@ group :test do
   gem 'ruby-debug19'
 end
 
+group :production do
+  gem 'pg'
+end
+
 gem 'minitest'
