@@ -23,18 +23,19 @@
 </div>
 
 <div class="clearfix">
-   <%= f.label :users, t("activerecord.attributes.transaction.users", :default => "Beneficiaries"), :class => :label %>
+  <%= f.label :transaction_type, t("activerecord.attributes.transaction.account_id", :default => "Transaction Type"), :class => :label %>
   <div class="input">
-    <%= f.collection_select :users, @accountusers, :user_id, :user_name, {:prompt => false, :selected => @transaction.user_ids},{ :multiple => true, :class => 'selectwidth', :name => 'transaction[user_ids][]', :rows => 5 } -%>
+    <%= f.select :transaction_type, Transaction::TRANSACTION_TYPES, {}, { :default => "Track a Personal Expense", :class => 'selectwidth' } %>
   </div>
 </div>
 
-<div class="clearfix">
-   <%= f.label :amount, t("activerecord.attributes.transaction.amount", :default => "Amount"), :class => :label %>
-  <div class="input">
-    <%= f.text_field :amount, :class => 'text_field' %>
-  </div>
-</div>
+<% partial_name = case (f.object.transaction_type)
+                  when 2 then "group_equal"
+                  when 3 then "group_unequal"
+                  else "group_equal"
+                  end %>
+
+<%= render(:partial => "transactions/transaction_types/#{partial_name}", :locals =>  {:f => f}) %>
 
 <div class="clearfix">
    <%= f.label :category, t("activerecord.attributes.transaction.category", :default => "Category"), :class => :label %>

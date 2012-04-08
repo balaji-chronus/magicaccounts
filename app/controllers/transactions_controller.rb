@@ -60,6 +60,9 @@ class TransactionsController < ApplicationController
       if @transaction
         if (@transaction.user_id == session[:user_id] || @transaction.users.find_by_id(session[:user_id]))
           @accountusers = get_userlist_for_current_user
+          (User.find_all_by_id(@accountusers.collect(&:user_id)) - @transaction.transactions_users.collect(&:user)).each do |user|
+              @transaction.transactions_users.build({:user => user})
+          end
           format.html
           format.json { render json: @transaction }
         else
@@ -88,6 +91,7 @@ class TransactionsController < ApplicationController
           format.json { render json: @transaction, status: :created, location: @transaction }
           format.js
       else
+        debugger
         format.html { render action: "new" }
         format.json { render json: @transaction.errors, status: :unprocessable_entity }
       end
@@ -159,9 +163,9 @@ class TransactionsController < ApplicationController
 
   private
   def initiate_account
-      @disableaccount = action_name == 'view'
       @transaction = Transaction.new      
       @accountusers = get_userlist_for_current_user
+      @accountusers.each { |user| @transaction.transactions_users.build({:user => User.find_by_id(user.user_id)})}
   end
   
 end

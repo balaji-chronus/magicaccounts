@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120305054214) do
+ActiveRecord::Schema.define(:version => 20120408205946) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -62,12 +62,13 @@ ActiveRecord::Schema.define(:version => 20120305054214) do
     t.datetime "txndate"
     t.integer  "account_id"
     t.integer  "user_id"
-    t.decimal  "amount",     :precision => 14, :scale => 2
+    t.decimal  "amount",           :precision => 14, :scale => 2
     t.string   "category"
     t.text     "remarks"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "enteredby"
+    t.integer  "transaction_type"
   end
 
   add_index "transactions", ["account_id"], :name => "fk_transactions_account_id"
@@ -78,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20120305054214) do
     t.datetime "txndate"
     t.integer  "account_id"
     t.integer  "user_id"
-    t.decimal  "amount",         :precision => 18, :scale => 6
+    t.decimal  "amount",         :precision => 14, :scale => 2
     t.string   "category"
     t.text     "remarks"
     t.datetime "created_at"
@@ -87,15 +88,12 @@ ActiveRecord::Schema.define(:version => 20120305054214) do
     t.integer  "beneficiary_id"
   end
 
-  create_table "transactions_rolled_up", :id => false, :force => true do |t|
-    t.integer "id",                                                     :default => 0, :null => false
-    t.decimal "share",                   :precision => 18, :scale => 6
-    t.integer "user_count", :limit => 8,                                :default => 0, :null => false
-  end
-
-  create_table "transactions_users", :id => false, :force => true do |t|
-    t.integer "transaction_id"
-    t.integer "user_id"
+  create_table "transactions_users", :force => true do |t|
+    t.integer  "transaction_id"
+    t.integer  "user_id"
+    t.decimal  "amount",         :precision => 14, :scale => 2
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

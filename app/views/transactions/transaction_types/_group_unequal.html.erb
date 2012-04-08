@@ -1,0 +1,25 @@
+<div id="transaction_user_amount">
+  <div class="clearfix">
+    <%= label_tag :beneficiaries, "Beneficiaries", :class => :label %>
+    <div class="input">
+      <% txn_users_count = @transaction.transactions_users.size ;txn_users_column_count = (txn_users_count.to_f/ 3).ceil; i = 0 %>
+      <%= f.fields_for :transactions_users do |tu_form| %>
+      <% if i.modulo(txn_users_column_count)== 0 %>
+      <ul class="txn_user_list">
+      <% end %>
+        <li>
+          <div class="input-prepend">
+            <%= tu_form.hidden_field :user_id %>
+            <%= tu_form.hidden_field :transaction_id %>
+            <%= tu_form.label :amount, tu_form.object.user.name, :class => "add-on" %>
+            <%= tu_form.text_field :amount, {:class => "input-mini prepended_amount_input#{!tu_form.object.amount.blank? && tu_form.object.amount > 0 ? " active" : ""}"} %>
+            <%= tu_form.hidden_field :_destroy, :value => tu_form.object.amount.blank?, :class => "txnuserdestroy" %>
+          </div>
+        </li>
+      <% if i.modulo(txn_users_column_count)== txn_users_column_count - 1 || i == txn_users_count - 1 %>
+      </ul>
+      <% end %>
+      <%  i += 1; end%>
+    </div>
+  </div>
+</div>

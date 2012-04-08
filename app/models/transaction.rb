@@ -1,8 +1,10 @@
 class Transaction < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :account  
-  has_many :comments, :as => :commentable
-  has_and_belongs_to_many :users, :uniq => true
+  belongs_to  :user
+  belongs_to  :account
+  has_many    :comments, :as => :commentable
+  has_many    :users, :through => :transactions_users
+  has_many    :transactions_users
+  accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true
   
   CATEGORIES = [
     ["General", 'general'],
@@ -21,13 +23,18 @@ class Transaction < ActiveRecord::Base
     ["Miscellaneous", "miscellaneous"]
   ]
 
-
-  validates_numericality_of :amount, :greater_than => 0.01
-  validates :amount, :txndate, :remarks, :presence => {:message => "Cannot be blank"}  
+  TRANSACTION_TYPES = [
+    ["Track a Personal Expense","1"],
+    ["Group - Split Equally", "2"],
+    ["Group - Not Split Equally", "3"]
+  ]
+  
+  validates :txndate, :remarks, :presence => {:message => "Cannot be blank"}  
   validates_inclusion_of :category, :in => CATEGORIES.map {|name,val| val}
   validates_inclusion_of :user_id, :in => User.find(:all).map {|user| user.id}, :message => 'Select an investor from the list'
   #validates_inclusion_of :beneficiary_id, :in => User.find(:all).map {|user| user.id}, :message => 'Select a Beneficiary from the list'
   validates_inclusion_of :account_id, :in => Account.find(:all).map {|account| account.id}, :message => 'Select an account from the list'
+  validates :transactions_users, :presence => true
 
   def self.balance(sessionuser)
 

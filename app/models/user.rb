@@ -1,12 +1,12 @@
 require 'digest/sha2'
-class User < ActiveRecord::Base
-  USERTYPES = ["Admin","User"]
+class User < ActiveRecord::Base  
 
   has_many :transactions
   has_many :groups
   has_many :accounts
   has_and_belongs_to_many :groups, :uniq => true
-  has_and_belongs_to_many :transactions, :uniq => true
+  has_many :transaction_items, :class_name => "Transaction", :through => :transactions_users
+  has_many :transactions_users
 
   attr_accessor :password_confirmation
   
@@ -24,11 +24,7 @@ class User < ActiveRecord::Base
             :confirmation => true
 
   validates :password_confirmation,            
-            :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'}
-            
-
-  validates :user_type,
-            :inclusion => {:in => USERTYPES, :message => 'Select a user type from the list'}
+            :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'}  
 
   validates :email,            
             :email => {:message => "Please enter a valid email. ex: johndoe@mail.com"},

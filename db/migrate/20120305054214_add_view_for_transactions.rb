@@ -29,7 +29,7 @@ class AddViewForTransactions < ActiveRecord::Migration
   end
 
   def down
-    execute %{  DROP VIEW transactions_rolled_up }
-    execute %{  DROP VIEW transactions_beneficiaries }
+    execute %{  DROP VIEW IF EXISTS transactions_rolled_up }
+    execute %{  DROP VIEW IF EXISTS transactions_beneficiaries }
   end
 end

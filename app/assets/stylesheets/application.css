@@ -7,4 +7,31 @@
  *= require jquery.ui.all
  *= require_tree . 
 */
+html{ overflow-y:scroll; }
 
+.txnamountuser {
+    width: 100px;
+    margin-bottom: 5px !important;
+}
+
+.txnamountuser.btn.btn-primary.active {
+    background-color: #57A957;
+    color: #EEFFFF;
+}
+
+#transaction_user_amount .txn_user_list {
+    float: left;
+    width: 100px;
+    list-style-type: none;
+    margin-right: 20px;
+    margin-left: 0px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.add-on { width: 100px !important; }
+
+.prepended_amount_input {
+    width: 100px !important;
+    text-align: center;
+}

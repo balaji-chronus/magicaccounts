@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  transaction_id: 
+  user_id: 
+  amount: 9.99
+
+two:
+  transaction_id: 
+  user_id: 
+  amount: 9.99

@@ -21,24 +21,54 @@ $(document).ready(function() {
     
    jQuery.fn.submitWithAjax = function() {
     this.submit(function() {
-    $.post(this.action, $(this).serialize(), null, "script");
+    jQuery.post(this.action, jQuery(this).serialize(), null, "script");
     return false;
     })
     return this;
    };
     
-   $("#new_transaction").submitWithAjax();
-   $("#form_invite").submitWithAjax();
+   jQuery("#new_transaction").submitWithAjax();
+   jQuery("#form_invite").submitWithAjax();
 
-   $("#newtranbtn").live("click", function() {
-     $('#newacctran').slideToggle();
-     $(this).text($(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
+   jQuery("#newtranbtn").live("click", function() {
+     jQuery('#newacctran').slideToggle(2000);
+     jQuery(this).text(jQuery(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
    });
        
-   $('#hidetranbtn').click(function(){
-     $('#newacctran').hide("blind", {direction : "vertical"}, 350);
-        $("#newtranbtn").text($("#newtranbtn").text() == 'Move up' ? 'New Transaction' : 'Move up');
+   jQuery('#hidetranbtn').click(function(){
+     jQuery('#newacctran').hide("blind", {direction : "vertical"}, 2000);
+        jQuery("#newtranbtn").text(jQuery("#newtranbtn").text() == 'Move up' ? 'New Transaction' : 'Move up');
    });
 
+   // Transaction Form
+   var Transaction = {
+        setTransactionUserAmount: function(){          
+          var amount = jQuery('#transaction_equal_amount').val() ? jQuery('#transaction_equal_amount').val() : 0;
+          var active_users = jQuery(".txnamountuser.active");          
+          active_users.siblings(".txnuseramount").val(amount/active_users.length);
+        },
+        setActiveTransactionUsers: function(e){            
+            jQuery(e).siblings(".txnuserdestroy").val(!(jQuery(e).hasClass("active")));
+        }
+    }
+
+   jQuery('.txnamountuser').click(function(){
+        jQuery(this).toggleClass("active");
+        Transaction.setActiveTransactionUsers(this);
+        Transaction.setTransactionUserAmount();
+    });
+
+   jQuery("#transaction_equal_amount").blur(function(){
+        Transaction.setTransactionUserAmount();
+   });
+
+   jQuery(".prepended_amount_input").blur(function(){
+        var amount = jQuery(this).val();
+        if(amount && amount > 0 )        
+            jQuery(this).addClass("active");
+        else
+            jQuery(this).removeClass("active");        
+        Transaction.setActiveTransactionUsers(this);
+   });
 })
 
