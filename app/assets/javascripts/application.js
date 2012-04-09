@@ -17,6 +17,28 @@ jQuery.ajaxSetup({
     'beforeSend': function(xhr) {xhr.setRequestHeader("Accept","text/javascript")}
 })
 
+var Transaction = {
+        setTransactionUserAmount: function(){
+          var amount = jQuery('#transaction_equal_amount').val() ? jQuery('#transaction_equal_amount').val() : 0;
+          var active_users = jQuery(".txnamountuser.active");
+          if(active_users)
+            active_users.siblings(".txnuseramount").val(amount/active_users.length);
+        },
+        setActiveTransactionUsers: function(e){
+          jQuery(e).siblings(".txnuserdestroy").val(!(jQuery(e).hasClass("active")));
+        },
+        cleanUpTransactionUsers: function(){
+            jQuery('.txnuserdestroy').val(true);
+            jQuery('.txnamountuser').removeClass("active")
+            jQuery('.txnuseramount').val("");
+        },
+        setUpTransactionUsers: function(e){
+            var user = jQuery(e).val();
+            if(user)
+                jQuery("input.txn_user_amt_id[value='" + user + "']").siblings(".txnamountuser").addClass("active").siblings(".txnuseramount").val(jQuery("#transaction_equal_amount").val()).siblings(".txnuserdestroy").val(false);
+        }
+    }
+
 $(document).ready(function() {
     
    jQuery.fn.submitWithAjax = function() {
@@ -41,28 +63,19 @@ $(document).ready(function() {
    });
 
    // Transaction Form
-   var Transaction = {
-        setTransactionUserAmount: function(){          
-          var amount = jQuery('#transaction_equal_amount').val() ? jQuery('#transaction_equal_amount').val() : 0;
-          var active_users = jQuery(".txnamountuser.active");          
-          active_users.siblings(".txnuseramount").val(amount/active_users.length);
-        },
-        setActiveTransactionUsers: function(e){            
-            jQuery(e).siblings(".txnuserdestroy").val(!(jQuery(e).hasClass("active")));
-        }
-    }
+   
 
-   jQuery('.txnamountuser').click(function(){
+   jQuery('.txnamountuser').live("click", function(){
         jQuery(this).toggleClass("active");
         Transaction.setActiveTransactionUsers(this);
         Transaction.setTransactionUserAmount();
     });
 
-   jQuery("#transaction_equal_amount").blur(function(){
+   jQuery("#transaction_equal_amount").live("blur", function(){
         Transaction.setTransactionUserAmount();
    });
 
-   jQuery(".prepended_amount_input").blur(function(){
+   jQuery(".prepended_amount_input").live("blur", function(){
         var amount = jQuery(this).val();
         if(amount && amount > 0 )        
             jQuery(this).addClass("active");
@@ -70,5 +83,11 @@ $(document).ready(function() {
             jQuery(this).removeClass("active");        
         Transaction.setActiveTransactionUsers(this);
    });
+
+   jQuery('#transaction_user_id').change(function(){       
+       Transaction.cleanUpTransactionUsers();
+       Transaction.setUpTransactionUsers(this);
+   });
+   
 })
 

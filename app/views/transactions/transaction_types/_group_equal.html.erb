@@ -20,11 +20,12 @@
       <%  i += 1; end%>
     </div>
   </div>
-</div>
 
-<div class="clearfix">
-  <%= label_tag :amount, "Amount", :class => :label %>
-  <div class="input">
-    <%= text_field_tag  :amount, @transaction.transactions_users.collect{|tu| tu.amount.blank? ? 0 : tu.amount}.inject(:+), :class => 'text_field', :id => "transaction_equal_amount" %>
+
+  <div class="clearfix">
+    <%= label_tag :amount, "Amount", :class => :label %>
+    <div class="input">
+      <%= text_field_tag  :amount, @transaction.transactions_users.collect{|tu| tu.amount.blank? ? 0 : tu.amount}.inject(:+), :class => 'text_field', :id => "transaction_equal_amount" %>
+    </div>
   </div>
 </div>

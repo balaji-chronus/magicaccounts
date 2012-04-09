@@ -32,7 +32,7 @@
 <% partial_name = case (f.object.transaction_type)
                   when 2 then "group_equal"
                   when 3 then "group_unequal"
-                  else "group_equal"
+                  else "personal"
                   end %>
 
 <%= render(:partial => "transactions/transaction_types/#{partial_name}", :locals =>  {:f => f}) %>
@@ -60,3 +60,22 @@
 <div class="form-actions">
   <button class="btn primary" type="submit">Save</button>
 </div>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery('#transaction_transaction_type').change(function() {
+    var transaction_type = jQuery(this).val();
+    if (transaction_type == "1") {      
+      Transaction.cleanUpTransactionUsers();
+      Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
+      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/personal', :locals =>  {:f => f}))%>");
+    }
+    else if(transaction_type == "2") {      
+      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_equal', :locals =>  {:f => f}))%>");
+    }
+    else if(transaction_type == "3") {      
+      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_unequal', :locals =>  {:f => f}))%>");
+    }
+  });
+});
+</script>

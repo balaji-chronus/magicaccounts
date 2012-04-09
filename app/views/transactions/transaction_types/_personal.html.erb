@@ -1,0 +1,19 @@
+<div id="transaction_user_amount">
+    <%= f.fields_for :transactions_users do |tu_form| %>
+    <div class="txn_user_entry">
+      <%= tu_form.hidden_field :user_id, :class => "txn_user_amt_id" %>
+      <%= tu_form.hidden_field :transaction_id %>
+      <%= hidden_field_tag :amount_support, "", :class => "txnamountuser#{f.object.user_id == tu_form.object.user_id ? " active" : ""}" %>
+      <%= tu_form.hidden_field :amount, :class => "txnuseramount" %>
+      <%= tu_form.hidden_field :_destroy, :value => tu_form.object.amount.blank?, :class => "txnuserdestroy" %>
+    </div>
+    <% end %>
+
+
+  <div class="clearfix">
+    <%= label_tag :amount, "Amount", :class => :label %>
+    <div class="input">
+      <%= text_field_tag  :amount, @transaction.transactions_users.collect{|tu| tu.amount.blank? ? 0 : tu.amount}.inject(:+), :class => 'text_field', :id => "transaction_equal_amount" %>
+    </div>
+  </div>
+</div>
