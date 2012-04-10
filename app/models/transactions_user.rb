@@ -1,6 +1,4 @@
-class TransactionsUser < ActiveRecord::Base
-  validates_numericality_of :amount, :greater_than => 0.01
-  
+class TransactionsUser < ActiveRecord::Base   
   belongs_to :user
   belongs_to :transaction
 end

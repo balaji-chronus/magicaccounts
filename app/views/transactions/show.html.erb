@@ -11,9 +11,6 @@
 <label class="label"><%= t("activerecord.attributes.transaction.beneficiary_id", :default => t("activerecord.labels.beneficiary_id", :default => "Beneficiary")) %>:</label>
 <p><%= @transaction.transactions_users.collect(&:user).collect(&:name).join(",") %></p>
 
-<label class="label"><%= t("activerecord.attributes.transaction.amount", :default => t("activerecord.labels.amount", :default => "Amount")) %>:</label>
-<p><%= @transaction.amount %></p>
-
 <label class="label"><%= t("activerecord.attributes.transaction.cndategory", :default => t("activerecord.labels.category", :default => "Category")) %>:</label>
 <p><%= @transaction.category %></p>
 

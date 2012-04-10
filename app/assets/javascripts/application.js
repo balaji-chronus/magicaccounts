@@ -36,20 +36,37 @@ var Transaction = {
             var user = jQuery(e).val();
             if(user)
                 jQuery("input.txn_user_amt_id[value='" + user + "']").siblings(".txnamountuser").addClass("active").siblings(".txnuseramount").val(jQuery("#transaction_equal_amount").val()).siblings(".txnuserdestroy").val(false);
+        },
+        calculateAmount: function() {
+            var amount = 0;
+            jQuery(".txnuseramount").each(function() {
+                if(!isNaN(this.value) && this.value.length!=0) {
+                    amount += parseFloat(this.value);
+                }
+            });
+            return amount.toFixed(2);
         }
-    }
+    }    
 
-$(document).ready(function() {
+    jQuery(document).ready(function() {
+        jQuery.fn.submitWithAjax = function() {
+        this.submit(function() {
+            jQuery.post(this.action, jQuery(this).serialize(), null, "script");
+            return false;
+        })
+        return this;
+    };
     
-   jQuery.fn.submitWithAjax = function() {
-    this.submit(function() {
-    jQuery.post(this.action, jQuery(this).serialize(), null, "script");
-    return false;
-    })
-    return this;
-   };
-    
-   jQuery("#new_transaction").submitWithAjax();
+    jQuery("#new_transaction").submit(function() {
+        if(Transaction.calculateAmount() <=0)
+        {
+            alert("Choose atleast one beneficiary with amount greater than 0");
+            return false;
+        }
+        jQuery.post(this.action, jQuery(this).serialize(), null, "script");
+        return false;
+    });
+
    jQuery("#form_invite").submitWithAjax();
 
    jQuery("#newtranbtn").live("click", function() {
@@ -76,8 +93,8 @@ $(document).ready(function() {
    });
 
    jQuery(".prepended_amount_input").live("blur", function(){
-        var amount = jQuery(this).val();
-        if(amount && amount > 0 )        
+        var amount = jQuery(this).val();        
+        if(amount && amount > 0 )
             jQuery(this).addClass("active");
         else
             jQuery(this).removeClass("active");        

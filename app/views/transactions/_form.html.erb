@@ -65,13 +65,14 @@
 jQuery(document).ready(function(){
   jQuery('#transaction_transaction_type').change(function() {
     var transaction_type = jQuery(this).val();
-    if (transaction_type == "1") {      
+    if (transaction_type == "1") {
+      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/personal', :locals =>  {:f => f}))%>");
       Transaction.cleanUpTransactionUsers();
       Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
-      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/personal', :locals =>  {:f => f}))%>");
     }
     else if(transaction_type == "2") {      
       jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_equal', :locals =>  {:f => f}))%>");
+      Transaction.setTransactionUserAmount();
     }
     else if(transaction_type == "3") {      
       jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_unequal', :locals =>  {:f => f}))%>");

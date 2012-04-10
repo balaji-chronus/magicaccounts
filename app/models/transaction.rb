@@ -71,22 +71,27 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.view_transactions(user, account, page)    
-    Kaminari.paginate_array(Transaction.find_by_sql(["
-                              SELECT *
-                              FROM   (SELECT  A.id,
-                                              A.amount,
-                                              CASE  WHEN A.user_id = ? AND GROUP_CONCAT(CONCAT('|',B.user_id,'|')) LIKE CONCAT('%|',?,'|%') THEN CASE WHEN A.amount - (A.amount/ COUNT(B.user_id)) > 0 THEN CONCAT('Your investment is Rs. ', A.amount - ROUND(A.amount/ COUNT(B.user_id),2)) ELSE CONCAT('Your expenditure is Rs. ', A.amount) END
-                                                    WHEN A.user_id = ? THEN CONCAT('Your investment is Rs. ', A.amount)
-                                                    WHEN GROUP_CONCAT(CONCAT('|',B.user_id,'|')) LIKE CONCAT('%|',?,'|%') THEN CONCAT('Your expenditure is Rs. ', ROUND(A.amount/ COUNT(B.user_id),2))
-                                              ELSE  'NA' END details,
-                                              A.remarks,
-                                              IFNULL(A.updated_at, A.created_at) created_at
-                                      FROM    transactions A JOIN transactions_users B
-                                      ON      A.account_id = ?
-                                      AND     A.id = B.transaction_id                                      
-                                      GROUP   BY A.id )tmp
-                              WHERE   details <> 'NA'
-                              ORDER   BY created_at DESC ", user,user,user,user,account])).page(page).per(5)
+    Kaminari.paginate_array(Transaction.find_by_sql(['
+                              SELECT 	id,
+                                      amount,
+                                      CASE 	WHEN net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
+                                        WHEN type = "investor" THEN CONCAT("Your Investment is ", net_amount)
+                                        WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is ", net_amount)
+                                      END	details,
+                                      remarks,
+                                      created_at
+                              FROM   	( SELECT  A.id,
+                                                CASE WHEN A.user_id = ? THEN "investor" WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 ELSE 0 END) = 1 THEN "beneficiary" ELSE "none" END type,
+                                                SUM(B.amount) - SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
+                                                SUM(B.amount) amount,
+                                                A.remarks,
+                                                IFNULL(A.updated_at, A.created_at) created_at
+                                        FROM    transactions A JOIN transactions_users B
+                                        ON      A.account_id = ?
+                                        AND     A.id = B.transaction_id
+                                        GROUP   BY A.id )tmp
+                              WHERE     type <> "none"
+                              ORDER     BY created_at DESC ', user,user,user,account])).page(page).per(5)
   end
 end
 

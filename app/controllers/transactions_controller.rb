@@ -91,7 +91,6 @@ class TransactionsController < ApplicationController
           format.json { render json: @transaction, status: :created, location: @transaction }
           format.js
       else
-        debugger
         format.html { render action: "new" }
         format.json { render json: @transaction.errors, status: :unprocessable_entity }
       end
