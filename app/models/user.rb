@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
             :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'}  
 
   validates :email,            
-            :email => {:message => "Please enter a valid email. ex: johndoe@mail.com"},
+            :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :message => "Please enter a valid email. ex: johndoe@mail.com"},
             :length => {:maximum => 128, :message => "email should not exceed 128 characters"},
             :uniqueness => {:message => "Already registered"}
 

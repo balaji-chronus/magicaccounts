@@ -10,7 +10,6 @@
 //= require twitter/bootstrap
 //= require_tree .
 //= require rails.validations
-//= require rails.validations.custom
 
 
 jQuery.ajaxSetup({
