@@ -41,3 +41,7 @@ group :test do
 end
 
 gem 'minitest'
+
+group :production do
+  gem 'thin'
+end
