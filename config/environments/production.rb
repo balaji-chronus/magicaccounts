@@ -55,6 +55,18 @@ Magicaccounts::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
 
-  # Send deprecation notices to registered listeners
-  config.active_support.deprecation = :notify
+  config.action_mailer.default_url_options = { :host => 'magicaccounts.herokuapp.com' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "magicaccounts.heroku.com",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: ENV["seetharaman.balaji@gmail.com"],
+    password: ENV["SAju1234"]
+  }
 end
