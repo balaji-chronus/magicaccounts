@@ -118,7 +118,7 @@ class GroupsController < ApplicationController
       if @group
         @group.users << (User.find_by_id(session[:user_id]) if session[:user_id]) 
         if @group.save
-          format.html { redirect_to groups_url, notice: "You have been added to '#{@group.name}'" }
+          format.html { redirect_to transactions_url, notice: "You have been added to '#{@group.name}'" }
           format.json { head :ok }
         else
           flash[:error] = "Cannot complete your request. Unknown Error"

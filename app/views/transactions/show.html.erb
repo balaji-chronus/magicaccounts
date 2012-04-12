@@ -11,6 +11,9 @@
 <label class="label"><%= t("activerecord.attributes.transaction.beneficiary_id", :default => t("activerecord.labels.beneficiary_id", :default => "Beneficiary")) %>:</label>
 <p><%= @transaction.transactions_users.collect(&:user).collect(&:name).join(",") %></p>
 
+<label class="label"><%= t("activerecord.attributes.transaction.amount", :default => t("activerecord.labels.amount", :default => "Amount")) %>:</label>
+<p><%= @transaction.transactions_users.collect(&:amount).inject(:+) %></p>
+
 <label class="label"><%= t("activerecord.attributes.transaction.cndategory", :default => t("activerecord.labels.category", :default => "Category")) %>:</label>
 <p><%= @transaction.category %></p>
 
@@ -18,5 +21,5 @@
 <p><%= @transaction.remarks %></p>
 
 <div class="form-actions">
-<%= link_to "Back", transactions_path, :class => 'btn'  %>
+<%= link_to "Back", {:action => "view", :accountid => @transaction.account_id}, :class => 'btn'  %>
 </div>

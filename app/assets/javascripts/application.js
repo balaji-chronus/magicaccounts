@@ -62,6 +62,7 @@ var Transaction = {
             alert("Choose atleast one beneficiary with amount greater than 0");
             return false;
         }
+        jQuery("#transactions_save").attr('disabled','disabled').val("Saving..");
         jQuery.post(this.action, jQuery(this).serialize(), null, "script");
         return false;
     });
