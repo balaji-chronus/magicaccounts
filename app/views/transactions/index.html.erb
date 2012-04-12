@@ -66,9 +66,9 @@
     
     <td>
       <% if balance.investments.to_f - balance.expenditures.to_f < 0 %>
-      Pay <%= balance.user_name %> Rs. <%= balance.expenditures - balance.investments %> 
-      <% elsif balance.investments - balance.expenditures > 0  %>
-      Request <%= balance.user_name %> Rs. <%= balance.investments - balance.expenditures %> 
+      Pay <%= balance.user_name %> Rs. <%= balance.expenditures.to_f - balance.investments.to_f %>
+      <% elsif balance.investments.to_f - balance.expenditures.to_f > 0  %>
+      Request <%= balance.user_name %> Rs. <%= balance.investments.to_f - balance.expenditures.to_f %>
       <% end -%>
     </td>
     </tr>
