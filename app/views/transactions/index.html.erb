@@ -65,14 +65,14 @@
     <td><%= balance.expenditures %></td>
     
     <td>
-      <% if balance.investments - balance.expenditures < 0 -%>
+      <% if balance.investments.to_f - balance.expenditures.to_f < 0 %>
       Pay <%= balance.user_name %> Rs. <%= balance.expenditures - balance.investments %> 
       <% elsif balance.investments - balance.expenditures > 0  %>
       Request <%= balance.user_name %> Rs. <%= balance.investments - balance.expenditures %> 
       <% end -%>
     </td>
     </tr>
-    <% end end -%>
+    <% end end %>
    </tbody>
 </table>
 <% end end -%>
