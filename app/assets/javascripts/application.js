@@ -38,7 +38,7 @@ var Transaction = {
         },
         calculateAmount: function() {
             var amount = 0;
-            jQuery(".txnuseramount").each(function() {
+            jQuery(".txnuseramount,.prepended_amount_input").each(function() {
                 if(!isNaN(this.value) && this.value.length!=0) {
                     amount += parseFloat(this.value);
                 }
@@ -93,7 +93,7 @@ var Transaction = {
    });
 
    jQuery(".prepended_amount_input").live("blur", function(){
-        var amount = jQuery(this).val();        
+        var amount = jQuery(this).val();
         if(amount && amount > 0 )
             jQuery(this).addClass("active");
         else
