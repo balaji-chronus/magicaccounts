@@ -30,10 +30,9 @@ class Transaction < ActiveRecord::Base
   ]
   
   validates :txndate, :remarks, :presence => {:message => "Cannot be blank"}  
-  validates_inclusion_of :category, :in => CATEGORIES.map {|name,val| val}
-  validates_inclusion_of :user_id, :in => User.find(:all).map {|user| user.id}, :message => 'Select an investor from the list'
-  #validates_inclusion_of :beneficiary_id, :in => User.find(:all).map {|user| user.id}, :message => 'Select a Beneficiary from the list'
-  validates_inclusion_of :account_id, :in => Account.find(:all).map {|account| account.id}, :message => 'Select an account from the list'
+  validates_inclusion_of :category, :in => proc{CATEGORIES.collect(&:val)}
+  validates_inclusion_of :user_id, :in => proc{User.find(:all).collect(&:id)}, :message => 'Select an investor from the list'
+  validates_inclusion_of :account_id, :in => proc{Account.find(:all).collect(&:id)}, :message => 'Select an account from the list'
   validates :transactions_users, :presence => true
 
   def self.balance(sessionuser)

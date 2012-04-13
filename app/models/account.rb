@@ -20,6 +20,6 @@ class Account < ActiveRecord::Base
             :inclusion => ACCOUNT_STATUS,
             :presence => true
 
-  validates_inclusion_of :group_id, :in => Group.find(:all).map {|grp| grp.id}, :message => "Select a group from the list"
+  validates_inclusion_of :group_id, :in => proc { Group.find(:all).collect(&:id) }, :message => "Select a group from the list"
 
 end
