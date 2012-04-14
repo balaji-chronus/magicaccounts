@@ -23,10 +23,7 @@ html{ overflow-y:scroll; }
     float: left;
     width: 100px;
     list-style-type: none;
-    margin-right: 20px;
-    margin-left: 0px;
-    margin-top: 5px;
-    margin-bottom: 0px;
+    margin: 5px 20px 10px 0;
 }
 
 .add-on { width: 100px !important; }
@@ -34,4 +31,32 @@ html{ overflow-y:scroll; }
 .prepended_amount_input {
     width: 100px !important;
     text-align: center;
+}
+
+.account_block {
+    margin-bottom: 5px !important;
+}
+
+.group_block {
+    margin-top: 10px !important;
+}
+
+.wellgreen {
+    -moz-border-radius: 4px 4px 4px 4px;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    background-color: #DDEECC;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 5px;
+    min-height: 20px;
+    padding: 6px 0px 10px 9px;
+}
+
+.wellblue {
+    -moz-border-radius: 4px 4px 4px 4px;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    background-color: #D0E0F0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 5px;
+    min-height: 20px;
+    padding: 6px 0px 7px 9px;
 }

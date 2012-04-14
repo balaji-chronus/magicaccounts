@@ -1,53 +1,54 @@
 <div class="group_header wellblue">
-    <h3> My Profile </h3>
+    <h3> My Groups </h3>
     <strong><%= link_to "Create Group", new_group_path, :method => "get", :class => 'btn primary' %></strong>
 </div>
-<% if @hasagroup.nil? %>
-<br/>
-<strong>New to Magic Accounts ? Start over by creating a Group ! </strong><br/><br/>
-<% elsif @hasanaccount.nil? %>
-<br/>
-<strong>We see you are part of one or more groups. add an account to start tracking your transactions </strong><br/><br/>
-  <strong><%= link_to "Create New Account", new_account_path, :method => "get", :class => 'btn primary' %></strong>
-<% elsif  @uniquegroups == [] %>
-  <br/>
-  <strong>Add transactions and start tracking them now !</strong><br/><br/>
-  <strong><%= link_to "Enter Transaction", new_transaction_path, :method => "get", :class => 'btn primary' %></strong>
+<% if @usergroups.blank? %>
+<div class="well">
+  New to Magic Accounts ? Start over by creating a Group !
+</div>
 <% else %>
-<% @uniquegroups.each do |group| -%>
-<div class="group_header wellblue">
-    <h3> <%=  Group.find(group[:groupid]).name %> </h3>
-    <% if Group.find(group[:groupid]).user_id == session[:user_id] %>
+<% @usergroups.each do |group| -%>
+<div class="group_header wellblue group_block">
+    <h3> <%=  group.name %> </h3>
+    <% if group.user_id == session[:user_id] %>
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
     <%end%>
     
-    <strong><%= link_to "Create Account", { :controller => 'accounts', :action => 'new', :groupid => group[:groupid] },:method => "get", :class => 'btn primary' %></strong>
-    <% if Group.find(group[:groupid]).user_id == session[:user_id] %>
+    <strong><%= link_to "Create Account", { :controller => 'accounts', :action => 'new', :groupid => group.id },:method => "get", :class => 'btn primary' %></strong>
+    <% if group.user_id == session[:user_id] %>
       <%=  link_to "Manage Group", {:controller => 'groups', :action => 'index'}, {:class => 'headerlinks'} %>
-    <%end%>
-    
+    <%end%>    
 </div>
-
-<% @uniqueaccounts.collect { |account| account if group[:groupid] == account[:groupid]}.each do |account| -%>
+<% accounts_by_group = @accounts.select { |account| account if group.id == account.group_id} %>
+<% if accounts_by_group.blank? %>
+<div class="well account_block">
+  There are no accounts for this group
+</div>
+<%else%>
+<% accounts_by_group.each do |account| -%>
 <% if account  %>
 <div class="group_header wellgreen">
-    <h3> <%=  Account.find(account[:accountid]).name %></h3>
-    <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
+    <h3> <%=  account.name %></h3>
+    <% if account.user_id == session[:user_id] %>
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
     <%end%>    
-    <strong><%=  link_to "Transactions", {:controller => 'transactions', :action => 'view', :accountid => account[:accountid]}, {:class => 'btn success'} %></strong>
-    <% if Account.find(account[:accountid]).user_id == session[:user_id] %>
+    <strong><%=  link_to "Transactions", {:controller => 'transactions', :action => 'view', :accountid => account.id}, {:class => 'btn success'} %></strong>
+    <% if account.user_id == session[:user_id] %>
     <%=  link_to "Manage Account", {:controller => 'accounts', :action => 'index'}, {:class => 'headerlinks'} %>
     <%end%>
-    
-    
 </div>
-
-<table class="table table-striped table-bordered">
+<%end%>
+<% transactions_by_account = @balance.select {|bal| bal if (account.group_id == bal.group_id && account.id == bal.account_id) }%>
+<% if transactions_by_account.blank? %>
+<div class="well account_block">
+  You have no transactions for this account
+</div>
+<%else%>
+<table class="table table-striped table-bordered account_block">
  <thead>
   <tr>
     <th>User</th>
@@ -57,7 +58,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @balance.collect {|bal| bal if (account[:groupid] == bal.group_id && account[:accountid] == bal.account_id) }.each do |balance| -%>
+  <% transactions_by_account.each do |balance| -%>
    <% if balance %>
     <tr>
     <td><%= balance.user_name == User.find(session[:user_id]).name ? "Myself" : balance.user_name %></td>
@@ -75,6 +76,7 @@
     <% end end %>
    </tbody>
 </table>
+<% end %>
 <% end end -%>
 <% end end -%>
 

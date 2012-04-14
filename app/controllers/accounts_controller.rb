@@ -1,4 +1,5 @@
 class AccountsController < ApplicationController
+  before_filter :initiate_groups, :only => [:new, :edit, :create, :update]
   # GET /accounts
   # GET /accounts.json
   def index
@@ -32,7 +33,7 @@ class AccountsController < ApplicationController
   # GET /accounts/new.json
   def new
     @account = Account.new
-    @usergroups = get_groups_for_current_user
+    
     if params[:groupid] && @usergroups.find {|grp| grp.id == params[:groupid].to_i}
       @account.group_id = params[:groupid]
       @defaultgroup = Group.find_by_id(params[:groupid]).name
@@ -48,8 +49,7 @@ class AccountsController < ApplicationController
   def edit
     @account = Account.find_by_id(params[:id])
     respond_to do |format|
-      if Account.find_all_by_user_id(session[:user_id]).include?(@account)
-        @usergroups = get_groups_for_current_user
+      if Account.find_all_by_user_id(session[:user_id]).include?(@account)        
         format.html # edit.html.erb
         format.json { render json: @account }
       else
@@ -69,7 +69,7 @@ class AccountsController < ApplicationController
       if  @account.save
           @comment = @account.comments.create( {:activity => " added ", :content => @account.name, :user_name => User.find_by_id(session[:user_id]).name})
           @comment.save
-        format.html { redirect_to @account, notice: "Account #{@account.name} was successfully created." }
+        format.html { redirect_to transactions_path, notice: "Account #{@account.name} was successfully created." }
         format.json { render json: @account, status: :created, location: @account }
       else
         format.html { render action: "new" }
@@ -119,5 +119,10 @@ class AccountsController < ApplicationController
         format.html { redirect_to accounts_url }
         format.json { head :ok }      
     end
+  end
+
+  private
+  def initiate_groups
+    @usergroups = get_groups_for_current_user
   end
 end

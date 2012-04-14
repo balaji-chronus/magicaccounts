@@ -3,7 +3,9 @@
     <strong><%= link_to "Create Group", new_group_path, :method => "get", :class => 'btn primary' %></strong>
 </div>
 <% if @groups.empty? %>
-    You don't own any groups at this point. <br/><br/>
+<div class="well">
+  You don't own any groups at this point
+</div>    
 <%else%>
 <table class="table table-striped">
  <thead>

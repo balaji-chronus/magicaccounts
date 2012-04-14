@@ -3,6 +3,11 @@
     <h3> Showing Transactions for <%=  @transaction.account.name %></h3>
     <strong><%= link_to "New Transaction", "javascript:void(0)", {:class => 'btn primary', :id => 'newtranbtn'} %></strong>
 </div>
+<% if tran.blank? %>
+<div class="well">
+  There are no transactions for this account
+</div>
+<%  else %>
 <table class="table table-striped">
  <thead>
   <tr>
@@ -31,4 +36,5 @@
 </tbody>
 </table>
 <%= paginate tran  %>
+<%  end %>
 </div>

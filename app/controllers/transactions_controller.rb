@@ -3,15 +3,9 @@ class TransactionsController < ApplicationController
 
   # GET /transactions
   # GET /transactions.json
-  def index
-     @balance = Transaction.balance(session[:user_id])
-     if @balance
-        @uniqueaccounts = @balance.collect { |b| { :accountid => b.account_id, :groupid => b.group_id}}.inject([]) { |result,h| result << h unless result.include?(h); result }
-        @uniquegroups   = @balance.collect { |b| {:groupid => b.group_id} }.inject([]) { |result,h| result << h unless result.include?(h); result }
-     end
-     @hasagroup = get_groups_for_current_user.empty? ? nil : 1
-     @hasanaccount = @accounts.empty? ? nil : 1
-     
+  def index   
+   @usergroups = get_groups_for_current_user
+   @balance = Transaction.balance(session[:user_id])          
       respond_to do |format|
       format.html
       format.json { render json: @balance }
@@ -84,16 +78,14 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(params[:transaction])
     
     respond_to do |format|
-      if  @transaction.save
-          @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_name => User.find_by_id(session[:user_id]).name})
-          @comment.save
-          format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
-          format.json { render json: @transaction, status: :created, location: @transaction }
-          format.js
+      if @transaction.save
+        @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_name => User.find_by_id(session[:user_id]).name})
+        @comment.save
+        flash.now[:notice] = "Transaction was successfully created"
       else
-        format.html { render action: "new" }
-        format.json { render json: @transaction.errors, status: :unprocessable_entity }
-      end
+        flash.now[:error] = @transaction.errors.full_messages.compact.uniq.join("\n")
+      end           
+      format.js
     end
   end
 

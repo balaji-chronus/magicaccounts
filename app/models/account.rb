@@ -20,6 +20,5 @@ class Account < ActiveRecord::Base
             :inclusion => ACCOUNT_STATUS,
             :presence => true
 
-  validates :group_id, :inclusion => { :in => Group.find(:all).collect(&:id)}
-
+  validates :group_id, :existence => true
 end

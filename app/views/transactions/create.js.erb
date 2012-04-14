@@ -1,3 +1,4 @@
+<% if @transaction.errors.blank? %>
 jQuery("#viewacctran").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/tran',
     :object => Transaction.view_transactions(session[:user_id],@transaction.account.id,1)))%>");
@@ -8,4 +9,6 @@ jQuery("#tranact").replaceWith("<%= escape_javascript(render(
 
 jQuery("#newacctran").slideToggle();
 jQuery("#newtranbtn").text = 'New Transaction';
+<% end %>
+$('.content').before('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
 jQuery("#transactions_save").removeAttr('disabled').val("Save");

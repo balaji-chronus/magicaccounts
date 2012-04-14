@@ -61,7 +61,7 @@ class GroupsController < ApplicationController
       if @group.save
           @comment = @group.comments.create( {:activity => "create", :content => @group.name, :user_name => User.find_by_id(session[:user_id]).name})
           @comment.save
-        format.html { redirect_to groups_path, notice: "Group '#{@group.name}' was successfully created." }
+        format.html { redirect_to transactions_path, notice: "Group '#{@group.name}' was successfully created." }
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html { render action: "new" }

@@ -55,17 +55,6 @@ var Transaction = {
         })
         return this;
     };
-    
-    jQuery("#new_transaction").submit(function() {
-        if(Transaction.calculateAmount() <=0)
-        {
-            alert("Choose atleast one beneficiary with amount greater than 0");
-            return false;
-        }
-        jQuery("#transactions_save").attr('disabled','disabled').val("Saving..");
-        jQuery.post(this.action, jQuery(this).serialize(), null, "script");
-        return false;
-    });
 
    jQuery("#form_invite").submitWithAjax();
 

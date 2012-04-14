@@ -9,3 +9,18 @@
 </div>
 
 <%= render(:partial => 'transactions/tran', :object => @transactions) -%>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery("#new_transaction").submit(function() {
+        if(Transaction.calculateAmount() <=0)
+        {
+            jQuery('.content').before('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => {:message => " An investor should have atleast one beneficiary with amount > 0 "}} ))%>');
+            return false;
+        }
+        jQuery("#transactions_save").attr('disabled','disabled').val("Saving..");
+        jQuery.post(this.action, jQuery(this).serialize(), null, "script");
+        return false;
+    });
+});
+</script>

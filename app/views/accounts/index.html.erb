@@ -3,7 +3,9 @@
     <strong><%= link_to "Create Account", new_account_path, :method => "get", :class => 'btn primary' %></strong>
 </div>
 <% if @ownedaccounts.empty? %>
-    You don't own any accounts at this point. <br/><br/>
+<div class="well">
+    You don't own any accounts at this point
+</div>
 <%else%>
 <table class="table table-striped">
  <thead>
