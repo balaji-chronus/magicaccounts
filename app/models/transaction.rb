@@ -32,7 +32,7 @@ class Transaction < ActiveRecord::Base
   validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
   validates :category,  :inclusion => { :in => CATEGORIES.collect {|val| val[1]}}
   validates :user_id,   :inclusion => {:in => User.find(:all).collect(&:id), :message => 'Select an investor from the list'}
-  validates_inclusion_of :account_id,:in => Account.find(:all).collect(&:id)
+  validates_inclusion_of :account_id,:in => Account.find(:all).collect(&:id), :message => 'Account is not valid'
   validates :transactions_users, :presence => true
 
   def self.balance(sessionuser)
