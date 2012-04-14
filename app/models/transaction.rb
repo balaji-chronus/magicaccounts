@@ -29,10 +29,10 @@ class Transaction < ActiveRecord::Base
     ["Group - Not Split Equally", "3"]
   ]
   
-  validates :txndate, :remarks, :presence => {:message => "Cannot be blank"}  
-  validates_inclusion_of :category, :in => proc{CATEGORIES.collect(&:val)}
-  validates_inclusion_of :user_id, :in => proc{User.find(:all).collect(&:id)}, :message => 'Select an investor from the list'
-  validates_inclusion_of :account_id, :in => proc{Account.find(:all).collect(&:id)}, :message => 'Select an account from the list'
+  validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
+  validates :category,  :inclusion => { :in => CATEGORIES.collect {|val| val[1]}}
+  validates :user_id,   :inclusion => {:in => User.find(:all).collect(&:id), :message => 'Select an investor from the list'}
+  validates :account_id,:inclusion => {:in => Account.find(:all).collect(&:id), :message => 'Select an account from the list'}
   validates :transactions_users, :presence => true
 
   def self.balance(sessionuser)
