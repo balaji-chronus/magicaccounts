@@ -82,7 +82,7 @@ class Transaction < ActiveRecord::Base
                                       remarks,
                                       created_at
                               FROM   	( SELECT  A.id,
-                                                CASE WHEN A.user_id = ? THEN "investor" WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 ELSE 0 END) = 1 THEN "beneficiary" ELSE "none" END type,
+                                                CASE WHEN A.user_id = ? THEN "investor" WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 ELSE 0 END) >= 1 THEN "beneficiary" ELSE "none" END type,
                                                 SUM(B.amount) - SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
                                                 SUM(B.amount) amount,
                                                 A.remarks,
