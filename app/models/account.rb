@@ -1,5 +1,5 @@
 class Account < ActiveRecord::Base
-  has_many :transactions
+  has_many :transactions, :dependent => :destroy
   belongs_to :group
   belongs_to :user
   has_many :comments, :as => :commentable

@@ -3,12 +3,14 @@ class AddForiegnKeysToTransaction < ActiveRecord::Migration
     execute %{alter table transactions
               add constraint fk_transactions_account_id
               foreign key (account_id)
-              references accounts(id)}
+              references accounts(id)
+              ON DELETE CASCADE ON UPDATE CASCADE}
     
     execute %{alter table transactions
               add constraint fk_transactions_user_id
               foreign key (user_id)
-              references users(id)}    
+              references users(id)
+              ON DELETE CASCADE ON UPDATE CASCADE}
 
   end
 

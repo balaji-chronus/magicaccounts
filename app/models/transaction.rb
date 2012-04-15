@@ -3,7 +3,7 @@ class Transaction < ActiveRecord::Base
   belongs_to  :account
   has_many    :comments, :as => :commentable
   has_many    :users, :through => :transactions_users
-  has_many    :transactions_users
+  has_many    :transactions_users, :dependent => :destroy
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true
   
   CATEGORIES = [
