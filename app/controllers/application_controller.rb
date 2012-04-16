@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     @activityacc = Comment.where(["commentable_type = 'Account' AND group_id IN (?)", Group.get_groups_for_current_user(current_user).map(&:id)]).order("created_at DESC")
   end
 
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_url, :alert => exception.message
+  end
+
   protected
   def authorize
     unless current_user
