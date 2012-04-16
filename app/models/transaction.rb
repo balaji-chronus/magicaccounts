@@ -76,14 +76,14 @@ class Transaction < ActiveRecord::Base
                               SELECT 	id,
                                       amount,
                                       CASE 	WHEN net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
-                                        WHEN type = "investor" THEN CONCAT("Your Investment is ", net_amount)
+                                        WHEN type = "investor" THEN CONCAT("Your Investment is ", amount - net_amount)
                                         WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is ", net_amount)
                                       END	details,
                                       remarks,
                                       created_at
                               FROM   	( SELECT  A.id,
                                                 CASE WHEN A.user_id = ? THEN "investor" WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 ELSE 0 END) >= 1 THEN "beneficiary" ELSE "none" END type,
-                                                SUM(B.amount) - SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
+                                                SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
                                                 SUM(B.amount) amount,
                                                 A.remarks,
                                                 IFNULL(A.updated_at, A.created_at) created_at
