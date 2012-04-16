@@ -1,3 +1,4 @@
+# Mailer class
 class MagicMailer < ActionMailer::Base
   default :from => "admin@magicaccounts.com"
   def group_invite(group, toemail)
