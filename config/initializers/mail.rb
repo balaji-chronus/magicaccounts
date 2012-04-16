@@ -7,3 +7,5 @@ ActionMailer::Base.smtp_settings = {
   :domain         => 'heroku.com'
 }
 ActionMailer::Base.delivery_method = :smtp
+Magicaccounts::Application.config.action_mailer.perform_deliveries = true
+Magicaccounts::Application.config.action_mailer.raise_delivery_errors = true
