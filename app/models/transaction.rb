@@ -75,7 +75,7 @@ class Transaction < ActiveRecord::Base
     Kaminari.paginate_array(Transaction.find_by_sql(['
                               SELECT 	id,
                                       amount,
-                                      CASE 	WHEN net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
+                                      CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
                                         WHEN type = "investor" THEN CONCAT("Your Investment is ", amount - net_amount)
                                         WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is ", net_amount)
                                       END	details,
