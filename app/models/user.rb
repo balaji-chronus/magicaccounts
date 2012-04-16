@@ -4,9 +4,10 @@ class User < ActiveRecord::Base
   has_many :transactions
   has_many :groups
   has_many :accounts
-  has_and_belongs_to_many :groups, :uniq => true
+  has_and_belongs_to_many :groupusers, :class_name => "Group", :uniq => true
   has_many :transaction_items, :class_name => "Transaction", :through => :transactions_users
   has_many :transactions_users
+  has_many :comments
 
   attr_accessor :password_confirmation
   
@@ -57,7 +58,15 @@ class User < ActiveRecord::Base
       end
     end
     user
-  end  
+  end
+
+  def admin?
+    self.user_type == "Admin"
+  end
+
+  def self.get_userlist_for_current_user(current_user)
+    User.joins("JOIN groups_users UG ON users.id = UG.user_id").joins("JOIN accounts A ON A.group_id = UG.group_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",current_user).select("DISTINCT users.id user_id, users.name user_name")
+  end
 
 private  
 

@@ -14,7 +14,7 @@ class SessionsControllerTest < ActionController::TestCase
   test "should get destroy" do
     get :destroy
     
-    assert_nil session[:user_id]
+    assert_nil current_user
     assert_equal "You have been logged out", flash[:notice]
     assert_redirected_to login_url
   end

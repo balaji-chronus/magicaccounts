@@ -54,8 +54,10 @@
     <%= f.text_field :company, :class => 'text_field' %>
   </div>
 </div> 
+   
+<%= f.hidden_field :user_type, :value => "User" %>
 
 <div class="form-actions">
   <button class="btn primary" type="submit">Save</button> or
-	<%= link_to "Cancel", users_path %>
+	<%= link_to "Cancel", transactions_path %>
 </div>

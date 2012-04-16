@@ -1,2 +1,2 @@
- $('.content').before('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>'); 
- $('#emailids').val('');
+ jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
+ jQuery('#emailids').val('');

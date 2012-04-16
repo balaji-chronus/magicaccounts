@@ -6,7 +6,7 @@ class UsersControllerTest < ActionController::TestCase
     @user.password = "123456"
     @user.password_confirmation = "123456"
 
-    session[:user_id] = @user.id
+    current_user = @user.id
   end
 
   test "should get index" do

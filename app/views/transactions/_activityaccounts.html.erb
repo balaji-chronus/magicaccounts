@@ -4,7 +4,7 @@
   <li>There is no activity for this section</li>
 <%else%>
 <% activityaccounts.each_with_index do |act,index| break if index == limit  %>
-  <li><strong><%=  act.user_name %></strong> <%= " " + act.activity + " " %><%= link_to truncate(act.content, :length => 15), :controller => type, :action => 'show', :id => act.commentable_id  %><span id="litetext"><%= " " + time_ago_in_words(Time.parse(act.created_at.to_s)) + " ago"    %></span> </li>
+  <li><strong><%=  User.find_by_id(act.user_id).name %></strong> <%= " " + act.activity + " " %><% if Account.find_by_id(act.commentable_id) %> <%= link_to truncate(act.content, :length => 15), :controller => type, :action => 'show', :id => act.commentable_id  %> <% else %> <%= truncate(act.content, :length => 15) %> <% end %> <span id="litetext"><%= " " + time_ago_in_words(Time.parse(act.created_at.to_s)) + " ago"    %></span> </li>
 <% end %>
 <% end%>
 </ul>

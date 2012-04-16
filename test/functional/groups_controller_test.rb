@@ -3,11 +3,11 @@ require 'test_helper'
 class GroupsControllerTest < ActionController::TestCase
   setup do
     @group = groups(:one)
-    session[:user_id] = @group.user.id
+    current_user = @group.user.id
   end
 
   test "should get index" do
-    session[:user_id] = @group.user.id
+    current_user = @group.user.id
     
     get :index
     assert_response :success
@@ -16,7 +16,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should get index with only the groups owned by the user" do
-    session[:user_id] = groups(:three).user.id
+    current_user = groups(:three).user.id
     
     get :index
     assert_response :success
@@ -26,7 +26,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should get index but not show any groups" do
-    session[:user_id] = users(:kate_austen).id
+    current_user = users(:kate_austen).id
     get :index
     assert_response :success
     assert_empty assigns(:groups)
@@ -52,7 +52,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should redirect index if user tries to see a group the user doesnt own" do
-    session[:user_id] = users(:john_locke).id
+    current_user = users(:john_locke).id
     get :show, id: @group.to_param
 
     assert_equal "Group was not found", flash[:error]
@@ -65,7 +65,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should redirect index if user tries to edit a group the user doesnt own" do
-    session[:user_id] = users(:john_locke).id
+    current_user = users(:john_locke).id
     get :edit, id: @group.to_param
 
     assert_equal "Group was not found", flash[:error]
@@ -82,7 +82,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should redirect index if user tries to update an invalid group" do
-    session[:user_id] = users(:john_locke).id
+    current_user = users(:john_locke).id
     @group.name = "Charlie"
     put :update, id: @group.to_param, group: @group.attributes
 
@@ -101,7 +101,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should redirect index if user tries to destroy a group the user doesnt own" do
-    session[:user_id] = users(:john_locke).id
+    current_user = users(:john_locke).id
     assert_difference('Group.count', 0) do
       delete :destroy, id: @group.to_param
     end
@@ -110,7 +110,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
 
   test "should add the user to the group on click of the adduser link" do
-    session[:user_id] = users(:kate_austen).id
+    current_user = users(:kate_austen).id
     get :adduser, :code => @group.code
     assert_equal "You have been added to '#{@group.name}'", flash[:notice]
     assert_equal @group.users.count, 2, "There shud be two members in this group"
@@ -118,7 +118,7 @@ class GroupsControllerTest < ActionController::TestCase
   end
   
   test "should redirect to index on click on adduser with invalid code" do
-    session[:user_id] = users(:kate_austen).id
+    current_user = users(:kate_austen).id
     get :adduser, :code => "1234"
     
     assert_equal "Cannot complete your request. Attempt to access an Invalid page", flash[:error]

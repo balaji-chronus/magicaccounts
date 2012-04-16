@@ -25,6 +25,7 @@ gem 'jquery-rails'
 gem 'client_side_validations'
 gem 'kaminari'
 gem "validates_existence", ">= 0.4"
+gem "cancan"
 
 
 # Use unicorn as the web server

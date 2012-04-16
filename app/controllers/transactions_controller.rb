@@ -4,9 +4,9 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index   
-   @usergroups = get_groups_for_current_user
-   @balance = Transaction.balance(session[:user_id])          
-      respond_to do |format|
+    @usergroups = Group.get_groups_for_current_user(current_user)
+    @balance = Transaction.balance(current_user)
+    respond_to do |format|
       format.html
       format.json { render json: @balance }
     end
@@ -40,8 +40,8 @@ class TransactionsController < ApplicationController
     end    
     
     respond_to do |format|      
-        format.html # new.html.erb
-        format.json { render json: @transaction }        
+      format.html # new.html.erb
+      format.json { render json: @transaction }
     end
   end
   
@@ -52,10 +52,10 @@ class TransactionsController < ApplicationController
 
     respond_to do |format|
       if @transaction
-        if (@transaction.user_id == session[:user_id] || @transaction.users.find_by_id(session[:user_id]))
-          @accountusers = get_userlist_for_current_user
+        if (@transaction.user_id == current_user || @transaction.users.find_by_id(current_user))
+          @accountusers = User.get_userlist_for_current_user(current_user)
           (User.find_all_by_id(@accountusers.collect(&:user_id)) - @transaction.transactions_users.collect(&:user)).each do |user|
-              @transaction.transactions_users.build({:user => user})
+            @transaction.transactions_users.build({:user => user})
           end
           format.html
           format.json { render json: @transaction }
@@ -79,7 +79,7 @@ class TransactionsController < ApplicationController
     
     respond_to do |format|
       if @transaction.save
-        @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_name => User.find_by_id(session[:user_id]).name})
+        @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.account.group_id})
         @comment.save
         flash.now[:notice] = "Transaction was successfully created"
       else
@@ -95,10 +95,10 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find_by_id(params[:id])
     @transaction.users = User.find(params[:user_ids]) if params[:user_ids]
     respond_to do |format|
-      if (@transaction.user_id == session[:user_id] || @transaction.users.find_by_id(session[:user_id]))
+      if (@transaction.user_id == current_user || @transaction.users.find_by_id(current_user))
         if @transaction.update_attributes(params[:transaction])
-           @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_name => User.find_by_id(session[:user_id]).name})
-           @comment.save
+          @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.account.group_id})
+          @comment.save
           format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
           format.json { head :ok }
         else
@@ -117,8 +117,8 @@ class TransactionsController < ApplicationController
   # DELETE /transactions/1.json
   def destroy
     @transaction = Transaction.find_by_id(params[:id])
-    if (@transaction.user_id == session[:user_id] || @transaction.users.find_by_id(session[:user_id]))
-      @comment = @transaction.comments.create( {:activity => " removed ", :content => @transaction.remarks, :user_name => User.find_by_id(session[:user_id]).name})
+    if (@transaction.user_id == current_user || @transaction.users.find_by_id(current_user))
+      @comment = @transaction.comments.create( {:activity => " removed ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.account.group_id})
       @comment.save
       flash[:notice] = "Transaction was succesfully removed"
       @transaction.destroy
@@ -134,7 +134,7 @@ class TransactionsController < ApplicationController
 
   def view
     
-    @transactions = Transaction.view_transactions(session[:user_id], params[:accountid], params[:page])
+    @transactions = Transaction.view_transactions(current_user, params[:accountid], params[:page])
     
     respond_to do |format|
       if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
@@ -154,9 +154,9 @@ class TransactionsController < ApplicationController
 
   private
   def initiate_account
-      @transaction = Transaction.new      
-      @accountusers = get_userlist_for_current_user
-      @accountusers.each { |user| @transaction.transactions_users.build({:user => User.find_by_id(user.user_id)})}
+    @transaction = Transaction.new
+    @accountusers = User.get_userlist_for_current_user(current_user)
+    @accountusers.each { |user| @transaction.transactions_users.build({:user => User.find_by_id(user.user_id)})}
   end
   
 end

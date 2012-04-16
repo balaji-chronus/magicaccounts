@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
   # GET /accounts
   # GET /accounts.json
   def index
-    @ownedaccounts = get_user_owned_accounts
+    @ownedaccounts = Account.get_user_owned_accounts(current_user)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -49,7 +49,7 @@ class AccountsController < ApplicationController
   def edit
     @account = Account.find_by_id(params[:id])
     respond_to do |format|
-      if Account.find_all_by_user_id(session[:user_id]).include?(@account)        
+      if Account.find_all_by_user_id(current_user).include?(@account)
         format.html # edit.html.erb
         format.json { render json: @account }
       else
@@ -67,8 +67,8 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       if  @account.save
-          @comment = @account.comments.create( {:activity => " added ", :content => @account.name, :user_name => User.find_by_id(session[:user_id]).name})
-          @comment.save
+        @comment = @account.comments.create( {:activity => " added ", :content => @account.name, :user_id => current_user, :group_id => @account.group_id})
+        @comment.save
         format.html { redirect_to transactions_path, notice: "Account #{@account.name} was successfully created." }
         format.json { render json: @account, status: :created, location: @account }
       else
@@ -84,10 +84,10 @@ class AccountsController < ApplicationController
     @account = Account.find_by_id(params[:id])
 
     respond_to do |format|
-      if Account.find_all_by_user_id(session[:user_id]).include?(@account)
+      if Account.find_all_by_user_id(current_user).include?(@account)
         if @account.update_attributes(params[:account])
-            @comment = @account.comments.create( {:activity => " changed ", :content => @account.name, :user_name => User.find_by_id(session[:user_id]).name})
-            @comment.save
+          @comment = @account.comments.create( {:activity => " changed ", :content => @account.name, :user_id => current_user, :group_id => @account.group_id})
+          @comment.save
           format.html { redirect_to @account, notice: "Account #{@account.name} was successfully updated" }
           format.json { head :ok }
         else
@@ -106,8 +106,8 @@ class AccountsController < ApplicationController
   # DELETE /accounts/1.json
   def destroy
     @account = Account.find_by_id(params[:id])
-    if Account.find_all_by_user_id(session[:user_id]).include?(@account)
-      @comment = @account.comments.create( {:activity => " removed ", :content => @account.name, :user_name => User.find_by_id(session[:user_id]).name})
+    if Account.find_all_by_user_id(current_user).include?(@account)
+      @comment = @account.comments.create( {:activity => " removed ", :content => @account.name, :user_id => current_user, :group_id => @account.group_id})
       @comment.save
       flash[:notice] = "Account #{@account.name} was successfully removed"
       @account.destroy
@@ -116,13 +116,13 @@ class AccountsController < ApplicationController
     end
     
     respond_to do |format|      
-        format.html { redirect_to accounts_url }
-        format.json { head :ok }      
+      format.html { redirect_to accounts_url }
+      format.json { head :ok }
     end
   end
 
   private
   def initiate_groups
-    @usergroups = get_groups_for_current_user
+    @usergroups = Group.get_groups_for_current_user(current_user)
   end
 end

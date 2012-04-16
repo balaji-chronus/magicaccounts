@@ -21,4 +21,8 @@ class Account < ActiveRecord::Base
             :presence => true
 
   validates :group_id, :existence => true
+
+  def self.get_user_owned_accounts(current_user)
+    Account.where('user_id = ?',  current_user)
+  end
 end

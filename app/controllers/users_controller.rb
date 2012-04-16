@@ -2,8 +2,9 @@ class UsersController < ApplicationController
   skip_before_filter :authorize, :only => [:new, :create]
   # GET /users
   # GET /users.json
-  def index
+  def index    
     @users = User.all
+    authorize! :index, User
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +16,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-
+    authorize! :show, @user    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @user }
@@ -34,8 +35,9 @@ class UsersController < ApplicationController
   end
 
   # GET /users/1/edit
-  def edit
+  def edit    
     @user = User.find(params[:id])
+    authorize! :edit, @user
   end
 
   # POST /users
@@ -45,7 +47,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        session[:user_id] = @user.id
+        current_user = @user.id
         format.html { redirect_to transactions_path, notice: "User '#{@user.name}' was successfully created." }
         format.json { render json: @user, status: :created, location: @user }
       else
@@ -57,9 +59,10 @@ class UsersController < ApplicationController
 
   # PUT /users/1
   # PUT /users/1.json
-  def update
+  def update    
     @user = User.find(params[:id])
-
+    authorize! :edit, @user
+    
     respond_to do |format|
       if @user.update_attributes(params[:user])
         format.html { redirect_to transactions_path, notice: "User '#{@user.name}' was successfully updated." }
@@ -75,6 +78,7 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user = User.find(params[:id])
+    authorize! :destroy, @user
     session[:user_id] = nil
     @user.destroy
 

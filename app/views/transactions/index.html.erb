@@ -10,14 +10,14 @@
 <% @usergroups.each do |group| -%>
 <div class="group_header wellblue group_block">
     <h3> <%=  group.name %> </h3>
-    <% if group.user_id == session[:user_id] %>
+    <% if group.user_id == current_user %>
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
     <%end%>
     
     <strong><%= link_to "Create Account", { :controller => 'accounts', :action => 'new', :groupid => group.id },:method => "get", :class => 'btn primary' %></strong>
-    <% if group.user_id == session[:user_id] %>
+    <% if group.user_id == current_user %>
       <%=  link_to "Manage Group", {:controller => 'groups', :action => 'index'}, {:class => 'headerlinks'} %>
     <%end%>    
 </div>
@@ -31,13 +31,13 @@
 <% if account  %>
 <div class="group_header wellgreen">
     <h3> <%=  account.name %></h3>
-    <% if account.user_id == session[:user_id] %>
+    <% if account.user_id == current_user %>
     <h5>(Owner)</h5>
     <%else%>
     <h5>(Member)</h5>
     <%end%>    
     <strong><%=  link_to "Transactions", {:controller => 'transactions', :action => 'view', :accountid => account.id}, {:class => 'btn success'} %></strong>
-    <% if account.user_id == session[:user_id] %>
+    <% if account.user_id == current_user %>
     <%=  link_to "Manage Account", {:controller => 'accounts', :action => 'index'}, {:class => 'headerlinks'} %>
     <%end%>
 </div>
@@ -61,7 +61,7 @@
   <% transactions_by_account.each do |balance| -%>
    <% if balance %>
     <tr>
-    <td><%= balance.user_name == User.find(session[:user_id]).name ? "Myself" : balance.user_name %></td>
+    <td><%= balance.user_name == User.find(current_user).name ? "Myself" : balance.user_name %></td>
     <td><%= balance.investments %></td>
     <td><%= balance.expenditures %></td>
     

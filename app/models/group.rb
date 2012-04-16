@@ -2,7 +2,7 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :users, :uniq => true
   has_many :accounts, :dependent => :destroy
   has_many :transactions, :through => :accounts, :dependent => :destroy
-  has_many :comments, :as => :commentable
+  has_many :comments
   belongs_to :user
   
   
@@ -24,5 +24,13 @@ class Group < ActiveRecord::Base
   validates :code,
             :presence => {:message => "group code is mandatory"},
             :length   => {:maximum => 50 }
+
+  def self.get_user_owned_groups(current_user)
+    Group.find_all_by_user_id(current_user)
+  end
+
+  def self.get_groups_for_current_user(current_user)
+      Group.where(" id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",current_user)
+  end
 
 end

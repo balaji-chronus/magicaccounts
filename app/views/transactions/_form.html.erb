@@ -53,7 +53,7 @@
 
 <div class="clearfix">
   <div class="input">
-    <%= f.hidden_field  :enteredby, :value => session[:user_id] %>
+    <%= f.hidden_field  :enteredby, :value => current_user %>
   </div>
 </div>
 

@@ -39,7 +39,7 @@
           </a>
           <a class="brand" href="/.">Magic Accounts</a>
           <div class="container nav-collapse">
-           <% if session[:user_id] %>
+           <% if current_user %>
                 <ul class="nav pills">
                     <li><%= link_to "My Profile", :controller => 'transactions', :action => 'index'  %></li>
                     <li class="dropdown" id="menu1">
@@ -47,18 +47,23 @@
                     Manage
                     <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu">
-                      <% if User.find_by_id(session[:user_id]).user_type == "Admin" %>
-                        <li><%= link_to "Users", :controller => 'users', :action => 'index'  %></li>
-                      <%end%>
+                    <ul class="dropdown-menu">                      
                       <li><%= link_to "Groups", {:controller => 'groups', :action => 'index'}%></li>
                       <li><%= link_to "Accounts", :controller => 'accounts', :action => 'index' %></li>
                     </ul>
                     </li>
                 </ul>
                 <ul class="nav navlast">
-                  <li id="welcomeheader"><%= "Welcome " + User.find_by_id(session[:user_id]).name + " !" %></li>
-                  <li><%= link_to "Logout", logout_url %></li>
+                  <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                      <%= "Welcome " + current_user.name %>
+                    <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><%= link_to "Edit Profile", {:controller => 'users', :action => 'edit', :id => current_user}%></li>
+                      <li><%= link_to "Logout", logout_url %></li>                      
+                    </ul>
+                  </li>                  
                 </ul>
             <%else%>
               <ul class="nav navlast">
@@ -79,11 +84,11 @@
             <%= yield %>
             </div>
             <div class="span1">&nbsp;</div>
-            <% if session[:user_id] %>
+            <% if current_user %>
             <div class="span4">
               <div class="wellsidebar sidebar-nav">
                 <h3>Recent Activity</h3>                
-                    <%= render(:partial => 'transactions/activitytransactions', :object => @activitytran, :locals =>  {:type => 'transactions', :limit => 15})  %>                                  
+                    <%= render(:partial => 'transactions/activitytransactions', :object => @activitytran, :locals =>  {:type => 'transactions', :limit => 15})  %>
                     <%= render(:partial => 'transactions/activityaccounts', :object => @activityacc, :locals =>  {:type => 'accounts', :limit => 5})  %>
             </div>              
            </div>
