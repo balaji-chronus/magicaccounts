@@ -132,7 +132,7 @@ class GroupsController < ApplicationController
     @group = Group.find_by_id(params[:groupid].to_i)
     begin
       if @toemail && @toemail != "" && @toemail =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
-        MagicMailer.group_invite(@group,@toemail)
+        MagicMailer.group_invite(@group,@toemail).deliver
         flash.now[:notice] = "Invites sent successfully"
       else
         flash.now[:error] = "Email is not valid"

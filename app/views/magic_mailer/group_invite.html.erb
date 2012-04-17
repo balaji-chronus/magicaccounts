@@ -1,0 +1,17 @@
+<div style="background-color: #333333; margin: 20px 0px; height: 50px; width:100%;">
+  <div style="padding-top: 10px; padding-left: 10px; font-size:large; color: #FFFFFF;"> <strong>Magic Accounts</strong></div>
+</div>
+
+Dear User,<br/> <br/>
+
+<p align="justify"><%= @user + " " %> invited you to join <%= @group.name %> ! Follow the below link to join the group,</p>
+<a href="<%= "http://magicaccounts.herokuapp.com/groups/" + @group.code + "/adduser" %>">Click here to join <%= @group.name %></a>
+
+<br/><br/>
+Cheers,<br/>
+Admin, Magic Accounts<br/>
+<br/><br/>
+<div style="color:#333333; font-size:11px">
+  Thank you for using Magic Accounts ! <br/>
+  Copyright &copy; Magic Accounts.
+</div>

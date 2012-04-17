@@ -27,4 +27,18 @@ Magicaccounts::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.action_mailer.default_url_options = { :host => 'magicaccounts.heroku.com' }
+  config.mailer_sender = "admin@magicaccounts.com"
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.smtp_settings = {
+    :address        => 'smtp.sendgrid.net',
+    :port           => '587',
+    :authentication => :plain,
+    :user_name      => "app3218830@heroku.com",
+    :password       => "cokakkpj",
+    :domain         => 'heroku.com'
+  }
 end
