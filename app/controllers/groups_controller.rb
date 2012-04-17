@@ -110,14 +110,19 @@ class GroupsController < ApplicationController
     @group = Group.find_by_code(params[:code])    
     respond_to do |format|
       if @group
-        @group.users << (current_user) 
-        if @group.save
-          format.html { redirect_to transactions_url, notice: "You have been added to '#{@group.name}'" }
-          format.json { head :ok }
+        if @group.users.include?(current_user)
+            format.html { redirect_to transactions_url, notice: "You are already part of '#{@group.name}'" }
+            format.json { render json: @group.errors, status: :unprocessable_entity }
         else
-          flash[:error] = "Cannot complete your request. Unknown Error"
-          format.html { redirect_to groups_url }
-          format.json { render json: @group.errors, status: :unprocessable_entity }
+          @group.users << (current_user)
+          if @group.save
+            format.html { redirect_to transactions_url, notice: "You have been added to '#{@group.name}'" }
+            format.json { head :ok }
+          else
+            flash[:error] = "Cannot complete your request. Unknown Error"
+            format.html { redirect_to groups_url }
+            format.json { render json: @group.errors, status: :unprocessable_entity }
+          end
         end
       else
         flash[:error] = "Cannot complete your request. Attempt to access an Invalid page"
