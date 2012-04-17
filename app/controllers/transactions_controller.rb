@@ -52,7 +52,7 @@ class TransactionsController < ApplicationController
 
     respond_to do |format|
       if @transaction
-        if (@transaction.user_id == current_user || @transaction.users.find_by_id(current_user))
+        if (@transaction.user == current_user || @transaction.users.find_by_id(current_user))
           @accountusers = User.get_userlist_for_current_user(current_user)
           (User.find_all_by_id(@accountusers.collect(&:user_id)) - @transaction.transactions_users.collect(&:user)).each do |user|
             @transaction.transactions_users.build({:user => user})
@@ -95,7 +95,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find_by_id(params[:id])
     @transaction.users = User.find(params[:user_ids]) if params[:user_ids]
     respond_to do |format|
-      if (@transaction.user_id == current_user || @transaction.users.find_by_id(current_user))
+      if (@transaction.user == current_user || @transaction.users.find_by_id(current_user))
         if @transaction.update_attributes(params[:transaction])
           @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.account.group_id})
           @comment.save
@@ -117,7 +117,7 @@ class TransactionsController < ApplicationController
   # DELETE /transactions/1.json
   def destroy
     @transaction = Transaction.find_by_id(params[:id])
-    if (@transaction.user_id == current_user || @transaction.users.find_by_id(current_user))
+    if (@transaction.user == current_user || @transaction.users.find_by_id(current_user))
       @comment = @transaction.comments.create( {:activity => " removed ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.account.group_id})
       @comment.save
       flash[:notice] = "Transaction was succesfully removed"

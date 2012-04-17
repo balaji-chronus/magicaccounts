@@ -1,33 +1,33 @@
 <div class="clearfix">
-   <%= f.label :group_id, t("activerecord.attributes.account.group_id", :default => "Group"), :class => :label %>
+  <%= f.label :group_id, t("activerecord.attributes.account.group_id", :default => "Group"), :class => :label %>
   <div class="input">    
     <%= f.select :group_id, @usergroups.collect {|grp| [grp.name, grp.id]}, {:prompt => 'Select Group' }, { :selected => @defaultgroup, :class => 'selectwidth' } %>
   </div>
 </div>
 
 <div class="clearfix">
-   <%= f.label :name, t("activerecord.attributes.account.name", :default => "Name*"), :class => :label %>
+  <%= f.label :name, t("activerecord.attributes.account.name", :default => "Name*"), :class => :label %>
   <div class="input">
     <%= f.text_field :name, :class => 'text_field' %>
   </div>
 </div>
 
 <div class="clearfix">
-   <%= f.label :code, t("activerecord.attributes.account.code", :default => "Code*"), :class => :label %>
+  <%= f.label :code, t("activerecord.attributes.account.code", :default => "Code*"), :class => :label %>
   <div class="input">
     <%= f.text_field :code, :class => 'text_field' %>
   </div>
 </div>
 
 <div class="clearfix">
-   <%= f.label :status, t("activerecord.attributes.account.status", :default => "Status"), :class => :label %>
+  <%= f.label :status, t("activerecord.attributes.account.status", :default => "Status"), :class => :label %>
   <div class="input">
     <%= f.select :status, Account::ACCOUNT_STATUS, {:prompt => false}, {:class => 'selectwidth', :default => 'Open'} %>
   </div>
 </div>
 
 <div class="clearfix">
-   <%= f.label :remarks, t("activerecord.attributes.account.remarks", :default => "Remarks"), :class => :label %>
+  <%= f.label :remarks, t("activerecord.attributes.account.remarks", :default => "Remarks"), :class => :label %>
   <div class="input">
     <%= f.text_area :remarks, :class => 'text_area', :rows => 5 %>
   </div>
@@ -35,11 +35,11 @@
 
 <div class="clearfix">  
   <div class="input">
-    <%= f.hidden_field  :user_id, :value => current_user %>
+    <%= f.hidden_field  :user_id, {:value => current_user.id} %>
   </div>
 </div>
 
 <div class="form-actions">
   <button class="btn primary" type="submit">Save</button> or
-	<%= link_to "Cancel", accounts_path %>
+  <%= link_to "Cancel", accounts_path %>
 </div>
