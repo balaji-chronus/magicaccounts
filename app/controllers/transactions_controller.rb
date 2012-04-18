@@ -81,6 +81,11 @@ class TransactionsController < ApplicationController
       if @transaction.save
         @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.account.group_id})
         @comment.save
+        @transaction.transactions_users.each do |transaction|
+            if !(@transaction.user == transaction.user)
+              MagicMailer.transaction_notification(@transaction, "Added", transaction.amount, transaction.user).deliver
+            end
+        end
         flash.now[:notice] = "Transaction was successfully created"
       else
         flash.now[:error] = @transaction.errors.full_messages.compact.uniq.join("\n")

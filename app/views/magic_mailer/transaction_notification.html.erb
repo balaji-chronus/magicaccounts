@@ -1,0 +1,40 @@
+<%= render(:partial => 'magic_mailer/header') %>
+<div style="padding-left: 10px">
+Dear <%=  @beneficiary.name%>,<br/> <br/>
+
+<h3 style="border-top:1px solid #444;border-bottom:1px solid #444;padding:5px;background-color:#D0E0F0;margin-bottom:20px">
+    A Transaction was <%= @action %> in <%= @transaction.account.group.name %>
+</h3>
+<div>
+<div style="margin-bottom:10px">
+  <span style="float:left;width:120px;"><strong>Who Spent?</strong> </span>
+  <span><%=  @transaction.user.name.titleize %></span>
+</div>
+<div style="margin-bottom:10px">
+  <span style="float:left;width:120px;"><strong>When?</strong> </span>
+  <span><%=  (@action == "Added" ? @transaction.created_at : @transaction.updated_at).strftime("%m/%d/%Y on a %A")%></span>
+</div>
+<div style="margin-bottom:10px">
+  <span style="float:left;width:120px;"><strong>Which Account?</strong> </span>
+  <span><%=  @transaction.account.name%></span>
+</div>
+<div style="margin-bottom:10px">
+  <span style="float:left;width:120px;"><strong>For What?</strong> </span>
+  <span><%=  @transaction.remarks%></span>
+</div>
+<div style="margin-bottom:10px">
+  <span style="float:left;width:120px;"><strong>How Much?</strong> </span>
+  <span>Rs. <%=  @transaction.transactions_users.collect(&:amount).inject(:+)%></span>
+</div>
+<div style="margin-bottom:10px">
+  <span style="float:left;width:120px;"><strong>My Share ?</strong> </span>
+    <span>Pay Rs. <%=  @amount%></span>
+</div>
+<hr/>
+</div>
+<br/><br/>
+Cheers,<br/>
+Admin, Magic Accounts<br/>
+<br/><br/>
+<%= render(:partial => 'magic_mailer/footer') %>
+</div>

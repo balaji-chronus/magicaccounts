@@ -47,7 +47,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        current_user = @user.id
+        session[:user_id] = @user.id
+        MagicMailer.registration_success(@user).deliver
         format.html { redirect_to transactions_path, notice: "User '#{@user.name}' was successfully created." }
         format.json { render json: @user, status: :created, location: @user }
       else

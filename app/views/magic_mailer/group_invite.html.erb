@@ -1,7 +1,5 @@
-<div style="background-color: #333333; margin: 20px 0px; height: 50px; width:100%;">
-  <div style="padding-top: 10px; padding-left: 10px; font-size:large; color: #FFFFFF;"> <strong>Magic Accounts</strong></div>
-</div>
-
+<%= render(:partial => 'magic_mailer/header') %>
+<div style="padding-left: 10px">
 Dear User,<br/> <br/>
 
 <p align="justify"><%= @user + " " %> invited you to join <%= @group.name %> ! Follow the below link to join the group,</p>
@@ -11,7 +9,5 @@ Dear User,<br/> <br/>
 Cheers,<br/>
 Admin, Magic Accounts<br/>
 <br/><br/>
-<div style="color:#333333; font-size:11px">
-  Thank you for using Magic Accounts ! <br/>
-  Copyright &copy; Magic Accounts.
+<%= render(:partial => 'magic_mailer/footer') %>
 </div>
