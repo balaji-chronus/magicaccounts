@@ -10,8 +10,10 @@
 <label class="label"><%= t("activerecord.attributes.account.status", :default => t("activerecord.labels.status", :default => "Status")) %>:</label>
 <p><%= @account.status %></p>
 
-<label class="label"><%= t("activerecord.attributes.account.remarks", :default => t("activerecord.labels.remarks", :default => "Remarks")) %>:</label>
-<p><%= @account.remarks %></p>
+<%  if !@account.remarks.blank? %>
+  <label class="label"><%= t("activerecord.attributes.account.remarks", :default => t("activerecord.labels.remarks", :default => "Remarks")) %>:</label>
+  <p><%= @account.remarks %></p>
+<% end %>
 
 <label class="label"><%= t("activerecord.attributes.group.user_id", :default => t("activerecord.labels.user_id", :default => "Owner")) %>:</label>
 <p><%= User.find(@account.user_id).name %></p>

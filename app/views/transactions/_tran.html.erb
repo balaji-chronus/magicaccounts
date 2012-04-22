@@ -1,7 +1,12 @@
 <div id ="viewacctran">
-<div class="group_header wellblue">
-    <h3> Showing Transactions for <%=  @transaction.account.name %></h3>
-    <strong><%= link_to "New Transaction", "javascript:void(0)", {:class => 'btn primary', :id => 'newtranbtn'} %></strong>
+<div class="group_header wellgroup">
+  <div class="group_image_container">
+    <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
+  </div>
+  <div class="group_information">
+    <h3> Transactions for <%=  @transaction.account.name %></h3>
+    <button class="btn primary" id="newtranbtn" type="button">New Transaction</button>    
+  </div>
 </div>
 <% if tran.blank? %>
 <div class="well">
@@ -10,10 +15,9 @@
 <%  else %>
 <table class="table table-striped">
  <thead>
-  <tr>
-    <th>ID</th>
+  <tr>    
     <th><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>    </th>
-    <th>Total Amount</th>
+    <th>Amount</th>
     <th>Details</th>
     <th>Created at</th>
     <th>Actions</th>
@@ -21,15 +25,18 @@
 </thead>
 <tbody>
   <% tran.each do |transaction| %>
-  <tr>
-    <td><%= transaction.id %></td>
-    <td><%= link_to transaction.remarks, transaction_path(transaction) %></td>
-    <td><%= transaction.amount %></td>
+  <tr>    
+    <td><%= link_to truncate(transaction.remarks, :length => 35), transaction_path(transaction) %></td>
+    <td>Rs. <%= transaction.amount %></td>
     <td><%= transaction.details %> </td>
-    <td><%= transaction.created_at %></td>
+    <td><%= transaction.created_at.strftime("%d/%m/%Y") %></td>
     <td>
-      <%= link_to image_tag('edit_16x16.png', :class => 'imglink'), edit_transaction_path(transaction) %>
-      <%= link_to image_tag('delicon.png', :class => 'imglink'), transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}" %>
+      <%= link_to(edit_transaction_path(transaction)) do %>
+        <i class='icon-pencil'></i>
+      <% end %>
+      <%= link_to(transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
+        <i class='icon-trash'></i>
+      <% end %>
     </td>
   </tr>
   <%end%>

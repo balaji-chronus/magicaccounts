@@ -1,4 +1,4 @@
-<div class="group_header wellblue">
+<div class="group_header wellgroup">
     <h3> Users </h3>
     <strong><%= link_to "Create User", new_user_path, :method => "get", :class => 'btn primary' %></strong>
 </div>
@@ -23,9 +23,13 @@
         <td><%= link_to user.name, user_path(user) %>
     </td>
         <td><%= user.created_at %></td>
-    <td>      
-      <%= link_to image_tag("edit_16x16.png"), edit_user_path(user) %>
-      <%= link_to image_tag("delicon.png"), user_path(user), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}" %>
+    <td>
+      <%= link_to(edit_user_path(user)) do %>
+        <i class='icon-pencil'></i>
+      <% end %>
+      <%= link_to(user_path(user), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
+        <i class='icon-trash'></i>
+      <% end %>
     </td>
     </tr>
     <% end end -%>

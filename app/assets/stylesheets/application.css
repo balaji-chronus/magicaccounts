@@ -41,22 +41,154 @@ html{ overflow-y:scroll; }
     margin-top: 10px !important;
 }
 
-.wellgreen {
+.wellaccount {
     -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
-    background-color: #DDEECC;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    background-color: #DDD;
     border: 1px solid rgba(0, 0, 0, 0.05);
     margin-bottom: 5px;
-    min-height: 20px;
+    min-height: 29px;
     padding: 6px 0px 10px 9px;
 }
 
-.wellblue {
+.wellgroup, .accordion-heading a {
     -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
-    background-color: #D0E0F0;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    background-color: #333;
     border: 1px solid rgba(0, 0, 0, 0.05);
     margin-bottom: 5px;
-    min-height: 20px;
+    min-height: 29px;
     padding: 6px 0px 7px 9px;
+}
+
+.login_home {
+    margin-top: 0px !important;
+}
+
+.accordion-heading h3, .accordion-heading h5, .accordion-heading button {
+    display: inline !important;
+    color: #FFFFFF !important;
+}
+
+.accordion-heading button {
+    float: right;
+    margin-left: 5px;
+}
+
+.accordion-heading a:hover {
+    text-decoration: none;
+}
+
+.wellempty {
+    background-color: #DDD;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
+}
+
+a.headerlinks {
+    font-size: 10px;
+    padding-left: 10px;
+    font-color:   #EEEEEE;
+    display: inline;
+}
+
+.wellgroup h3, .wellgroup h5 {
+    display: inline;
+    color: #FFFFFF;
+}
+
+.group_header button {
+    font-size: 10px;
+    padding-left: 7px;
+    margin-right: 7px;
+    float: right;
+}
+
+.group_header .group_image_container, .accordion-heading .group_image_container {
+    float: left;
+    width: 4%;
+}
+
+.group_header .group_information, .accordion-heading .group_information {
+    float: left;
+    width: 95%;
+    margin: 1px 0px 0px 5px;
+}
+
+.wellaccount h3, .wellaccount h5 {
+    display: inline;
+    color: #333;
+}
+
+.btn.account {
+    background-color: #333333;
+    background-image: -moz-linear-gradient(center top , #666666, #333333);
+    background-image: -webkit-linear-gradient(center top , #666666, #333333);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #EEFFFF;
+    font-size: 12px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn.account:hover {
+    background-color: #333333;    
+    color: #EEFFFF;    
+}
+
+.wrapper {
+    padding: 15px;
+    border: 4px solid #DDD;
+}
+
+#accact .nav-header, #tranact .nav-header {
+    line-height: 18px;
+}
+
+.nav-header .heading_container {
+    min-height: 20px;
+}
+
+.nav-header .heading_container .heading_image {
+    float: left;
+    width: 8%;
+}
+
+.nav-header .heading_container .heading_text {
+    float: left; 
+    width: 92%;
+    margin-top: 3px;
+}
+
+.balance-label {
+    padding: 3px 10px;
+    color: #FFF;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
+    font-weight: bold;
+}
+
+.site_features .feature_group .feature_info {
+    float: left;
+    width: 47%;
+    margin-right: 3%;    
+}
+
+.site_features .feature_group {
+    overflow: auto;
+}
+
+.site_features .feature_group .feature_info p {
+    font-size: 14px;
+    text-align: justify;
 }

@@ -5,12 +5,11 @@ en:
   hello: "Hello world"
   views:
     pagination:
-      previous: "&lt;"
-      next: "&gt;"
-      first: "&lt;&lt;"
-      last: "&gt;&gt;"
+      previous: <i class="icon-backward"></i>
+      next: <i class="icon-forward"></i>
+      first: <i class="icon-fast-backward"></i>
+      last: <i class="icon-fast-forward"></i>
 
   errors:
     messages:
       email: "is not valid. Please enter a valid email. ex: johndoe@mail.com"
-      

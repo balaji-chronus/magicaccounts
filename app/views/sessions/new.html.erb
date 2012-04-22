@@ -1,19 +1,43 @@
-<h3> Please log in to continue</h3><br/>
-<%= form_tag do %>
-  <div class="clearfix">
-    <label for="name" >Email:</label>
-    <div class="input">
-      <%= text_field_tag :email, params[:email], :class => 'text_field' %>
+<div class="hero-unit">
+  <h1>Magic Accounts</h1>
+<p>Managing expenses ridiculously easy ! Almost easier than forgetting !</p>
+<br/>
+<div class="site_features">
+  <div class="feature_group">
+    <div class="feature_info">
+      <%= image_tag('icons/Group_2.png', :size => "64x64") %><br/>
+      <h4>GROUPS</h4><br/>
+      <p>Create groups one each for yourself, your friends, your Music/Sports/Dance/Peer groups. Invite your friends to your groups and manage expenses between your peer groups. You don't have to keep tabs, maintain tedious excel sheets about who you paid how much anymore and you don't have to worry about asking them ! Log it in & forget ! Let Magic Accounts take care of the rest</p>
+    </div>
+    <div class="feature_info">
+      <%= image_tag('icons/Account.png', :size => "64x64") %><br/>
+      <h4>ACCOUNTS</h4><br/>
+      <p>Maintain your monthly accounts from Magic Accounts. Magic Accounts lets you create multiple accounts for each group. Maybe you decide to go on a vacation to Bangkok and want to maintain a separate account to track the expenses from that. Just create a new account in the same group and keep track of each account separately.</p>
     </div>
   </div>
-  <div class="clearfix">
-    <label for="password" >Password:</label>
-    <div class="input">
-      <%= password_field_tag :password, params[:pwd],  :class => 'text_field' %>
+  <div class="feature_group">
+    <div class="feature_info">
+      <%= image_tag('icons/Transaction.png', :size => "64x64") %><br/>
+      <h4>TRANSACTIONS</h4><br/>
+      <p>Enter multiple transactions and view them at the same time. Ability to track a personal expense like paying your telephone bill or Track a shared expense like a dinner with your friends or Go shopping with your friends and track a bill that is not equally shared between your friends everything from the same view. Know how much you owe/get paid from your peers in a group transaction and more !</p>
+    </div>
+    <div class="feature_info">
+      <%= image_tag('icons/Users.png', :size => "64x64") %><br/>
+      <h4>PERSONAL GROUPS</h4><br/>
+      <p>Create your own private personal group without inviting your friends and maintain your expenses within that group without exposing details of your personal group to your friends who are a part of another public group that you are also a member of. Analyse your personal account separately !</p>
     </div>
   </div>
-  <div class="form-actions">
-    <button class="btn primary" type="submit">Login</button> 
-  </div>  
-<% end %>
-
+  <div class="feature_group">
+    <div  class="feature_info">
+      <%= image_tag('icons/Health.png', :size => "64x64") %><br/>
+      <h4>INTUITIVE AND INTELLIGENT</h4><br/>
+      <p>An intuitive user interface that with easy navigation, simple to interpret balance sheets, timely progress alerts, email notifications and ridiculously simple management. All at absolutely no cost. Its FREE !</p>
+    </div>
+  </div>
+</div>
+<br/>
+<p>
+<a class="btn btn-primary btn-large" href='<%= new_user_path %>'>
+Register Now</a>
+</p>
+</div>

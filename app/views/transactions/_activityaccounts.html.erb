@@ -1,10 +1,33 @@
 <ul id ="accact" class="nav nav-list">
-<li class="nav-header">Accounts</li>
+  <li class="nav-header">
+    <div class="heading_container">
+      <div class ="heading_image">
+        <%= image_tag('icons/Account32x32.png', :size => "22x22") %>
+      </div>
+      <div class="heading_text">
+        Accounts
+      </div>
+    </div>
+ </li>
 <% if activityaccounts.empty? %>
   <li>There is no activity for this section</li>
 <%else%>
 <% activityaccounts.each_with_index do |act,index| break if index == limit  %>
-  <li><strong><%=  User.find_by_id(act.user_id).name %></strong> <%= " " + act.activity + " " %><% if Account.find_by_id(act.commentable_id) %> <%= link_to truncate(act.content, :length => 15), :controller => type, :action => 'show', :id => act.commentable_id  %> <% else %> <%= truncate(act.content, :length => 15) %> <% end %> <span id="litetext"><%= " " + time_ago_in_words(Time.parse(act.created_at.to_s)) + " ago"    %></span> </li>
+  <li>
+    <% if act.activity == " added " %>
+      <i class="icon-plus-sign"></i>
+    <% elsif act.activity == " removed " %>
+      <i class="icon-minus-sign"></i>
+    <% elsif act.activity == " changed " %>
+      <i class="icon-pencil"></i>
+    <%end%>
+    <strong>
+      <%=  User.find_by_id(act.user_id).name %>
+    </strong>
+    <%= " " + act.activity + " " %>
+    <% if Account.find_by_id(act.commentable_id) %> <%= link_to truncate(act.content, :length => 15), :controller => type, :action => 'show', :id => act.commentable_id  %> <% else %> <%= truncate(act.content, :length => 15) %> <% end %>
+    <span id="litetext"><%= " " + time_ago_in_words(Time.parse(act.created_at.to_s)) + " ago"    %></span>
+  </li>
 <% end %>
 <% end%>
 </ul>

@@ -7,8 +7,10 @@ jQuery("#tranact").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/activitytransactions',
     :object => Comment.joins("JOIN transactions t ON comments.commentable_id = t.id").where("commentable_type = 'Transaction'").select("comments.*").order("created_at DESC"), :locals =>  {:type => 'transactions', :limit => 15}))%>");
 
-jQuery("#newacctran").slideToggle();
-jQuery("#newtranbtn").text = 'New Transaction';
+jQuery('#transaction_user_id').val("");
+Transaction.cleanUpTransactionUsers();
+jQuery('#transaction_remarks').val("");    
 <% end %>
 jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
+jQuery("#new_transaction").removeAttr('disabled');
 jQuery("#transactions_save").removeAttr('disabled').val("Save");

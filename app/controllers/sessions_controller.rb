@@ -2,9 +2,10 @@ class SessionsController < ApplicationController
 skip_before_filter :authorize
 
   def new
+    redirect_to transactions_path if !current_user.blank?
   end
 
-  def create
+  def create    
     session[:user_id] = nil
     if request.post?
        user = User.authenticate(params[:email], params[:password])

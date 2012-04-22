@@ -16,6 +16,13 @@ jQuery.ajaxSetup({
     'beforeSend': function(xhr) {xhr.setRequestHeader("Accept","text/javascript")}
 })
 
+var Utilities = {
+    redirectTo: function(e,path){
+        e.preventDefault();
+        parent.location = path;
+    }
+}
+
 var Transaction = {
         setTransactionUserAmount: function(){
           var amount = jQuery('#transaction_equal_amount').val() ? jQuery('#transaction_equal_amount').val() : 0;
@@ -30,6 +37,7 @@ var Transaction = {
             jQuery('.txnuserdestroy').val(true);
             jQuery('.txnamountuser').removeClass("active")
             jQuery('.txnuseramount').val("");
+            jQuery('.prepended_amount_input').val("").removeClass("active");
         },
         setUpTransactionUsers: function(e){
             var user = jQuery(e).val();
@@ -59,17 +67,16 @@ var Transaction = {
    jQuery("#form_invite").submitWithAjax();
 
    jQuery("#newtranbtn").live("click", function() {
-     jQuery('#newacctran').slideToggle(2000);
+     jQuery('#newacctran').slideToggle(1000);
      jQuery(this).text(jQuery(this).text() == 'Move up' ? 'New Transaction' : 'Move up');
    });
        
    jQuery('#hidetranbtn').click(function(){
-     jQuery('#newacctran').hide("blind", {direction : "vertical"}, 2000);
+     jQuery('#newacctran').hide("blind", {direction : "vertical"}, 1000);
         jQuery("#newtranbtn").text(jQuery("#newtranbtn").text() == 'Move up' ? 'New Transaction' : 'Move up');
    });
 
-   // Transaction Form
-   
+   // Transaction Form   
 
    jQuery('.txnamountuser').live("click", function(){
         jQuery(this).toggleClass("active");

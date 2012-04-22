@@ -94,7 +94,7 @@ class Transaction < ActiveRecord::Base
                                         AND     A.id = B.transaction_id
                                         GROUP   BY A.id )tmp
                               WHERE     type <> "none"
-                              ORDER     BY created_at DESC ', user,user,user,account])).page(page).per(5)
+                              ORDER     BY created_at DESC ', user,user,user,account])).page(page).per(10)
   end
 end
 
