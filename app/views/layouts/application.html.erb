@@ -63,9 +63,9 @@
                       <li><%= link_to "Edit Profile", {:controller => 'users', :action => 'edit', :id => current_user}%></li>
                       <li><%= link_to "Logout", logout_url %></li>                      
                     </ul>
-                  </li>                  
-                </ul>                
-            <%else%>              
+                  </li>
+                </ul>
+            <%else%>
               <ul class="nav navlast pull-right">
                 <li><button class="btn primary" onClick="parent.location='/users/new'" type="button">Register</button></li>
               </ul>
