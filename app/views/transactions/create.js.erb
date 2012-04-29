@@ -9,7 +9,8 @@ jQuery("#tranact").replaceWith("<%= escape_javascript(render(
 
 jQuery('#transaction_user_id').val("");
 Transaction.cleanUpTransactionUsers();
-jQuery('#transaction_remarks').val("");    
+jQuery('#transaction_remarks').val("");
+jQuery("#newtranbtn").text("Move up");
 <% end %>
 jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
 jQuery("#new_transaction").removeAttr('disabled');
