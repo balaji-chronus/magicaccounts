@@ -96,6 +96,14 @@ class Transaction < ActiveRecord::Base
                               WHERE     type <> "none"
                               ORDER     BY created_at DESC ', user,user,user,account])).page(page).per(10)
   end
+
+  def self.spend_by(parameter, user)
+    Transaction.find_by_sql([" SELECT	#{parameter}, SUM(amount) spend, COUNT(DISTINCT id) txn_count
+                            FROM	transactions_beneficiaries
+                            WHERE	((user_id <> ? AND	beneficiary_id = ?) OR (user_id = ? AND	beneficiary_id = ?))
+                            AND	category != 'settlement'
+                            GROUP	BY #{parameter}", user, user, user, user])
+  end
 end
 
 

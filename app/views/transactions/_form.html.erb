@@ -41,7 +41,7 @@
    <%= f.label :category, t("activerecord.attributes.transaction.category", :default => "Category"), :class => :label %>
   <div class="input">
     <%= f.select :category, Transaction::CATEGORIES, {:prompt => false }, {:default => 'General', :class => 'selectwidth'} %>
-  </div>
+  </div>  
 </div>
 
 <div class="clearfix">

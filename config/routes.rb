@@ -1,4 +1,15 @@
-Magicaccounts::Application.routes.draw do
+Magicaccounts::Application.routes.draw do  
+  controller :reports do
+    get "reports" => "reports#index"
+    get "spend_by_category" => "reports#spend_by_category"
+    get "spend_by_account" => "reports#spend_by_account"
+    get "spend_by_user" => "reports#spend_by_user"
+    get "transaction_count_by_category" => "reports#transaction_count_by_category"
+    get "transaction_count_by_account" => "reports#transaction_count_by_account"
+    get "avg_spend_by_category" => "reports#avg_spend_by_category"
+    get "avg_spend_by_account" => "reports#avg_spend_by_account"
+  end
+
   resources :comments
 
   root :to => 'transactions#index'

@@ -1,0 +1,87 @@
+<div class="clearfix" style="display: none;">
+  <%= form_tag login_path, :id => "report_filter_form" do %>
+    <%= select_date %> <br/>
+    <%= select_date %> <br/>
+    <button class="btn primary" type="submit">Generate Report</button>
+  <% end %>
+</div>
+<div id="report_tree" class="accordion">
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a href='#bycategory' data-parent='#report_tree' data-toggle='collapse' class='accordion-toggle'>
+        <div class="group_image_container">
+          <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
+        </div>
+        <div class="group_information">
+          <h3> <%=  "Analysis by Category" %></h3>
+        </div>
+      </a>
+    </div>
+    <div class='accordian-body in' style='height: auto;' id='bycategory'>
+      <div class="accordion-inner">
+        <div class="group_header wellaccount">
+          <div class="group_information">
+            <h3>Spend Distribution</h3>
+          </div>
+        </div>
+        <div class="chart_bycategory">
+          <%= chart_tag('spend_by_category', 350) %>
+        </div>
+        <div class="group_header wellaccount">
+          <div class="group_information">
+            <h3>No of Transactions</h3>
+          </div>
+        </div>
+        <div class="chart_bycategory">
+          <%= chart_tag('transaction_count_by_category', 350) %>
+        </div>
+        <div class="group_header wellaccount">
+          <div class="group_information">
+            <h3>Average Spend Per Transaction</h3>
+          </div>
+        </div>
+        <div class="chart_bycategory">
+          <%= chart_tag('avg_spend_by_category', 350) %>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-heading">
+      <a href='#byaccount' data-parent='#report_tree' data-toggle='collapse' class='accordion-toggle'>
+        <div class="group_image_container">
+          <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
+        </div>
+        <div class="group_information">
+          <h3> <%=  "Analysis by Account" %></h3>
+        </div>
+      </a>
+    </div>
+    <div class='accordian-body collapse' id='byaccount'>
+      <div class="accordion-inner">
+        <div class="group_header wellaccount">
+          <div class="group_information">
+            <h3>Spend Distribution</h3>
+          </div>
+        </div>
+        <div class="chart_byaccount">
+          <%= chart_tag('spend_by_account', 350) %>
+        </div>
+        <div class="group_header wellaccount">
+          <div class="group_information">
+            <h3>No of Transactions</h3>
+          </div>
+        </div>
+        <div class="chart_bycategory">
+          <%= chart_tag('transaction_count_by_account', 350) %>
+        </div>
+        <div class="group_header wellaccount">
+          <div class="group_information">
+            <h3>Average Spend Per Transaction</h3>
+          </div>
+        </div>
+        <div class="chart_bycategory">
+          <%= chart_tag('avg_spend_by_account', 350) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

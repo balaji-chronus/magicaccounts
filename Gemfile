@@ -26,7 +26,7 @@ gem 'client_side_validations'
 gem 'kaminari'
 gem "validates_existence", ">= 0.4"
 gem "cancan"
-
+gem "googlecharts", :require => "gchart"
 
 # Use unicorn as the web server
 # gem 'unicorn'
