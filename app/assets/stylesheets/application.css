@@ -197,3 +197,8 @@ a.headerlinks {
     font-size: 14px;
     text-align: justify;
 }
+
+.submit_report {
+    vertical-align: top !important;
+    margin-left: 16%;
+}

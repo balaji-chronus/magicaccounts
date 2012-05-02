@@ -97,11 +97,12 @@ class Transaction < ActiveRecord::Base
                               ORDER     BY created_at DESC ', user,user,user,account])).page(page).per(10)
   end
 
-  def self.spend_by(parameter, user)
+  def self.spend_by(parameter, user, start_time, end_time)
     Transaction.find_by_sql([" SELECT	#{parameter}, SUM(amount) spend, COUNT(DISTINCT id) txn_count
                             FROM	transactions_beneficiaries
                             WHERE	((user_id <> ? AND	beneficiary_id = ?) OR (user_id = ? AND	beneficiary_id = ?))
                             AND	category != 'settlement'
+                            #{start_time.blank? ? "" : " AND txndate BETWEEN '#{start_time}' AND '#{end_time}' "}
                             GROUP	BY #{parameter}", user, user, user, user])
   end
 end

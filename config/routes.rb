@@ -1,6 +1,6 @@
 Magicaccounts::Application.routes.draw do  
   controller :reports do
-    get "reports" => "reports#index"
+    get 'reports' => :index
     get "spend_by_category" => "reports#spend_by_category"
     get "spend_by_account" => "reports#spend_by_account"
     get "spend_by_user" => "reports#spend_by_user"

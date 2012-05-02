@@ -1,8 +1,30 @@
-<div class="clearfix" style="display: none;">
-  <%= form_tag login_path, :id => "report_filter_form" do %>
-    <%= select_date %> <br/>
-    <%= select_date %> <br/>
-    <button class="btn primary" type="submit">Generate Report</button>
+<div class="clearfix">
+  <%= form_tag reports_path, :method => :get, :id => "report_filter_form" do %>
+  <%= label_tag :option, t("activerecord.attributes.transaction.user_id", :default => "Date Range"), :class => :label %>
+  <div class="input">
+    <%= select_tag  :option,
+                    options_for_select([["Overall"],["Last Week"],["Last Month"],["Custom Range"]], @option || "Overall"),
+                    :class => 'selectwidth',
+                    :id => 'report_date_option',
+                    :selected => @option.to_s %>
+  </div>
+  <div id="dynamic_date_range" class="clearfix" style="display: none;">
+    <div class="report_start_date clearfix">
+      <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "From"), :class => :label %>
+      <div class="input">
+        <%= select_date @start_date, :prefix => :report_start_date %>
+      </div>
+    </div>
+    <div class="report_end_date clearfix">
+      <%= label_tag :to, t("activerecord.attributes.transaction.txndate", :default => "To"), :class => :label %>
+      <div class="input">
+        <%= select_date @end_date, :prefix => :report_end_date %>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix">
+    <button class="btn primary submit_report" type="submit">Generate Report</button>
+  </div>
   <% end %>
 </div>
 <div id="report_tree" class="accordion">
@@ -25,7 +47,7 @@
           </div>
         </div>
         <div class="chart_bycategory">
-          <%= chart_tag('spend_by_category', 350) %>
+          <%= chart_tag('spend_by_category', 350, :start_date => @start_date, :end_date => @end_date) %>
         </div>
         <div class="group_header wellaccount">
           <div class="group_information">
@@ -33,7 +55,7 @@
           </div>
         </div>
         <div class="chart_bycategory">
-          <%= chart_tag('transaction_count_by_category', 350) %>
+          <%= chart_tag('transaction_count_by_category', 350, :start_date => @start_date, :end_date => @end_date) %>
         </div>
         <div class="group_header wellaccount">
           <div class="group_information">
@@ -41,7 +63,7 @@
           </div>
         </div>
         <div class="chart_bycategory">
-          <%= chart_tag('avg_spend_by_category', 350) %>
+          <%= chart_tag('avg_spend_by_category', 350, :start_date => @start_date, :end_date => @end_date) %>
         </div>
       </div>
     </div>
@@ -63,7 +85,7 @@
           </div>
         </div>
         <div class="chart_byaccount">
-          <%= chart_tag('spend_by_account', 350) %>
+          <%= chart_tag('spend_by_account', 350, :start_date => @start_date, :end_date => @end_date) %>
         </div>
         <div class="group_header wellaccount">
           <div class="group_information">
@@ -71,7 +93,7 @@
           </div>
         </div>
         <div class="chart_bycategory">
-          <%= chart_tag('transaction_count_by_account', 350) %>
+          <%= chart_tag('transaction_count_by_account', 350, :start_date => @start_date, :end_date => @end_date) %>
         </div>
         <div class="group_header wellaccount">
           <div class="group_information">
@@ -79,7 +101,7 @@
           </div>
         </div>
         <div class="chart_bycategory">
-          <%= chart_tag('avg_spend_by_account', 350) %>
+          <%= chart_tag('avg_spend_by_account', 350, :start_date => @start_date, :end_date => @end_date) %>
         </div>
       </div>
     </div>

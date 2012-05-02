@@ -101,6 +101,16 @@ var Transaction = {
        Transaction.cleanUpTransactionUsers();
        Transaction.setUpTransactionUsers(this);
    });
-   
+
+   jQuery("#report_date_option").change(function(){
+       if(jQuery(this).val() == "Custom Range")
+       {
+          jQuery('#dynamic_date_range').show();
+       }
+       else
+       {
+          jQuery('#dynamic_date_range').hide();
+       }
+   });
 })
 
