@@ -4,7 +4,8 @@
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *= require_self
  *= require bootstrap_and_overrides
- *= require jquery.ui.all
+ *= require jquery.ui.core
+ *= require jquery.ui.theme
  *= require_tree . 
 */
 html{ overflow-y:scroll; }
@@ -201,4 +202,19 @@ a.headerlinks {
 .submit_report {
     vertical-align: top !important;
     margin-left: 16%;
+}
+
+a#report_filter_link, a#report_filter_link:focus {
+    color: #0064CD;
+    text-decoration: underline;
+    float: right;
+    outline: none;
+}
+
+.report_filter_container {
+    display: none;
+}
+
+.nav-header.group_nav_header {
+    color: #EEE !important;
 }

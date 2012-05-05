@@ -1,6 +1,7 @@
 class ReportsController < ApplicationController
   def index
     @option = params[:option]
+    @advanced = params[:advanced] || "false"
     if @option == "Custom Range"
       @start_date = params[:report_start_date] ? Time.new(params[:report_start_date][:year], params[:report_start_date][:month], params[:report_start_date][:day]) : nil
       @end_date = params[:report_end_date] ? Time.new(params[:report_end_date][:year], params[:report_end_date][:month], params[:report_end_date][:day]) : nil

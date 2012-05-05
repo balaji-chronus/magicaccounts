@@ -105,12 +105,25 @@ var Transaction = {
    jQuery("#report_date_option").change(function(){
        if(jQuery(this).val() == "Custom Range")
        {
-          jQuery('#dynamic_date_range').show();
+          jQuery('#dynamic_date_range').fadeIn();
        }
        else
        {
-          jQuery('#dynamic_date_range').hide();
+          jQuery('#dynamic_date_range').fadeOut();
        }
    });
+
+   jQuery("#report_filter_link").toggle(
+        function(){
+            jQuery(this).text("Hide Advanced Filter");
+            jQuery('.report_filter_container').fadeIn();
+            jQuery('#toggle_advance_filter').val("true");
+        },
+        function(){
+            jQuery(this).text("Show Advanced Filter");
+            jQuery('.report_filter_container').fadeOut();
+            jQuery('#toggle_advance_filter').val("false");
+        }
+    );
 })
 

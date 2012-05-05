@@ -1,4 +1,4 @@
-<div class="clearfix">
+<div class="clearfix report_filter_container" style="display: <%= "#{@advanced == "false" ? "none" : "block"};" %>">
   <%= form_tag reports_path, :method => :get, :id => "report_filter_form" do %>
   <%= label_tag :option, t("activerecord.attributes.transaction.user_id", :default => "Date Range"), :class => :label %>
   <div class="input">
@@ -8,7 +8,7 @@
                     :id => 'report_date_option',
                     :selected => @option.to_s %>
   </div>
-  <div id="dynamic_date_range" class="clearfix" style="display: none;">
+  <div id="dynamic_date_range" class="clearfix" style="display: <%="#{@option=="Custom Range" ? "block" : "none" };"%>;">
     <div class="report_start_date clearfix">
       <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "From"), :class => :label %>
       <div class="input">
@@ -22,10 +22,14 @@
       </div>
     </div>
   </div>
+  <%= hidden_field_tag :advanced, :value => @advanced, :id => "toggle_advance_filter" %>
   <div class="clearfix">
     <button class="btn primary submit_report" type="submit">Generate Report</button>
   </div>
   <% end %>
+</div>
+<div class="clearfix">
+  <a href="javascript:void(0)" id="report_filter_link"><%= "#{@advanced == "false" ? "Show Advanced Filter" : "Hide Advanced Filter"}"%></a>
 </div>
 <div id="report_tree" class="accordion">
   <div class="accordion-group">
