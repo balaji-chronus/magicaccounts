@@ -1,14 +1,24 @@
 class TransactionsController < ApplicationController
-  before_filter :initiate_account, :only => [:new, :view]
+  before_filter :initiate_account, :only => [:new, :index]
 
   # GET /transactions
   # GET /transactions.json
-  def index   
-    @usergroups = Group.get_groups_for_current_user(current_user)
-    @balance = Transaction.balance(current_user)
+  def index
+    @transactions = Transaction.view_transactions(current_user, params[:accountid], params[:page])
+
     respond_to do |format|
-      format.html
-      format.json { render json: @balance }
+      if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
+        @transaction.account_id = params[:accountid]
+        @defaultaccount = Account.find_by_id(params[:accountid]).name
+        format.html
+        format.json { render json: @transactions }
+        format.js { render :content_type => 'text/javascript' }
+
+      else
+        flash[:error] = 'You cannot access this Account or Account doesnot exists'
+        format.html { redirect_to profile_url }
+        format.html { render }
+      end
     end
   end
 
@@ -132,28 +142,17 @@ class TransactionsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to transactions_url }
+      format.html { redirect_to profile_path }
       format.json { head :ok }
     end
   end
 
-  def view
-    
-    @transactions = Transaction.view_transactions(current_user, params[:accountid], params[:page])
-    
+  def user_profile
+    @usergroups = Group.get_groups_for_current_user(current_user)
+    @balance = Transaction.balance(current_user)
     respond_to do |format|
-      if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
-        @transaction.account_id = params[:accountid]
-        @defaultaccount = Account.find_by_id(params[:accountid]).name
-        format.html 
-        format.json { render json: @transactions }        
-        format.js { render :content_type => 'text/javascript' }
-
-      else
-        flash[:error] = 'You cannot access this Account or Account doesnot exists'
-        format.html { redirect_to transactions_url }
-        format.html { render }
-      end
+      format.html
+      format.json { render json: @balance }
     end
   end
 

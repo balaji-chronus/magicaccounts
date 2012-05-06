@@ -102,6 +102,8 @@ var Transaction = {
        Transaction.setUpTransactionUsers(this);
    });
 
+
+   // Reports Page
    jQuery("#report_date_option").change(function(){
        if(jQuery(this).val() == "Custom Range")
        {

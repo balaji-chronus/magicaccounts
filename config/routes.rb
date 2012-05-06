@@ -12,11 +12,10 @@ Magicaccounts::Application.routes.draw do
 
   resources :comments
 
-  root :to => 'transactions#index'
-  get 'profile' => 'profile#index'
+  root :to => 'transactions#user_profile'
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:accountid' => 'transactions#new'
-  get   'transactions/view/:accountid' => 'transactions#view'
+  match 'profile' => "transactions#user_profile"
   match 'accounts/new/:groupid' => 'accounts#new'
   match 'groups/sendinvites' => 'groups#sendinvites'
 

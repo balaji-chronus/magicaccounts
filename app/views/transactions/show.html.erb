@@ -34,5 +34,5 @@
 </div>
 
 <div class="form-actions">
-  <%= link_to "Back", {:action => "view", :accountid => @transaction.account_id}, :class => 'btn'  %>
+  <%= link_to "Back", transactions_path(:accountid => @transaction.account_id), :class => 'btn'  %>
 </div>

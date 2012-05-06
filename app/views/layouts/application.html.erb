@@ -41,7 +41,7 @@
           <div class="container nav-collapse">
            <% if current_user %>
                 <ul class="nav pills">
-                    <li><%= link_to "My Profile", transactions_path  %></li>
+                    <li><%= link_to "My Profile", profile_path  %></li>
                     <li class="dropdown" id="menu1">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
                     Manage
@@ -62,7 +62,7 @@
                         <%  if !group.accounts.empty? %>
                           <li class="nav-header group_nav_header"><%=  group.name %></li>
                           <% group.accounts.each do |account|%>
-                            <li><%= link_to account.name, {:controller => 'transactions', :action => 'view', :accountid => account.id}%></li>
+                            <li><%= link_to account.name, transactions_path(:accountid => account.id)%></li>
                           <%end%>
                         <%end%>
                       <%end%>
@@ -103,7 +103,7 @@
         <div class="content">
           <div class="row">
             <div class="span8">
-              <div class="wrapper">
+              <div class="wrapper clearfix">
                 <%= yield %>
               </div>
             </div>

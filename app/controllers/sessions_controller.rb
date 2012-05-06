@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
 skip_before_filter :authorize
 
   def new
-    redirect_to transactions_path if !current_user.blank?
+    redirect_to profile_path if !current_user.blank?
   end
 
   def create
@@ -13,7 +13,7 @@ skip_before_filter :authorize
         session[:user_id] = user.id
         uri = session[:request_uri]
         session[:request_uri] = nil
-        redirect_to (uri || transactions_url)
+        redirect_to (uri || profile_url)
       else
         flash[:error] = "Incorrect Username/Password"
         redirect_to login_url

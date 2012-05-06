@@ -72,29 +72,29 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.view_transactions(user, account, page)    
-    Kaminari.paginate_array(Transaction.find_by_sql(['
-                              SELECT 	id,
-                                      amount,
-                                      CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
-                                        WHEN type = "investor" THEN CONCAT("Your Investment is ", amount - net_amount)
-                                        WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is ", net_amount)
-                                      END	details,
-                                      remarks,
-                                      created_at
-                              FROM   	( SELECT  A.id,
-                                                CASE  WHEN A.user_id = ? THEN "investor"
-                                                      WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 END) >= 1 THEN "beneficiary"
-                                                      ELSE  "none" END type,
-                                                SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
-                                                SUM(B.amount) amount,
-                                                A.remarks,
-                                                IFNULL(A.updated_at, A.created_at) created_at
-                                        FROM    transactions A JOIN transactions_users B
-                                        ON      A.account_id = ?
-                                        AND     A.id = B.transaction_id
-                                        GROUP   BY A.id )tmp
-                              WHERE     type <> "none"
-                              ORDER     BY created_at DESC ', user,user,user,account])).page(page).per(10)
+    Transaction.paginate_by_sql(['
+      SELECT 	id,
+              amount,
+              CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
+                WHEN type = "investor" THEN CONCAT("Your Investment is ", amount - net_amount)
+                WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is ", net_amount)
+              END	details,
+              remarks,
+              txndate
+      FROM   	( SELECT  A.id,
+                        CASE  WHEN A.user_id = ? THEN "investor"
+                              WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 END) >= 1 THEN "beneficiary"
+                              ELSE  "none" END type,
+                        SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
+                        SUM(B.amount) amount,
+                        A.remarks,
+                        A.txndate
+                FROM    transactions A JOIN transactions_users B
+                ON      A.account_id = ?
+                AND     A.id = B.transaction_id
+                GROUP   BY A.id )tmp
+      WHERE     type <> "none"
+      ORDER     BY txndate DESC ', user,user,user,account], :page => page, :per_page => 10)
   end
 
   def self.spend_by(parameter, user, start_time, end_time)

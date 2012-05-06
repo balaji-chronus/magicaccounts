@@ -23,10 +23,12 @@ end
 
 gem 'jquery-rails'
 gem 'client_side_validations'
-gem 'kaminari'
+gem 'will_paginate', '> 3.0'
 gem "validates_existence", ">= 0.4"
 gem "cancan"
 gem "googlecharts", :require => "gchart"
+gem 'minitest'
+gem 'thinking-sphinx'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -42,8 +44,6 @@ group :test do
   gem 'turn', '0.8.2', :require => false
   gem 'ruby-debug19'
 end
-
-gem 'minitest'
 
 group :production do
   gem 'thin'

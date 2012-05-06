@@ -69,7 +69,7 @@ class AccountsController < ApplicationController
       if  @account.save
         @comment = @account.comments.create( {:activity => " added ", :content => @account.name, :user_id => current_user, :group_id => @account.group_id})
         @comment.save
-        format.html { redirect_to transactions_path, notice: "Account #{@account.name} was successfully created." }
+        format.html { redirect_to profile_path, notice: "Account #{@account.name} was successfully created." }
         format.json { render json: @account, status: :created, location: @account }
       else
         format.html { render action: "new" }

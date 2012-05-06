@@ -19,7 +19,7 @@
     <th><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>    </th>
     <th>Amount</th>
     <th>Details</th>
-    <th>Created at</th>
+    <th>Date</th>
     <th>Actions</th>
   </tr>
 </thead>
@@ -29,7 +29,7 @@
     <td><%= link_to truncate(transaction.remarks, :length => 35), transaction_path(transaction) %></td>
     <td>Rs. <%= transaction.amount %></td>
     <td><%= transaction.details %> </td>
-    <td><%= transaction.created_at.strftime("%d/%m/%Y") %></td>
+    <td><%= transaction.txndate.strftime("%d/%m/%Y") %></td>
     <td>
       <%= link_to(edit_transaction_path(transaction)) do %>
         <i class='icon-pencil'></i>
@@ -42,6 +42,6 @@
   <%end%>
 </tbody>
 </table>
-<%= paginate tran  %>
+<%= will_paginate tran, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :accountid => @transaction.account.id} %>
 <%  end %>
 </div>

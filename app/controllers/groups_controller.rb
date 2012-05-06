@@ -59,7 +59,7 @@ class GroupsController < ApplicationController
     @group.users << (current_user) if @group
     respond_to do |format|
       if @group.save          
-        format.html { redirect_to transactions_path, notice: "Group '#{@group.name}' was successfully created." }
+        format.html { redirect_to profile_path, notice: "Group '#{@group.name}' was successfully created." }
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html { render action: "new" }
@@ -111,12 +111,12 @@ class GroupsController < ApplicationController
     respond_to do |format|
       if @group
         if @group.users.include?(current_user)
-            format.html { redirect_to transactions_url, notice: "You are already part of '#{@group.name}'" }
+            format.html { redirect_to profile_url, notice: "You are already part of '#{@group.name}'" }
             format.json { render json: @group.errors, status: :unprocessable_entity }
         else
           @group.users << (current_user)
           if @group.save
-            format.html { redirect_to transactions_url, notice: "You have been added to '#{@group.name}'" }
+            format.html { redirect_to profile_url, notice: "You have been added to '#{@group.name}'" }
             format.json { head :ok }
           else
             flash[:error] = "Cannot complete your request. Unknown Error"
