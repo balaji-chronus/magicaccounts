@@ -1,32 +1,101 @@
 <div id="newacctran" style="display: none">
+  <div class="group_header wellgroup">
+    <div class="group_image_container">
+      <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
+    </div>
+    <div class="group_information">
+      <h3> Add New Transaction </h3>
+      <button class="btn primary" id="hidetranbtn" type="button">Hide</button>
+    </div>
+  </div>
+  <%= form_for @transaction, :remote => true, :validate => true, :url => transactions_path, :html => { :class => :form } do |f| -%>
+    <%= render :partial => "form", :locals => {:f => f} %>
+  <% end -%>
+</div>
+
 <div class="group_header wellgroup">
   <div class="group_image_container">
     <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
   </div>
   <div class="group_information">
-    <h3> Add New Transaction </h3>
-    <button class="btn primary" id="hidetranbtn" type="button">Hide</button>
+    <h3> Transactions for <span id="view_transaction_for_account"><%=  @defaultaccount.name %></span></h3>
+    <button class="btn primary" id="newtranbtn" type="button">New Transaction</button>
   </div>
 </div>
-<%= form_for @transaction, :remote => true, :validate => true, :url => transactions_path, :html => { :class => :form } do |f| -%>
-  <%= render :partial => "form", :locals => {:f => f} %>
-<% end -%>
+<%= form_tag transactions_path(params), :remote => true, method: :get, :id => "transaction_search_form", :before => 'jQuery("#transactions_loader").show();', :after => 'jQuery("#transactions_loader").hide();' do %>
+  <div class="transaction_search clearfix">
+    <div class="transaction_search_col1">
+      <%= label_tag :label_query, t("activerecord.attributes.transaction.txndate", :default => "Keywords"), :class => :label %>
+      <div class="input">
+        <%= text_field_tag :query, params[:query] %>
+      </div>
+    </div>
+    <div class="transaction_search_col2">
+      <%= hidden_field_tag :accountid, @defaultaccount.id %>
+      <%= submit_tag "Search", :class => "btn primary transaction_search_submit" %>
+      <%= link_to "Show Advanced", "javascript:void(0)",:id => "advanced_filter_link" %>
+    </div>
+    <div class="advanced_filter_container clearfix">
+      <div class="advanced_search_row_container">
+        <div class="advanced_search_column clearfix">
+          <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "From"), :class => "label advanced_label_left" %>
+          <div class="input">
+            <%= text_field_tag :transaction_start_date, params[:transaction_start_date], :class => "date_select advanced_search_param" %>
+          </div>
+        </div>
+        <div class="advanced_search_column clearfix">
+          <%= label_tag :to, t("activerecord.attributes.transaction.txndate", :default => "To"), :class => "label advanced_label_right" %>
+          <div class="input">
+            <%= text_field_tag :transaction_end_date, params[:transaction_end_date], :class => "date_select advanced_search_param" %>
+          </div>
+        </div>
+      </div>
+      <div class="advanced_search_row_container">
+        <div class="advanced_search_column clearfix">
+          <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "Category"), :class => "label advanced_label_left" %>
+          <div class="input">
+            <%= select_tag :category,
+              options_for_select(Transaction::CATEGORIES << ["All", "all"], params[:category] || "all"),
+              :class => 'advanced_search_select' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= hidden_field_tag :open_advanced_search, params[:open_advanced_search], :id => "toggle_advance_filter" %>
+  </div>
+<% end %> 
+<div id="display_transactions_container">
+  <div id="transactions_loader">
+    <%= image_tag('icons/spinner.png')%>
+  </div>
+  <div id="transactions_list_container">
+    <%= render(:partial => 'transactions/tran', :locals => { :tran => @transactions, :filtered_transactions => @filtered_transactions }) -%>
+  </div>
 </div>
 
-<%= render(:partial => 'transactions/tran', :object => @transactions) -%>
 
 <script type="text/javascript">
-jQuery(document).ready(function(){
-  jQuery("#new_transaction").submit(function() {
-        if(Transaction.calculateAmount() <=0)
-        {
-            jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => {:message => " An investor should have atleast one beneficiary with amount > 0 "}} ))%>');
-            return false;
-        }
-        jQuery("#transactions_save").attr('disabled','disabled').val("Saving..");
-        jQuery("#new_transaction").attr('disabled', 'disabled');
-        jQuery.post(this.action, jQuery(this).serialize(), null, "script");
+  jQuery(document).ready(function(){
+    jQuery("#new_transaction").submit(function() {
+      if(Transaction.calculateAmount() <=0)
+      {
+        jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => {:message => " An investor should have atleast one beneficiary with amount > 0 "}} ))%>');
         return false;
+      }
+      jQuery("#transactions_save").attr('disabled','disabled').val("Saving..");
+      jQuery("#new_transaction").attr('disabled', 'disabled');
+      jQuery("#transactions_loader").show();
+      jQuery.post(this.action, jQuery(this).serialize(), null, "script");
+      return false;
+    });    
+
+    jQuery('#transaction_search_form')
+    .bind("ajax:beforeSend", function(evt, xhr, settings){
+      jQuery("#transactions_loader").show();
+    })
+    .bind('ajax:complete', function(evt, xhr, status){
+      jQuery("#transactions_loader").hide();
     });
-});
+  });
+  
 </script>

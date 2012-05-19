@@ -1,3 +1,4 @@
 $("#viewacctran").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/tran',
-    :object => @transactions))%>");
+    :locals => { :tran => @transactions, :filtered_transactions => @filtered_transactions }))%>");
+jQuery("#transactions_loader").hide();

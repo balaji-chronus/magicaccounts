@@ -1,6 +1,7 @@
 $(function() {
   $(".pagination a").live("click", function() {
     $(".pagination").html("Loading Transactions...");
+    jQuery("#transactions_loader").show();
     $.getScript(this.href);
     return false;
   });

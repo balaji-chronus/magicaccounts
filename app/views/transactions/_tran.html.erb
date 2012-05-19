@@ -1,47 +1,43 @@
-<div id ="viewacctran">
-<div class="group_header wellgroup">
-  <div class="group_image_container">
-    <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
-  </div>
-  <div class="group_information">
-    <h3> Transactions for <%=  @transaction.account.name %></h3>
-    <button class="btn primary" id="newtranbtn" type="button">New Transaction</button>    
-  </div>
-</div>
-<% if tran.blank? %>
-<div class="well">
-  There are no transactions for this account
-</div>
-<%  else %>
-<table class="table table-striped">
- <thead>
-  <tr>    
-    <th><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>    </th>
-    <th>Amount</th>
-    <th>Details</th>
-    <th>Date</th>
-    <th>Actions</th>
-  </tr>
-</thead>
-<tbody>
-  <% tran.each do |transaction| %>
-  <tr>    
-    <td><%= link_to truncate(transaction.remarks, :length => 35), transaction_path(transaction) %></td>
-    <td>Rs. <%= transaction.amount %></td>
-    <td><%= transaction.details %> </td>
-    <td><%= transaction.txndate.strftime("%d/%m/%Y") %></td>
-    <td>
-      <%= link_to(edit_transaction_path(transaction)) do %>
-        <i class='icon-pencil'></i>
-      <% end %>
-      <%= link_to(transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
-        <i class='icon-trash'></i>
-      <% end %>
-    </td>
-  </tr>
-  <%end%>
-</tbody>
-</table>
-<%= will_paginate tran, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :accountid => @transaction.account.id} %>
-<%  end %>
+<div id ="viewacctran" class="clearfix">
+  <% if tran.blank? %>
+    <div class="well">
+      There are no transactions for this account
+    </div>
+  <%  else %>
+    <% if filtered_transactions.present? %>
+      <% transaction_account = filtered_transactions.first.account_name %>
+      <% transaction_account_id = filtered_transactions.first.account_id %>
+    <%end%>
+    <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :accountid => transaction_account_id} %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Transaction")) %>    </th>
+          <th>Amount</th>
+          <th>Details</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tran.each do |transaction| %>
+          <tr>
+            <td><%= link_to truncate(transaction.remarks, :length => 35), transaction_path(transaction) %></td>
+            <td>Rs. <%= transaction.amount %></td>
+            <td><%= transaction.details %> </td>
+            <td><%= transaction.txndate.strftime("%Y-%m-%d") %></td>
+            <td>
+              <%= link_to(edit_transaction_path(transaction)) do %>
+                <i class='icon-pencil'></i>
+              <% end %>
+              <%= link_to(transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
+                <i class='icon-trash'></i>
+              <% end %>
+            </td>
+          </tr>
+        <%end%>
+      </tbody>
+    </table>
+    <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :accountid => transaction_account_id} %>
+  <% end %>
 </div>

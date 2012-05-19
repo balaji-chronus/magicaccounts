@@ -1,7 +1,10 @@
 <% if @transaction.errors.blank? %>
+<% params = { :accountid => @transaction.account.id } %>
+window.setTimeout(function (){jQuery("#view_transaction_for_account").text("<%=  @transaction.account.name %>");}, 1000);
+<% filtered_transactions = Transaction.search(params) %>
 jQuery("#viewacctran").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/tran',
-    :object => Transaction.view_transactions(current_user,@transaction.account.id,1)))%>");
+    :locals => { :tran => Transaction.view_transactions(current_user, filtered_transactions.collect(&:id)), :filtered_transactions => filtered_transactions }))%>");
 
 jQuery("#tranact").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/activitytransactions',
@@ -11,7 +14,10 @@ jQuery('#transaction_user_id').val("");
 Transaction.cleanUpTransactionUsers();
 jQuery('#transaction_remarks').val("");
 jQuery("#newtranbtn").text("Move up");
+jQuery(".transaction_search select#category").val("all");
+jQuery(".transaction_search input[type='text']").val("");
 <% end %>
 jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
 jQuery("#new_transaction").removeAttr('disabled');
 jQuery("#transactions_save").removeAttr('disabled').val("Save");
+jQuery("#transactions_loader").hide();

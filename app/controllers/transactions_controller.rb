@@ -4,12 +4,14 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.view_transactions(current_user, params[:accountid], params[:page])
+    @filtered_transactions = Transaction.search(params)
+    @transactions = Transaction.view_transactions(current_user, @filtered_transactions.collect(&:id))
+    
 
     respond_to do |format|
       if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
         @transaction.account_id = params[:accountid]
-        @defaultaccount = Account.find_by_id(params[:accountid]).name
+        @defaultaccount = Account.find_by_id(params[:accountid])
         format.html
         format.json { render json: @transactions }
         format.js { render :content_type => 'text/javascript' }
@@ -46,7 +48,7 @@ class TransactionsController < ApplicationController
     
     if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
       @transaction.account_id = params[:accountid]
-      @defaultaccount = Account.find_by_id(params[:accountid]).name
+      @defaultaccount = Account.find_by_id(params[:accountid])
     end    
     
     respond_to do |format|      
@@ -59,7 +61,7 @@ class TransactionsController < ApplicationController
   # GET /transactions/1/edit
   def edit
     @transaction  = Transaction.find_by_id(params[:id])
-
+    @defaultaccount = @transaction.account
     respond_to do |format|
       if @transaction
         if (@transaction.user == current_user || @transaction.users.find_by_id(current_user))

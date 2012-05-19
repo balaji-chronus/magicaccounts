@@ -115,17 +115,19 @@ var Transaction = {
        }
    });
 
-   jQuery("#report_filter_link").toggle(
+   jQuery("#advanced_filter_link").toggle(
         function(){
-            jQuery(this).text("Hide Advanced Filter");
-            jQuery('.report_filter_container').fadeIn();
+            jQuery(this).text("Hide Advanced");
+            jQuery('.advanced_filter_container').fadeIn();
             jQuery('#toggle_advance_filter').val("true");
         },
         function(){
-            jQuery(this).text("Show Advanced Filter");
-            jQuery('.report_filter_container').fadeOut();
-            jQuery('#toggle_advance_filter').val("false");
+            jQuery(this).text("Show Advanced");
+            jQuery('.advanced_filter_container').fadeOut();
+            jQuery('#toggle_advance_filter').val("");
         }
     );
+
+    jQuery(".date_select").datepicker({format: 'yyyy-mm-dd'});
 })
 

@@ -5,6 +5,20 @@ class Transaction < ActiveRecord::Base
   has_many    :users, :through => :transactions_users
   has_many    :transactions_users, :dependent => :destroy
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true
+
+  include Tire::Model::Search
+  include Tire::Model::Callbacks
+
+  mapping do
+    indexes :id, type: 'integer'
+    indexes :account, type: 'integer'
+    indexes :category, boost: 5
+    indexes :remarks, analyzer: 'snowball', boost: 10
+    indexes :txndate, type: 'date'
+    indexes :created_at, type: 'date'
+    indexes :updated_at, type: 'date'
+    indexes :account_name
+  end
   
   CATEGORIES = [
     ["General", 'general'],
@@ -71,8 +85,8 @@ class Transaction < ActiveRecord::Base
 
   end
 
-  def self.view_transactions(user, account, page)    
-    Transaction.paginate_by_sql(['
+  def self.view_transactions(user, ids)
+    Transaction.find_by_sql(['
       SELECT 	id,
               amount,
               CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
@@ -88,13 +102,14 @@ class Transaction < ActiveRecord::Base
                         SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
                         SUM(B.amount) amount,
                         A.remarks,
-                        A.txndate
+                        A.txndate,
+                        IFNULL(A.updated_at, A.created_at) created_at
                 FROM    transactions A JOIN transactions_users B
-                ON      A.account_id = ?
-                AND     A.id = B.transaction_id
+                ON      A.id = B.transaction_id
+                WHERE   A.id IN (?)
                 GROUP   BY A.id )tmp
       WHERE     type <> "none"
-      ORDER     BY txndate DESC ', user,user,user,account], :page => page, :per_page => 10)
+      ORDER     BY txndate DESC, created_at DESC ', user,user,user,ids])
   end
 
   def self.spend_by(parameter, user, start_time, end_time)
@@ -104,6 +119,25 @@ class Transaction < ActiveRecord::Base
                             AND	category != 'settlement'
                             #{start_time.blank? ? "" : " AND txndate BETWEEN '#{start_time}' AND '#{end_time}' "}
                             GROUP	BY #{parameter}", user, user, user, user])
+  end
+
+  def self.search(params)
+    tire.search(page: params[:page] || 1, per_page: 10) do
+      query { string params[:query], default_operator: "AND" } if params[:query].present?
+      filter :range, txndate: {gte: params[:transaction_start_date]} if params[:transaction_start_date].present?
+      filter :range, txndate: {lte: params[:transaction_end_date]} if params[:transaction_end_date].present?
+      filter :term, account_id: params[:accountid]
+      filter :term, category: params[:category] if params[:category].present? && params[:category] != "all"
+      sort { by :txndate, 'desc' }
+    end
+  end
+
+  def to_indexed_json
+    to_json(methods: [:account_name])
+  end
+
+  def account_name
+    self.account.name
   end
 end
 

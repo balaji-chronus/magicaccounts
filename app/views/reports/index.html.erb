@@ -1,4 +1,4 @@
-<div class="clearfix report_filter_container" style="display: <%= "#{@advanced == "false" ? "none" : "block"};" %>">
+<div class="clearfix advanced_filter_container" style="display: <%= "#{@advanced == "false" ? "none" : "block"};" %>">
   <%= form_tag reports_path, :method => :get, :id => "report_filter_form" do %>
   <%= label_tag :option, t("activerecord.attributes.transaction.user_id", :default => "Date Range"), :class => :label %>
   <div class="input">
@@ -12,13 +12,13 @@
     <div class="report_start_date clearfix">
       <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "From"), :class => :label %>
       <div class="input">
-        <%= select_date @start_date, :prefix => :report_start_date %>
+        <%= text_field_tag :report_start_date, @start_date || Date.today, :class => "date_select" %>
       </div>
     </div>
     <div class="report_end_date clearfix">
       <%= label_tag :to, t("activerecord.attributes.transaction.txndate", :default => "To"), :class => :label %>
       <div class="input">
-        <%= select_date @end_date, :prefix => :report_end_date %>
+        <%= text_field_tag :report_end_date, @end_date || Date.today, :class => "date_select" %>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
   <% end %>
 </div>
 <div class="clearfix">
-  <a href="javascript:void(0)" id="report_filter_link"><%= "#{@advanced == "false" ? "Show Advanced Filter" : "Hide Advanced Filter"}"%></a>
+  <a href="javascript:void(0)" id="advanced_filter_link"><%= "#{@advanced == "false" ? "Show Advanced" : "Hide Advanced"}"%></a>
 </div>
 <div id="report_tree" class="accordion">
   <div class="accordion-group">

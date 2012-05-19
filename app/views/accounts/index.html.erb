@@ -26,7 +26,7 @@
    <tr>    
     <td><%= link_to account.name, account_path(account) %></td>
     <td><%= link_to Group.find(account.group_id).name, :controller => 'groups', :action => 'show', :id => account.group_id %></td>
-    <td><%= account.created_at.strftime("%d/%m/%Y") %></td>
+    <td><%= account.created_at.strftime("%Y-%m-%d") %></td>
     <td>
       <%= link_to(edit_account_path(account)) do %>
         <i class='icon-pencil'></i>

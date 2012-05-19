@@ -204,17 +204,88 @@ a.headerlinks {
     margin-left: 16%;
 }
 
-a#report_filter_link, a#report_filter_link:focus {
+a#advanced_filter_link, a#advanced_filter_link:focus {
     color: #0064CD;
     text-decoration: underline;
     float: right;
     outline: none;
 }
 
-.report_filter_container {
+.advanced_filter_container {
     display: none;
 }
 
 .nav-header.group_nav_header {
     color: #EEE !important;
+}
+
+/************** Transaction Search *************/
+
+.transaction_search .transaction_search_col1 {
+    float: left;
+    width: 75%;
+}
+
+.transaction_search .transaction_search_col2 {
+    float: left;
+    width: 25%;
+}
+
+.transaction_search .transaction_search_col1 label{
+    width: 12.7%;
+}
+
+.transaction_search .transaction_search_col1 input{
+    width: 80%;
+}
+
+.transaction_search .advanced_search_row_container {
+    float: left;
+    width: 82%;
+}
+
+.transaction_search .advanced_search_row_container .advanced_search_column {
+    float: left;
+    width: 50%;
+}
+
+.transaction_search .advanced_search_row_container .advanced_search_column .advanced_label_left {
+    width: 23%;
+}
+
+.transaction_search .advanced_search_row_container .advanced_search_column .advanced_label_right {
+    width: 8%;
+}
+
+.transaction_search .advanced_search_row_container .advanced_search_column .advanced_search_param {
+    width: 62%;
+}
+
+.transaction_search .advanced_search_row_container .advanced_search_column .advanced_search_select {
+    width: 65%;
+}
+
+.transaction_search .transaction_search_submit {
+    margin-right: 10px;
+}
+
+.transaction_search a {
+    color: #005580;
+    text-decoration: underline;
+}
+
+.spinner {
+    margin: 18% 0 0 43%;
+}
+
+#display_transactions_container {
+    position: relative;
+}
+
+#display_transactions_container #transactions_loader {
+    display: none;
+    position: absolute;    
+    z-index: 10;
+    top: 44%;
+    left: 50%;
 }

@@ -28,10 +28,12 @@ Magicaccounts::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  ENV['SSL_CERT_FILE'] = "/opt/local/etc/certs/cacert.pem"
+
   config.action_mailer.default_url_options = { :host => 'magicaccounts.heroku.com' }
   config.mailer_sender = "admin@magicaccounts.com"
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.raise_delivery_errors = false
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',

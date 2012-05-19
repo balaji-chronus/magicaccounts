@@ -3,7 +3,7 @@ module ReportsHelper
     params[:format] ||= :json
     path = url_for({:controller => 'reports', :action => action}.merge(params))      
     content_tag(:div, :'data-chart' => path, :style => "height: #{height}px;") do
-      image_tag('icons/spinner.gif', :class => 'spinner')
+      image_tag('icons/spinner.png', :class => 'spinner')
     end
   end
 end

@@ -12,7 +12,7 @@ Dear <%=  @beneficiary.name%>,<br/> <br/>
 </div>
 <div style="margin-bottom:10px">
   <span style="float:left;width:120px;"><strong>When?</strong> </span>
-  <span><%=  (@action == "Added" ? @transaction.created_at : @transaction.updated_at).strftime("%m/%d/%Y on a %A")%></span>
+  <span><%=  (@action == "Added" ? @transaction.created_at : @transaction.updated_at).strftime("%Y-%m-%d on a %A")%></span>
 </div>
 <div style="margin-bottom:10px">
   <span style="float:left;width:120px;"><strong>Which Account?</strong> </span>
