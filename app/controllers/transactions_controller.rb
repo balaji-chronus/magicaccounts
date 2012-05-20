@@ -6,9 +6,8 @@ class TransactionsController < ApplicationController
   def index
     @filtered_transactions = Transaction.search(params)
     @transactions = Transaction.view_transactions(current_user, @filtered_transactions.collect(&:id))
-    @transaction_categories = Transaction::CATEGORIES
-    @transaction_categories << ["All", "all"]
-    
+    transaction_categories = Transaction::CATEGORIES.select{|cat| cat}
+    @transaction_categories = transaction_categories.push(["All", "all"])
 
     respond_to do |format|
       if params[:accountid] && @accounts.find {|acc| acc.id == params[:accountid].to_i}
