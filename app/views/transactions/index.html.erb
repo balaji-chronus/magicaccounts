@@ -55,7 +55,7 @@
           <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "Category"), :class => "label advanced_label_left" %>
           <div class="input">
             <%= select_tag :category,
-              options_for_select(Transaction::CATEGORIES << ["All", "all"], params[:category] || "all"),
+              options_for_select(@transaction_categories, params[:category] || "all"),
               :class => 'advanced_search_select' %>
           </div>
         </div>

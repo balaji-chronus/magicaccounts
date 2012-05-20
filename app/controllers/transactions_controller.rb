@@ -6,6 +6,8 @@ class TransactionsController < ApplicationController
   def index
     @filtered_transactions = Transaction.search(params)
     @transactions = Transaction.view_transactions(current_user, @filtered_transactions.collect(&:id))
+    @transaction_categories = Transaction::CATEGORIES
+    @transaction_categories << ["All", "all"]
     
 
     respond_to do |format|
