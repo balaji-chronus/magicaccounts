@@ -34,6 +34,7 @@ class Transaction < ActiveRecord::Base
     ["Entertainment", "entertainment"],
     ["Footwear", "footwear"],
     ["Settlement", "settlement"],
+    ["Telephone", "telephone"],
     ["Miscellaneous", "miscellaneous"]
   ]
 
