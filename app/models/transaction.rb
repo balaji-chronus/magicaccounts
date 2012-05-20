@@ -18,6 +18,7 @@ class Transaction < ActiveRecord::Base
     indexes :created_at, type: 'date'
     indexes :updated_at, type: 'date'
     indexes :account_name
+    indexes :players, type: 'integer'
   end
   
   CATEGORIES = [
@@ -46,8 +47,6 @@ class Transaction < ActiveRecord::Base
   
   validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
   validates :category,  :inclusion => { :in => CATEGORIES.collect {|val| val[1]}}
-  #validates :user_id,   :inclusion => { :in => ->{User.find(:all).collect(&:id)}, :message => 'Select an investor from the list'}
-  #validates :account_id,:inclusion => { :in => ->{Account.find(:all).collect(&:id)}, :message => 'Account is not valid'}
   validates :user_id, :existence => true
   validates :account_id, :existence => true
   validates :transactions_users, :presence => true
@@ -122,23 +121,28 @@ class Transaction < ActiveRecord::Base
                             GROUP	BY #{parameter}", user, user, user, user])
   end
 
-  def self.search(params)
+  def self.search(params, current_user)
     tire.search(page: params[:page] || 1, per_page: 10) do
       query { string params[:query], default_operator: "AND" } if params[:query].present?
       filter :range, txndate: {gte: params[:transaction_start_date]} if params[:transaction_start_date].present?
       filter :range, txndate: {lte: params[:transaction_end_date]} if params[:transaction_end_date].present?
       filter :term, account_id: params[:accountid]
       filter :term, category: params[:category] if params[:category].present? && params[:category] != "all"
+      filter :term, players: current_user.id
       sort { by :txndate, 'desc' }
     end
   end
 
   def to_indexed_json
-    to_json(methods: [:account_name])
+    to_json(methods: [:account_name, :players])
   end
 
   def account_name
     self.account.name
+  end
+
+  def players
+    self.transactions_users.collect(&:user_id).push(self.user_id).uniq
   end
 end
 
