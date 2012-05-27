@@ -1,5 +1,5 @@
 class TransactionsController < ApplicationController
-  before_filter :initiate_transaction, :only => [:new, :index]
+  before_filter :initiate_transaction, :only => [:index]
 
   # GET /transactions
   # GET /transactions.json
@@ -138,5 +138,6 @@ class TransactionsController < ApplicationController
   private
   def initiate_transaction
     @transaction = Transaction.new
+    @transaction.user = current_user
   end
 end

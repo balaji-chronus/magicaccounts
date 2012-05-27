@@ -5,7 +5,7 @@
       <%= tu_form.hidden_field :transaction_id %>
       <%= hidden_field_tag :amount_support, "", :class => "txnamountuser#{f.object.user_id == tu_form.object.user_id ? " active" : ""}" %>
       <%= tu_form.hidden_field :amount, :class => "txnuseramount" %>
-      <%= tu_form.hidden_field :_destroy, :value => tu_form.object.amount.blank?, :class => "txnuserdestroy" %>
+      <%= tu_form.hidden_field :_destroy, :value => f.object.user_id == tu_form.object.user_id ? false : true, :class => "txnuserdestroy" %>
     </div>
     <% end %>
 

@@ -25,8 +25,8 @@
   <%= f.label :user_id, t("activerecord.attributes.transaction.user_id", :default => "Investor"), :class => :label %>
   <div class="input">
     <%= f.select  :user_id,
-      [[current_user.name,current_user.id]],
-      { :selected => current_user.name},
+      [[f.object.user.name,f.object.user.id]],
+      { :selected => f.object.user.id},
       { :class => 'selectwidth' } %>
   </div>
 </div>
