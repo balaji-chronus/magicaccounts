@@ -14,7 +14,7 @@ Magicaccounts::Application.routes.draw do
 
   root :to => 'transactions#user_profile'
   match 'groups/:code/adduser' => 'groups#adduser'
-  match 'transactions/new/:accountid' => 'transactions#new'
+  match 'transactions/new/:groupid' => 'transactions#new'
   match 'profile' => "transactions#user_profile"
   match 'accounts/new/:groupid' => 'accounts#new'
   match 'groups/sendinvites' => 'groups#sendinvites'

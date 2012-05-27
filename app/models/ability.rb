@@ -39,6 +39,14 @@ class Ability
       can :destroy, User do |usr|
         usr == user
       end
+
+      can :change, Transaction do |transaction|
+        transaction.user == user
+      end
+
+      can :show, Transaction do |transaction|
+        transaction.user == user || transaction.users.include?(user)
+      end
     end
   end
 end

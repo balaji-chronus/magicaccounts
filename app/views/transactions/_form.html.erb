@@ -1,24 +1,33 @@
 <div class="clearfix">
-   <%= f.label :txndate, t("activerecord.attributes.transaction.txndate", :default => "Txn Date"), :class => :label %>
+  <%= f.label :txndate, t("activerecord.attributes.transaction.txndate", :default => "Txn Date"), :class => :label %>
   <div class="input">
     <%= f.text_field :txndate, :value => f.object.txndate || Date.today, :class => 'date_select' %>
   </div>
 </div>
 
-<div class="clearfix">
-  <%= f.label :account_id, t("activerecord.attributes.transaction.account_id", :default => "Account"), :class => :label %>
-  <div class="input">    
-    <%= f.select :account_id, @accounts.collect {|acc| [acc.name, acc.id]}, {:prompt => 'Select Account' }, { :selected => @defaultaccount.name, :class => 'selectwidth' } %>
+<% if type == "edit" %>
+  <div class="clearfix">
+    <%= f.label :group_id, t("activerecord.attributes.transaction.account_id", :default => "Group"), :class => :label %>
+    <div class="input">
+      <%= f.select :group_id, [[@defaultgroup.name, @defaultgroup.id]], {}, { :selected => @defaultgroup.name, :class => 'selectwidth', :disabled => true} %>
+    </div>
   </div>
-</div>
+<% else %>
+  <div class="clearfix">
+    <%= f.label :group_id, t("activerecord.attributes.transaction.account_id", :default => "Group"), :class => :label %>
+    <div class="input">
+      <%= f.select :group_id, @groups.collect {|grp| [grp.name, grp.id, {:redirectUrl => transactions_path(:groupid => grp.id, :open_new_form => "true")}]}, {:prompt => 'Select Group' }, { :selected => @defaultgroup.name, :class => 'selectwidth', :onchange => "Utilities.redirectTo(event,jQuery('option:selected', this).attr('redirectUrl'))" } %>
+    </div>
+  </div>
+<% end %>
 
 <div class="clearfix">
-   <%= f.label :user_id, t("activerecord.attributes.transaction.user_id", :default => "Investor"), :class => :label %>
+  <%= f.label :user_id, t("activerecord.attributes.transaction.user_id", :default => "Investor"), :class => :label %>
   <div class="input">
     <%= f.select  :user_id,
-                  @accountusers.collect {|user| [user.user_name,user.user_id]},
-                  { :prompt => 'Select Investor'},
-                  { :class => 'selectwidth' } %>
+      [[current_user.name,current_user.id]],
+      { :selected => current_user.name},
+      { :class => 'selectwidth' } %>
   </div>
 </div>
 
@@ -30,22 +39,22 @@
 </div>
 
 <% partial_name = case (f.object.transaction_type)
-                  when 2 then "group_equal"
-                  when 3 then "group_unequal"
-                  else "personal"
-                  end %>
+when 2 then "group_equal"
+when 3 then "group_unequal"
+else "personal"
+end %>
 
 <%= render(:partial => "transactions/transaction_types/#{partial_name}", :locals =>  {:f => f}) %>
 
 <div class="clearfix">
-   <%= f.label :category, t("activerecord.attributes.transaction.category", :default => "Category"), :class => :label %>
+  <%= f.label :category, t("activerecord.attributes.transaction.category", :default => "Category"), :class => :label %>
   <div class="input">
     <%= f.select :category, Transaction::CATEGORIES, {:prompt => false }, {:default => 'General', :class => 'selectwidth'} %>
   </div>  
 </div>
 
 <div class="clearfix">
-   <%= f.label :remarks, t("activerecord.attributes.transaction.remarks", :default => "Remarks"), :class => :label %>
+  <%= f.label :remarks, t("activerecord.attributes.transaction.remarks", :default => "Remarks"), :class => :label %>
   <div class="input">
     <%= f.text_area :remarks, :class => 'text_area', :rows => 5  %>
   </div>
@@ -53,30 +62,30 @@
 
 <div class="clearfix">
   <div class="input">
-    <%= f.hidden_field  :enteredby, :value => current_user %>
+    <%= f.hidden_field  :enteredby, :value => current_user.id %>
   </div>
 </div>
 
 <div class="form-actions">
   <%= f.submit "Save", id: "transactions_save", class: "btn primary", disable_with: "Submitting..." %>
-</div>
+  </div>
 
-<script type="text/javascript">
-jQuery(document).ready(function(){
-  jQuery('#transaction_transaction_type').change(function() {
-    var transaction_type = jQuery(this).val();
-    if (transaction_type == "1") {
-      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/personal', :locals =>  {:f => f}))%>");
-      Transaction.cleanUpTransactionUsers();
-      Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
-    }
-    else if(transaction_type == "2") {      
-      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_equal', :locals =>  {:f => f}))%>");
-      Transaction.setTransactionUserAmount();
-    }
-    else if(transaction_type == "3") {      
-      jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_unequal', :locals =>  {:f => f}))%>");
-    }
-  });
-});
-</script>
+  <script type="text/javascript">
+    jQuery(document).ready(function(){
+      jQuery('#transaction_transaction_type').change(function() {
+        var transaction_type = jQuery(this).val();
+        if (transaction_type == "1") {
+          jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/personal', :locals =>  {:f => f}))%>");
+          Transaction.cleanUpTransactionUsers();
+          Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
+        }
+        else if(transaction_type == "2") {
+          jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_equal', :locals =>  {:f => f}))%>");
+          Transaction.setTransactionUserAmount();
+        }
+        else if(transaction_type == "3") {
+          jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_unequal', :locals =>  {:f => f}))%>");
+        }
+      });
+    });
+  </script>

@@ -1,7 +1,6 @@
 class Group < ActiveRecord::Base
   has_and_belongs_to_many :users, :uniq => true
-  has_many :accounts, :dependent => :destroy
-  has_many :transactions, :through => :accounts, :dependent => :destroy
+  has_many :transactions, :dependent => :destroy
   has_many :comments
   belongs_to :user
   

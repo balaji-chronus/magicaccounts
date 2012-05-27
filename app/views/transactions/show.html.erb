@@ -4,8 +4,8 @@
 </div>
 
 <div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.account_id", :default => t("activerecord.labels.account_id", :default => "Account")) %>:</label>
-  <p><%= Account.find_by_id(@transaction.account_id).name + " (" + Account.find_by_id(@transaction.account_id).code + ")" %></p>
+  <label class="label"><%= t("activerecord.attributes.transaction.account_id", :default => t("activerecord.labels.account_id", :default => "Group")) %>:</label>
+  <p><%= @transaction.group.name %></p>
 </div>
 
 <div class="clearfix">
@@ -34,5 +34,5 @@
 </div>
 
 <div class="form-actions">
-  <%= link_to "Back", transactions_path(:accountid => @transaction.account_id), :class => 'btn'  %>
+  <%= link_to "Back", transactions_path(:groupid => @transaction.group_id), :class => 'btn'  %>
 </div>

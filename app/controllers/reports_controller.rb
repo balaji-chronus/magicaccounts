@@ -32,8 +32,8 @@ class ReportsController < ApplicationController
   def spend_by_account
     render :json => {
       :type => 'PieChart',
-      :cols => [['string', 'Account'], ['number', 'Spend']],
-      :rows => Transaction.spend_by("account_id", current_user.id, params[:start_date], params[:end_date]).collect{|row| [Account.find_by_id(row.account_id).name + " (" + Account.find_by_id(row.account_id).group.name + ")", row.spend.to_f]},
+      :cols => [['string', 'Group'], ['number', 'Spend']],
+      :rows => Transaction.spend_by("group_id", current_user.id, params[:start_date], params[:end_date]).collect{|row| [Group.find_by_id(row.group_id).name, row.spend.to_f]},
       :options => {
         :chartArea => { :width => '90%', :height => '80%' },
         :legend => 'left',
@@ -74,8 +74,8 @@ class ReportsController < ApplicationController
   def transaction_count_by_account
     render :json => {
       :type => 'ColumnChart',
-      :cols => [['string', 'Account'], ['number', 'No of Transactions']],
-      :rows => Transaction.spend_by("account_id", current_user.id, params[:start_date], params[:end_date]).collect{|row| [Account.find_by_id(row.account_id).name + " (" + Account.find_by_id(row.account_id).group.name + ")", row.txn_count.to_i]},
+      :cols => [['string', 'Group'], ['number', 'No of Transactions']],
+      :rows => Transaction.spend_by("group_id", current_user.id, params[:start_date], params[:end_date]).collect{|row| [Group.find_by_id(row.group_id).name, row.txn_count.to_i]},
       :options => {
         :chartArea => { :width => '80%', :height => '80%' },
         :legend => 'none',
@@ -102,8 +102,8 @@ class ReportsController < ApplicationController
   def avg_spend_by_account
     render :json => {
       :type => 'LineChart',
-      :cols => [['string', 'Account'], ['number', 'Avg Spend/Transaction']],
-      :rows => Transaction.spend_by("account_id", current_user.id, params[:start_date], params[:end_date]).collect{|row| [Account.find_by_id(row.account_id).name + " (" + Account.find_by_id(row.account_id).group.name + ")", (row.spend.to_f/row.txn_count.to_i).round(2)]},
+      :cols => [['string', 'Group'], ['number', 'Avg Spend/Transaction']],
+      :rows => Transaction.spend_by("group_id", current_user.id, params[:start_date], params[:end_date]).collect{|row| [Group.find_by_id(row.group_id).name, (row.spend.to_f/row.txn_count.to_i).round(2)]},
       :options => {
         :chartArea => { :width => '80%', :height => '80%' },
         :legend => 'none',

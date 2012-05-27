@@ -1,6 +1,6 @@
 class Transaction < ActiveRecord::Base
   belongs_to  :user
-  belongs_to  :account
+  belongs_to  :group
   has_many    :comments, :as => :commentable
   has_many    :users, :through => :transactions_users
   has_many    :transactions_users, :dependent => :destroy
@@ -11,13 +11,13 @@ class Transaction < ActiveRecord::Base
 
   mapping do
     indexes :id, type: 'integer'
-    indexes :account, type: 'integer'
+    indexes :group_id, type: 'integer'
     indexes :category, boost: 5
     indexes :remarks, analyzer: 'snowball', boost: 10
     indexes :txndate, type: 'date'
     indexes :created_at, type: 'date'
     indexes :updated_at, type: 'date'
-    indexes :account_name
+    indexes :group_name
     indexes :players, type: 'integer'
   end
   
@@ -47,39 +47,37 @@ class Transaction < ActiveRecord::Base
   
   validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
   validates :category,  :inclusion => { :in => CATEGORIES.collect {|val| val[1]}}
-  validates :user_id, :existence => true
-  validates :account_id, :existence => true
   validates :transactions_users, :presence => true
+  validate  :check_group_user_access
 
   def self.balance(sessionuser)
 
-  Transaction.find_by_sql([" SELECT	Y.group_id, Y.id account_id, U.name user_name, investments, expenditures
-                            FROM    ( SELECT	R1.account_id, R1.user_id, IFNULL(investments, 0) investments, expenditures
-                                      FROM 	( SELECT	account_id, user_id, SUM(amount) expenditures
+  Transaction.find_by_sql([" SELECT	X.group_id, U.name user_name, investments, expenditures
+                            FROM    ( SELECT	R1.group_id, R1.user_id, IFNULL(investments, 0) investments, expenditures
+                                      FROM 	( SELECT	group_id, user_id, SUM(amount) expenditures
                                               FROM    transactions_beneficiaries A
                                               WHERE 	beneficiary_id = ?
-                                              GROUP   BY account_id, user_id) R1
+                                              GROUP   BY group_id, user_id) R1
                                               LEFT	JOIN
-                                              (SELECT	account_id, beneficiary_id, SUM(amount) investments
+                                              (SELECT	group_id, beneficiary_id, SUM(amount) investments
                                               FROM    transactions_beneficiaries A
                                               WHERE   user_id = ?
-                                              GROUP   BY account_id, beneficiary_id) R2
-                                      ON    R1.account_id = R2.account_id
+                                              GROUP   BY group_id, beneficiary_id) R2
+                                      ON    R1.group_id = R2.group_id
                                       and   R1.user_id = R2.beneficiary_id
                                       UNION
-                                      SELECT	R2.account_id, R2.beneficiary_id user_id, investments, IFNULL(expenditures,0) expenditures
-                                      FROM 	( SELECT	account_id, user_id, SUM(amount) expenditures
+                                      SELECT	R2.group_id, R2.beneficiary_id user_id, investments, IFNULL(expenditures,0) expenditures
+                                      FROM 	( SELECT	group_id, user_id, SUM(amount) expenditures
                                               FROM    transactions_beneficiaries A
                                               WHERE   beneficiary_id = ?
-                                              GROUP   BY account_id, user_id) R1
+                                              GROUP   BY group_id, user_id) R1
                                       RIGHT	JOIN
-                                           (  SELECT	account_id, beneficiary_id, SUM(amount) investments
+                                           (  SELECT	group_id, beneficiary_id, SUM(amount) investments
                                               FROM    transactions_beneficiaries A
                                               WHERE   user_id = ?
-                                              GROUP   BY account_id, beneficiary_id) R2
-                                      ON    R1.account_id = R2.account_id
-                                      and   R1.user_id = R2.beneficiary_id) X JOIN accounts Y
-                            ON        X.account_id = Y.id                            
+                                              GROUP   BY group_id, beneficiary_id) R2
+                                      ON    R1.group_id = R2.group_id
+                                      and   R1.user_id = R2.beneficiary_id) X
                             JOIN      users U
                             ON        X.user_id = U.id ", sessionuser,sessionuser,sessionuser,sessionuser])
 
@@ -126,7 +124,7 @@ class Transaction < ActiveRecord::Base
       query { string params[:query], default_operator: "AND" } if params[:query].present?
       filter :range, txndate: {gte: params[:transaction_start_date]} if params[:transaction_start_date].present?
       filter :range, txndate: {lte: params[:transaction_end_date]} if params[:transaction_end_date].present?
-      filter :term, account_id: params[:accountid]
+      filter :term, group_id: params[:groupid]
       filter :term, category: params[:category] if params[:category].present? && params[:category] != "all"
       filter :term, players: current_user.id
       sort { by :txndate, 'desc' }
@@ -134,15 +132,34 @@ class Transaction < ActiveRecord::Base
   end
 
   def to_indexed_json
-    to_json(methods: [:account_name, :players])
+    to_json(methods: [:group_name, :players])
   end
 
-  def account_name
-    self.account.name
+  def group_name
+    self.group.name
   end
 
   def players
     self.transactions_users.collect(&:user_id).push(self.user_id).uniq
+  end
+
+  def self.get_user_transactions(user)
+    tire.search(per_page: 15) do
+      filter :term, players: user.id
+    end
+  end
+
+  private
+  
+  def check_group_user_access
+    if !(Group.get_groups_for_current_user(self.user_id).collect(&:id).include?(self.group_id))
+      errors.add(:group_id, "is not valid")
+    else
+      players = self.transactions_users.collect(&:user_id).push(self.user_id).uniq
+      if !(players & Group.find_by_id(self.group_id).users.collect(&:id) == players.uniq)
+        errors.add(:user_id, "/Beneficiaries are not valid")
+      end
+    end
   end
 end
 

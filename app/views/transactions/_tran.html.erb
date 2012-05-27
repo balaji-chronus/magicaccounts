@@ -1,14 +1,14 @@
 <div id ="viewacctran" class="clearfix">
   <% if tran.blank? %>
     <div class="well">
-      There are no transactions for this account
+      Sorry, No Transactions Found
     </div>
   <%  else %>
     <% if filtered_transactions.present? %>
-      <% transaction_account = filtered_transactions.first.account_name %>
-      <% transaction_account_id = filtered_transactions.first.account_id %>
+      <% transaction_group = filtered_transactions.first.group_name %>
+      <% transaction_group_id = filtered_transactions.first.group_id %>
     <%end%>
-    <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :accountid => transaction_account_id} %>
+    <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :groupid => transaction_group_id} %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -27,17 +27,22 @@
             <td><%= transaction.details %> </td>
             <td><%= transaction.txndate.strftime("%Y-%m-%d") %></td>
             <td>
-              <%= link_to(edit_transaction_path(transaction)) do %>
-                <i class='icon-pencil'></i>
-              <% end %>
-              <%= link_to(transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
-                <i class='icon-trash'></i>
+              <% if can?(:change, Transaction.find_by_id(transaction.id)) %>
+
+                <%= link_to(edit_transaction_path(transaction)) do %>
+                  <i class='icon-pencil'></i>
+                <% end %>
+                <%= link_to(transaction_path(transaction), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
+                  <i class='icon-trash'></i>
+                <% end %>
+              <% else %>
+                &nbsp;
               <% end %>
             </td>
           </tr>
         <%end%>
       </tbody>
     </table>
-    <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :accountid => transaction_account_id} %>
+    <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :groupid => transaction_group_id} %>
   <% end %>
 </div>

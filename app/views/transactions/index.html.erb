@@ -1,4 +1,4 @@
-<div id="newacctran" style="display: none">
+<div id="newacctran" style="display: <%= params[:open_new_form] == "true" ? "block" : "none" %>">
   <div class="group_header wellgroup">
     <div class="group_image_container">
       <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
@@ -9,7 +9,7 @@
     </div>
   </div>
   <%= form_for @transaction, :remote => true, :validate => true, :url => transactions_path, :html => { :class => :form } do |f| -%>
-    <%= render :partial => "form", :locals => {:f => f} %>
+    <%= render :partial => "form", :locals => {:f => f, :type => "new"} %>
   <% end -%>
 </div>
 
@@ -18,8 +18,8 @@
     <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
   </div>
   <div class="group_information">
-    <h3> Transactions for <span id="view_transaction_for_account"><%=  @defaultaccount.name %></span></h3>
-    <button class="btn primary" id="newtranbtn" type="button">New Transaction</button>
+    <h3> Transactions for <span id="view_transaction_for_account"><%=  @defaultgroup.name %></span></h3>
+    <button class="btn primary" id="newtranbtn" type="button"><%= params[:open_new_form] == "true" ? "Move up" : "New Transaction" %></button>
   </div>
 </div>
 <%= form_tag transactions_path(params), :remote => true, method: :get, :id => "transaction_search_form", :before => 'jQuery("#transactions_loader").show();', :after => 'jQuery("#transactions_loader").hide();' do %>
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="transaction_search_col2">
-      <%= hidden_field_tag :accountid, @defaultaccount.id %>
+      <%= hidden_field_tag :groupid, @defaultgroup.id %>
       <%= submit_tag "Search", :class => "btn primary transaction_search_submit" %>
       <%= link_to "Show Advanced", "javascript:void(0)",:id => "advanced_filter_link" %>
     </div>

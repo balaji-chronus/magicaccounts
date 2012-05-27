@@ -1,6 +1,6 @@
 <% if @transaction.errors.blank? %>
-<% params = { :accountid => @transaction.account.id } %>
-window.setTimeout(function (){jQuery("#view_transaction_for_account").text("<%=  @transaction.account.name %>");}, 1000);
+<% params = { :groupid => @transaction.group.id } %>
+window.setTimeout(function (){jQuery("#view_transaction_for_account").text("<%=  @transaction.group.name %>");}, 1000);
 <% filtered_transactions = Transaction.search(params, current_user) %>
 jQuery("#viewacctran").replaceWith("<%= escape_javascript(render(
     :partial => 'transactions/tran',

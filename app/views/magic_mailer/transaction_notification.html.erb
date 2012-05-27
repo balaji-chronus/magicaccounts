@@ -3,7 +3,7 @@
 Dear <%=  @beneficiary.name%>,<br/> <br/>
 
 <h3 style="border-top:1px solid #444;border-bottom:1px solid #444;padding:5px;background-color:#D0E0F0;margin-bottom:20px">
-    A Transaction was <%= @action %> in <%= @transaction.account.group.name %>
+    A Transaction was <%= @action %> in <%= @transaction.group.name %>
 </h3>
 <div>
 <div style="margin-bottom:10px">
@@ -15,8 +15,8 @@ Dear <%=  @beneficiary.name%>,<br/> <br/>
   <span><%=  (@action == "Added" ? @transaction.created_at : @transaction.updated_at).strftime("%Y-%m-%d on a %A")%></span>
 </div>
 <div style="margin-bottom:10px">
-  <span style="float:left;width:120px;"><strong>Which Account?</strong> </span>
-  <span><%=  @transaction.account.name%></span>
+  <span style="float:left;width:120px;"><strong>Which Group?</strong> </span>
+  <span><%=  @transaction.group.name%></span>
 </div>
 <div style="margin-bottom:10px">
   <span style="float:left;width:120px;"><strong>For What?</strong> </span>
