@@ -12,6 +12,13 @@ jQuery("#tranact").replaceWith("<%= escape_javascript(render(
 
 jQuery('#transaction_user_id').val("");
 Transaction.cleanUpTransactionUsers();
+var transaction_type = jQuery("#transaction_transaction_type").val();
+if (transaction_type == "1") {    
+  Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
+}
+else if(transaction_type == "2") {
+  Transaction.setTransactionUserAmount();
+}
 jQuery('#transaction_remarks').val("");
 jQuery("#newtranbtn").text("Move up");
 jQuery(".transaction_search select#category").val("all");
