@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
             :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
 
   validates :phone,
-            :length => { :in => 10..11, :message => "enter a phone number between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
+            :length => { :in => 10..11, :message => "Enter a phone number between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
             :format => { :with => /^[0-9]+$/, :message => "Only numbers are allowed in this section", :allow_blank => true}            
 
   validates :password,            
