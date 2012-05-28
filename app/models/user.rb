@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   validates :name,
             :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must have at least one alphabet and contain only alphabets, digits, or underscores'},
             :uniqueness => {:message => "Unavailable. Please choose another name"},
-            :length => {:in => 6..32, :message => "should be between 6 and 15 characters"}
+            :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
 
   validates :phone,
             :length => { :in => 10..11, :message => "enter a phone number between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
