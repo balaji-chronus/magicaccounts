@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   def load_activities  
     if current_user
       @groups =  current_user.user_groups
-      @activitytran = Comment.where(["commentable_type = 'Transaction' AND commentable_id IN (?)", Transaction.get_user_transactions(current_user).collect(&:id)]).order("created_at DESC")
+      @activitytran = Comment.where(["commentable_type = 'Transaction' AND commentable_id IN (?)", Transaction.get_user_transactions(current_user)]).order("created_at DESC")
     end
   end
 

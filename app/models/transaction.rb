@@ -144,9 +144,17 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.get_user_transactions(user)
-    tire.search(per_page: 15) do
+    results = tire.search(per_page: 15) do
       filter :term, players: user.id
+      sort { by :txndate, 'desc' }
     end
+
+    Transaction.find_by_sql(['
+    SELECT  A.id
+    FROM    transactions A 
+    WHERE   A.id IN (?)
+    ORDER   BY txndate DESC, IFNULL(A.updated_at, A.created_at) DESC',results.collect(&:id)])
+    
   end
 
   private

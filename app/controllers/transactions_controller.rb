@@ -68,7 +68,7 @@ class TransactionsController < ApplicationController
     respond_to do |format|
       if @transaction.user == current_user
         if @transaction.save
-          @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.group.id})
+          @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
           @comment.save
           @transaction.transactions_users.each do |transaction|
             if !(@transaction.user == transaction.user)
@@ -95,7 +95,7 @@ class TransactionsController < ApplicationController
     respond_to do |format|
       if @transaction.present?
         if @transaction.update_attributes(params[:transaction])
-          @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.group.id})
+          @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
           @comment.save
           format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
         else
@@ -114,7 +114,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find_by_id(params[:id])
     authorize! :change, @transaction
     if @transaction.present?
-      @comment = @transaction.comments.create( {:activity => " removed ", :content => @transaction.remarks, :user_id => current_user, :group_id => @transaction.group.id})
+      @comment = @transaction.comments.create( {:activity => " removed ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
       @comment.save
       flash[:notice] = "Transaction was succesfully removed"
       @transaction.destroy
