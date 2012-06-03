@@ -192,6 +192,7 @@ a.headerlinks {
 
 .site_features .feature_group {
     overflow: auto;
+    margin-bottom: 5%
 }
 
 .site_features .feature_group .feature_info p {
@@ -288,4 +289,13 @@ a#advanced_filter_link, a#advanced_filter_link:focus {
     z-index: 10;
     top: 44%;
     left: 50%;
+}
+
+#share_links {
+    margin: 4% 15px 4% 0;
+}
+
+img.dev-image {
+    float: left;
+    margin-right: 15px;
 }

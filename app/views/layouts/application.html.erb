@@ -51,7 +51,7 @@
                   <ul class="dropdown-menu">
                     <li class="nav-header group_nav_header"><%=  "Groups" %></li>
                     <% current_user.user_groups.each do |group| %>
-                      <%  if group.present? %>                        
+                      <%  if group.present? %>
                         <li><%= link_to group.name, transactions_path(:groupid => group.id)%></li>
                       <%end%>
                     <%end%>
@@ -60,6 +60,19 @@
                 <li><%= link_to "Reports", reports_path  %></li>
               </ul>
               <ul class="nav navlast">
+                <li id="share_links">
+                  <!-- AddThis Button BEGIN -->
+                  <div class="addthis_toolbox addthis_default_style ">
+                    <a class="addthis_button_preferred_1"></a>
+                    <a class="addthis_button_preferred_2"></a>
+                    <a class="addthis_button_preferred_3"></a>
+                    <a class="addthis_button_preferred_4"></a>
+                    <a class="addthis_button_compact"></a>
+                    <a class="addthis_counter addthis_bubble_style"></a>
+                  </div>
+                  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fcb097650d67cc7"></script>
+                  <!-- AddThis Button END -->
+                </li>
                 <li class="dropdown">
                   <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
                     <%= "Welcome " + current_user.name %>
@@ -103,38 +116,8 @@
                 <h3>Recent Activity</h3>
                 <%= render(:partial => 'transactions/activitytransactions', :object => @activitytran, :locals =>  {:type => 'transactions', :limit => 15})  %>
               <%else%>
-                <h3>User Testimonials</h3>
-                <ul class="nav nav-list">
-                  <li class="nav-header">
-                    Name, City
-                  </li>
-                  <li><%= image_tag("icons/quote24x24.png") %><blockquote style="display: inline;"><i>This application is everything it claims to be ! Simple, Intuitive and Easy to use. The more i use, the more i like it. Thumbs up</i></blockquote></li>
-                </ul>
-                <ul class="nav nav-list">
-                  <li class="nav-header">
-                    Name, City
-                  </li>
-                  <li><%= image_tag("icons/quote24x24.png") %><blockquote style="display: inline;"><i>This application is everything it claims to be ! Simple, Intuitive and Easy to use. The more i use, the more i like it. Thumbs up</i></blockquote></li>
-                </ul>
-                <ul class="nav nav-list">
-                  <li class="nav-header">
-                    Name, City
-                  </li>
-                  <li><%= image_tag("icons/quote24x24.png") %><blockquote style="display: inline;"><i>This application is everything it claims to be ! Simple, Intuitive and Easy to use. The more i use, the more i like it. Thumbs up</i></blockquote></li>
-                </ul>
-                <h3>Team</h3>
-                <ul class="nav nav-list">
-                  <li class="nav-header">
-                    Balaji S, Developer
-                  </li>
-                  <li><%= image_tag("balaji.jpg", :size => "50x75") %><br/>Works as a Senior Design Engineer @ Chronus Corporation. Passionate about developing open source products/ software. Magic Accounts is my first full fledged web application.</li>
-                </ul>
-                <ul class="nav nav-list">
-                  <li class="nav-header">
-                    Sreevidya N, Tested Magic Accounts
-                  </li>
-                  <li><%= image_tag("Sree.jpg", :size => "50x75") %><br/>Works as a Senior Software Engineer @ INautix. Passionate about learning new technologies.</li>
-                </ul>
+                <%= render(:partial => 'common/user_testimonials') %>
+                <%= render(:partial => 'common/dev_team') %>
               <%end%>
             </div>
           </div>
@@ -142,6 +125,7 @@
       </div>
 
       <footer>
+        <br/>
         <strong><br/><p>&copy; Magic Accounts 2012</p></strong>
       </footer>
 
