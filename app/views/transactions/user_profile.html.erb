@@ -39,7 +39,7 @@
             <% transactions_by_group = @balance.select {|bal| bal if (group.id == bal.group_id) }%>
             <% if transactions_by_group.blank? %>
               <div class="wellempty account_block">
-                You have no transactions for this group
+                You have no transactions for this group. <%= link_to "Add Transactions", transactions_path(:groupid => group.id, :open_new_form => true) %>
               </div>
             <%else%>
               <table class="table table-striped table-bordered account_block">

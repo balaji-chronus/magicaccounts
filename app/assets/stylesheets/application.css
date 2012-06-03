@@ -299,3 +299,7 @@ img.dev-image {
     float: left;
     margin-right: 15px;
 }
+
+.wellempty a {
+    color: #0064CD;
+}
