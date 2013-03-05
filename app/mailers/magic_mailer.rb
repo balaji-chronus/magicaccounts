@@ -15,7 +15,7 @@ class MagicMailer < ActionMailer::Base
   def transaction_notification(transaction, action, amount, beneficiary)
     @transaction = transaction
     @action = action
-    @amount = amount
+    @amount = amount.round
     @beneficiary = beneficiary
     mail(:to => beneficiary.email, :subject => "Magic Accounts - Transaction notification")
   end
