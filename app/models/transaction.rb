@@ -1,26 +1,7 @@
 class Transaction < ActiveRecord::Base
-  belongs_to  :user
-  belongs_to  :group
-  has_many    :comments, :as => :commentable
-  has_many    :users, :through => :transactions_users
-  has_many    :transactions_users, :dependent => :destroy
-  accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true
-
   include Tire::Model::Search
   include Tire::Model::Callbacks
 
-  mapping do
-    indexes :id, type: 'integer'
-    indexes :group_id, type: 'integer'
-    indexes :category, boost: 5
-    indexes :remarks, analyzer: 'snowball', boost: 10
-    indexes :txndate, type: 'date'
-    indexes :created_at, type: 'date'
-    indexes :updated_at, type: 'date'
-    indexes :group_name
-    indexes :players, type: 'integer'
-  end
-  
   CATEGORIES = [
     ["General", 'general'],
     ["Food", 'food'],
@@ -44,11 +25,30 @@ class Transaction < ActiveRecord::Base
     ["Group - Split Equally", "2"],
     ["Group - Not Split Equally", "3"]
   ]
-  
+
   validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
   validates :category,  :inclusion => { :in => CATEGORIES.collect {|val| val[1]}}
   validates :transactions_users, :presence => true
   validate  :check_group_user_access
+
+  belongs_to  :user
+  belongs_to  :group
+  has_many    :comments, :as => :commentable
+  has_many    :users, :through => :transactions_users
+  has_many    :transactions_users, :dependent => :destroy
+  accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
+
+  mapping do
+    indexes :id, type: 'integer'
+    indexes :group_id, type: 'integer'
+    indexes :category, boost: 5
+    indexes :remarks, analyzer: 'snowball', boost: 10
+    indexes :txndate, type: 'date'
+    indexes :created_at, type: 'date'
+    indexes :updated_at, type: 'date'
+    indexes :group_name
+    indexes :players, type: 'integer'
+  end
 
   def self.balance(sessionuser)
 
@@ -155,6 +155,10 @@ class Transaction < ActiveRecord::Base
     WHERE   A.id IN (?)
     ORDER   BY txndate DESC, IFNULL(A.updated_at, A.created_at) DESC',results.collect(&:id)])
     
+  end
+
+  def self.user_balance_for(group)
+    user_investments = Transaction.where("group_id = ?", group.id).group("user_id").select("user_id, SUM(amount)")
   end
 
   private
