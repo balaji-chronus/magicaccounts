@@ -23,7 +23,7 @@
         <% tran.each do |transaction| %>
           <tr>
             <td><%= link_to truncate(transaction.remarks, :length => 35), transaction_path(transaction) %></td>
-            <td>Rs. <%= transaction.amount %></td>
+            <td>Rs. <%= transaction.amount.round %></td>
             <td><%= transaction.details %> </td>
             <td><%= transaction.txndate.strftime("%Y-%m-%d") %></td>
             <td>

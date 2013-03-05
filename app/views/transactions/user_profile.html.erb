@@ -54,16 +54,18 @@
                 <tbody>
                   <% transactions_by_group.each do |balance| -%>
                     <% if balance %>
+                    <% total_investment = balance.investments.round %>
+                    <% total_expenditure = balance.expenditures.round %>
                       <tr>
                         <td><%= balance.user_name == User.find(current_user).name ? "Myself" : balance.user_name %></td>
-                        <td>Rs. <%= balance.investments %></td>
-                        <td>Rs. <%= balance.expenditures %></td>
+                        <td>Rs. <%= total_investment %></td>
+                        <td>Rs. <%= total_expenditure %></td>
 
                         <td>
-                          <% if balance.investments.to_f - balance.expenditures.to_f < 0 %>
-                            <span class="balance-label label-important">Rs. <%= balance.expenditures.to_f - balance.investments.to_f %></span>
-                          <% elsif balance.investments.to_f - balance.expenditures.to_f > 0  %>
-                            <span class="balance-label label-success">Rs. <%= balance.investments.to_f - balance.expenditures.to_f %></span>
+                          <% if total_investment - total_expenditure < 0 %>
+                            <span class="balance-label label-important">Rs. <%= total_expenditure - total_investment %></span>
+                          <% elsif total_investment - total_expenditure > 0  %>
+                            <span class="balance-label label-success">Rs. <%= total_investment - total_expenditure %></span>
                           <% end -%>
                         </td>
                       </tr>

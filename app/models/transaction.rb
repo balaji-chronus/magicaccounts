@@ -87,9 +87,9 @@ class Transaction < ActiveRecord::Base
     Transaction.find_by_sql(['
       SELECT 	id,
               amount,
-              CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is ", amount)
-                WHEN type = "investor" THEN CONCAT("Your Investment is ", amount - net_amount)
-                WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is ", net_amount)
+              CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is Rs. ", ROUND(amount))
+                WHEN type = "investor" THEN CONCAT("Your Investment is Rs. ", ROUND(amount - net_amount))
+                WHEN type = "beneficiary" THEN CONCAT("Your Expenditure is Rs. ", ROUND(net_amount))
               END	details,
               remarks,
               txndate
@@ -111,7 +111,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.spend_by(parameter, user, start_time, end_time)
-    Transaction.find_by_sql([" SELECT	#{parameter}, SUM(amount) spend, COUNT(DISTINCT id) txn_count
+    Transaction.find_by_sql([" SELECT	#{parameter}, SUM(ROUND(amount)) spend, COUNT(DISTINCT id) txn_count
                             FROM	transactions_beneficiaries
                             WHERE	((user_id <> ? AND	beneficiary_id = ?) OR (user_id = ? AND	beneficiary_id = ?))
                             AND	category != 'settlement'

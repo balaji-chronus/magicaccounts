@@ -20,7 +20,7 @@
 
 <div class="clearfix">
   <label class="label"><%= t("activerecord.attributes.transaction.amount", :default => t("activerecord.labels.amount", :default => "Amount")) %>:</label>
-  <p><%= @transaction.transactions_users.collect(&:amount).inject(:+) %></p>
+  <p><%= @transaction.transactions_users.collect(&:amount).inject(:+).round %></p>
 </div>
 
 <div class="clearfix">

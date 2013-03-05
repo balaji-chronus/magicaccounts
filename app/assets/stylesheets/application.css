@@ -159,6 +159,10 @@ a.headerlinks {
 
 #accact .nav-header, #tranact .nav-header {
     line-height: 18px;
+    float: left;
+    width: 100%;
+    margin: 10px 0;
+    padding: 0;
 }
 
 .nav-header .heading_container {
@@ -221,6 +225,10 @@ a#advanced_filter_link, a#advanced_filter_link:focus {
 }
 
 /************** Transaction Search *************/
+
+.transaction_search {
+    margin: 20px 0;
+}
 
 .transaction_search .transaction_search_col1 {
     float: left;
