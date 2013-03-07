@@ -146,7 +146,7 @@ class Transaction < ActiveRecord::Base
   def self.get_user_transactions(user)
     results = tire.search(per_page: 15) do
       filter :term, players: user.id
-      sort { by :txndate, 'desc' }
+      sort { by :updated_at, 'desc' }
     end
 
     Transaction.find_by_sql(['
