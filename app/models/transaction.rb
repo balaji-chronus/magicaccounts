@@ -158,7 +158,28 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.user_balance_for(group)
-    user_investments = Transaction.where("group_id = ?", group.id).group("user_id").select("user_id, SUM(amount)")
+    Transaction.find_by_sql(["  SELECT U.name user_name, (investments - expenditures) balance  
+                                FROM  ( SELECT user_id, investments, IFNULL(expenditures, 0) expenditures
+                                        FROM    ( SELECT  user_id, SUM(amount) investments
+                                                  FROM    transactions
+                                                  WHERE   group_id = ?
+                                                  GROUP   BY user_id ) A LEFT JOIN (  SELECT  beneficiary_id, SUM(amount) expenditures
+                                                                                      FROM    transactions_beneficiaries
+                                                                                      WHERE   group_id = ?
+                                                                                      GROUP   BY beneficiary_id) B
+                                        ON      A.user_id = B.beneficiary_id
+                                        UNION
+                                        SELECT  user_id, IFNULL(investments,0), expenditures
+                                        FROM    ( SELECT  user_id, SUM(amount) investments
+                                                  FROM    transactions
+                                                  WHERE   group_id = ?
+                                                  GROUP   BY user_id ) Y RIGHT JOIN ( SELECT  beneficiary_id, SUM(amount) expenditures
+                                                                                      FROM    transactions_beneficiaries
+                                                                                      WHERE   group_id = ?
+                                                                                      GROUP   BY beneficiary_id) Z
+                                        ON      Y.user_id = Z.beneficiary_id ) X
+                            JOIN      users U
+                            ON        X.user_id = U.id ", group.id, group.id, group.id, group.id])    
   end
 
   private
