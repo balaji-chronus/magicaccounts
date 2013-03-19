@@ -158,7 +158,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.user_balance_for(group)
-    Transaction.find_by_sql(["  SELECT U.name user_name, (investments - expenditures) balance  
+    Transaction.find_by_sql(["  SELECT U.name user_name, investments, expenditures
                                 FROM  ( SELECT user_id, investments, IFNULL(expenditures, 0) expenditures
                                         FROM    ( SELECT  user_id, SUM(amount) investments
                                                   FROM    transactions

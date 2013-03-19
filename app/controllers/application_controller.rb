@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
     if current_user
       @groups =  current_user.user_groups
       @activitytran = Comment.where(["commentable_type = 'Transaction' AND commentable_id IN (?)", Transaction.get_user_transactions(current_user)]).order("created_at DESC")
+      @user_group_balance = Transaction.user_balance_for(@groups.first)
     end
   end
 

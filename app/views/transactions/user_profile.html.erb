@@ -15,7 +15,7 @@
   <div id="group_tree" class="accordion">
     <% @usergroups.each_with_index do |group,index| -%>
       <div class="accordion-group">
-        <div class="accordion-heading">
+        <div class="accordion-heading"  group_id="<%= group.id %>">
           <a <%= "href='#group_#{group.id}' data-parent='#group_tree' data-toggle='collapse' class='accordion-toggle'"%>>
             <div class="group_image_container">
               <%= image_tag('icons/Group32x32.png', :size => "27x27") %>
@@ -80,3 +80,13 @@
     <% end -%>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  jQuery(document).ready(function() { 
+    jQuery('.accordion-heading').click(function(){
+      var group_id = jQuery(this).attr('group_id');
+      jQuery("#balance_group_select").select2("val", [group_id]);
+      Transaction.getUserBalance("<%= get_group_balance_transactions_url %>", group_id);
+    })
+  });
+</script>

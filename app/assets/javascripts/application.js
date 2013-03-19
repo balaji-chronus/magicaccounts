@@ -10,11 +10,17 @@
 //= require twitter/bootstrap
 //= require_tree .
 //= require rails.validations
+//= require select2
 
 
 jQuery.ajaxSetup({
     'beforeSend': function(xhr) {xhr.setRequestHeader("Accept","text/javascript")}
 })
+
+jQuery(document).ajaxSend(function(e, xhr, options) {
+  var token = jQuery("meta[name='csrf-token']").attr("content");
+  xhr.setRequestHeader("X-CSRF-Token", token);
+});
 
 var Utilities = {
     redirectTo: function(e,path){
@@ -52,6 +58,19 @@ var Transaction = {
                 }
             });
             return amount.toFixed(2);
+        },
+
+        getUserBalance: function(url, group) {
+
+          if(this.xhr && this.xhr.readyState != 4){
+            this.xhr.abort();
+          }
+
+          this.xhr = jQuery.ajax ({
+              url: url,
+              data: jQuery.param({ group_id: group, format: 'js'}),
+              type: 'GET'
+          });
         }
     }    
 

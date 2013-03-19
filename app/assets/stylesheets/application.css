@@ -7,6 +7,8 @@
  *= require jquery.ui.core
  *= require jquery.ui.theme
  *= require_tree . 
+ *= require select2
+
 */
 html{ overflow-y:scroll; }
 
@@ -311,4 +313,9 @@ img.dev-image {
 
 .wellempty a {
     color: #0064CD;
+}
+
+#s2id_balance_group_select {
+    margin: 10px 0 20px;
+    width: 100%;
 }

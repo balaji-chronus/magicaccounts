@@ -1,0 +1,32 @@
+<div id="balance_group_data">
+	<% if user_group_balance.present? %>
+		<table class="table table-striped table-bordered account_block">
+			<thead>
+			  <tr>
+			    <th><i class="icon-user"></i> User</th>
+			    <th><i class="icon-eye-open"></i> Balance</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <% user_group_balance.each do |balance| %>
+			    <% if balance %>
+			    <% total_investment = balance.investments.round %>
+			    <% total_expenditure = balance.expenditures.round %>
+			      <tr>
+			        <td><%= balance.user_name == User.find(current_user).name ? "Myself" : balance.user_name %></td>
+			        <td>
+			          <% if total_investment - total_expenditure < 0 %>
+			            <span class="balance-label label-important">Rs. <%= total_expenditure - total_investment %></span>
+			          <% elsif total_investment - total_expenditure > 0  %>
+			            <span class="balance-label label-success">Rs. <%= total_investment - total_expenditure %></span>
+			          <% end -%>
+			        </td>
+			      </tr>
+			    <% end %>
+			  <% end %>
+			</tbody>
+		</table>
+	<% else %>
+		There are no transactions for this group
+	<% end %>
+</div>

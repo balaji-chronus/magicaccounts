@@ -47,6 +47,10 @@ class Ability
       can :show, Transaction do |transaction|
         transaction.user == user || transaction.users.include?(user)
       end
+
+      can :view, Group do |group|
+        user.user_groups.include?(group)
+      end
     end
   end
 end

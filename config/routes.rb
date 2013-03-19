@@ -30,6 +30,11 @@ Magicaccounts::Application.routes.draw do
   end
 
   resources :transactions do
+    
+    collection do
+      get :get_group_balance
+    end
+
     resources :comments
   end
 

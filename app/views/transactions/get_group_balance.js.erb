@@ -1,0 +1,1 @@
+jQuery("#balance_group_data").replaceWith("<%= escape_javascript(render(:partial => 'transactions/group_balance_entries', :locals =>  {:user_group_balance => @user_group_balance})) %>");

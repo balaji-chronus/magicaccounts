@@ -135,6 +135,12 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def get_group_balance
+    @group = Group.find_by_id(params[:group_id])
+    authorize! :view, @group
+    @user_group_balance = Transaction.user_balance_for(@group)
+  end
+
   private
   def initiate_transaction
     @transaction = Transaction.new

@@ -1,0 +1,14 @@
+<% if @groups.present? %>
+	<%= select_tag 'balance_group_select', options_for_select(@groups.collect{ |g| [g.name, g.id] }) %>
+
+	<%= render(:partial => 'transactions/group_balance_entries', :locals =>  {:user_group_balance => @user_group_balance})  %>
+
+	<script type="text/javascript">
+		jQuery(document).ready(function() { 
+			jQuery("#balance_group_select").select2();
+			jQuery("#balance_group_select").on("change", function(e) { Transaction.getUserBalance("<%= get_group_balance_transactions_url %>", e.val); });
+		});
+	</script>
+<% else %>
+	Please join/create one or more groups
+<% end %>
