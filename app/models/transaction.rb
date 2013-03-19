@@ -169,7 +169,7 @@ class Transaction < ActiveRecord::Base
                                                                                       GROUP   BY beneficiary_id) B
                                         ON      A.user_id = B.beneficiary_id
                                         UNION
-                                        SELECT  user_id, IFNULL(investments,0), expenditures
+                                        SELECT  beneficiary_id, IFNULL(investments,0), expenditures
                                         FROM    ( SELECT  user_id, SUM(amount) investments
                                                   FROM    transactions
                                                   WHERE   group_id = ?
