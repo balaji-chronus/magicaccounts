@@ -150,3 +150,5 @@ var Transaction = {
     jQuery(".date_select").datepicker({format: 'yyyy-mm-dd'});
 })
 
+
+
