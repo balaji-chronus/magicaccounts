@@ -13,7 +13,7 @@
 			    <% total_investment = balance.investments.round %>
 			    <% total_expenditure = balance.expenditures.round %>
 			      <tr>
-			        <td><%= balance.user_name == User.find(current_user).name ? "Myself" : balance.user_name %></td>
+			        <td><%= balance.user_name == User.find(current_user).name ? content_tag(:b, "Myself") : balance.user_name %></td>
 			        <td>
 			          <% if total_investment - total_expenditure < 0 %>
 			            <span class="balance-label label-important">Rs. <%= total_expenditure - total_investment %></span>

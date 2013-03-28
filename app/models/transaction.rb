@@ -179,7 +179,8 @@ class Transaction < ActiveRecord::Base
                                                                                       GROUP   BY beneficiary_id) Z
                                         ON      Y.user_id = Z.beneficiary_id ) X
                             JOIN      users U
-                            ON        X.user_id = U.id ", group.id, group.id, group.id, group.id])    
+                            ON        X.user_id = U.id 
+                            ORDER     BY (investments - expenditures) DESC", group.id, group.id, group.id, group.id])
   end
 
   private
