@@ -1,12 +1,12 @@
 <div id ="viewacctran" class="clearfix">
-  <% if tran.blank? %>
+  <% if filtered_transactions.blank? %>
     <div class="well">
       Sorry, No Transactions Found
     </div>
   <%  else %>
     <% if filtered_transactions.present? %>
-      <% transaction_group = filtered_transactions.first.group_name %>
-      <% transaction_group_id = filtered_transactions.first.group_id %>
+      <% transaction_group = @defaultgroup.name %>
+      <% transaction_group_id = @defaultgroup.id %>
     <%end%>
     <%= will_paginate filtered_transactions, previous_label: h("<"), next_label: h(">"), :params => { :controller => "transactions", :action => "index", :groupid => transaction_group_id} %>
     <table class="table table-striped">
@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <% tran.each do |transaction| %>
+        <% filtered_transactions.each do |transaction| %>
           <tr>
             <td><%= link_to truncate(transaction.remarks, :length => 35), transaction_path(transaction) %></td>
             <td>Rs. <%= transaction.amount.round %></td>

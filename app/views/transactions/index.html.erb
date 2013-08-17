@@ -69,7 +69,7 @@
     <%= image_tag('icons/spinner.png')%>
   </div>
   <div id="transactions_list_container">
-    <%= render(:partial => 'transactions/tran', :locals => { :tran => @transactions, :filtered_transactions => @filtered_transactions }) -%>
+    <%= render(:partial => 'transactions/tran', :locals => { :filtered_transactions => @transactions }) -%>
   </div>
 </div>
 

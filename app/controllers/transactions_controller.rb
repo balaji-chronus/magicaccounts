@@ -4,8 +4,7 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @filtered_transactions = Transaction.search(params, current_user)
-    @transactions = Transaction.view_transactions(current_user, @filtered_transactions.collect(&:id))
+    @transactions = Transaction.view_transactions(current_user, params)
     transaction_categories = Transaction::CATEGORIES.select{|cat| cat}
     @transaction_categories = transaction_categories.push(["All", "all"])
 

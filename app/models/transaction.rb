@@ -1,6 +1,4 @@
 class Transaction < ActiveRecord::Base
-  include Tire::Model::Search
-  include Tire::Model::Callbacks
 
   CATEGORIES = [
     ["General", 'general'],
@@ -38,53 +36,8 @@ class Transaction < ActiveRecord::Base
   has_many    :transactions_users, :dependent => :destroy
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
 
-  mapping do
-    indexes :id, type: 'integer'
-    indexes :group_id, type: 'integer'
-    indexes :category, boost: 5
-    indexes :remarks, analyzer: 'snowball', boost: 10
-    indexes :txndate, type: 'date'
-    indexes :created_at, type: 'date'
-    indexes :updated_at, type: 'date'
-    indexes :group_name
-    indexes :players, type: 'integer'
-  end
-
-  def self.balance(sessionuser)
-
-  Transaction.find_by_sql([" SELECT	X.group_id, U.name user_name, investments, expenditures
-                            FROM    ( SELECT	R1.group_id, R1.user_id, IFNULL(investments, 0) investments, expenditures
-                                      FROM 	( SELECT	group_id, user_id, SUM(amount) expenditures
-                                              FROM    transactions_beneficiaries A
-                                              WHERE 	beneficiary_id = ?
-                                              GROUP   BY group_id, user_id) R1
-                                              LEFT	JOIN
-                                              (SELECT	group_id, beneficiary_id, SUM(amount) investments
-                                              FROM    transactions_beneficiaries A
-                                              WHERE   user_id = ?
-                                              GROUP   BY group_id, beneficiary_id) R2
-                                      ON    R1.group_id = R2.group_id
-                                      and   R1.user_id = R2.beneficiary_id
-                                      UNION
-                                      SELECT	R2.group_id, R2.beneficiary_id user_id, investments, IFNULL(expenditures,0) expenditures
-                                      FROM 	( SELECT	group_id, user_id, SUM(amount) expenditures
-                                              FROM    transactions_beneficiaries A
-                                              WHERE   beneficiary_id = ?
-                                              GROUP   BY group_id, user_id) R1
-                                      RIGHT	JOIN
-                                           (  SELECT	group_id, beneficiary_id, SUM(amount) investments
-                                              FROM    transactions_beneficiaries A
-                                              WHERE   user_id = ?
-                                              GROUP   BY group_id, beneficiary_id) R2
-                                      ON    R1.group_id = R2.group_id
-                                      and   R1.user_id = R2.beneficiary_id) X
-                            JOIN      users U
-                            ON        X.user_id = U.id ", sessionuser,sessionuser,sessionuser,sessionuser])
-
-  end
-
-  def self.view_transactions(user, ids)
-    Transaction.find_by_sql(['
+  def self.view_transactions(user, params)
+    Transaction.paginate_by_sql(['
       SELECT 	id,
               amount,
               CASE 	WHEN amount - net_amount = 0 THEN CONCAT("Your Expenditure is Rs. ", ROUND(amount))
@@ -104,10 +57,18 @@ class Transaction < ActiveRecord::Base
                         IFNULL(A.updated_at, A.created_at) created_at
                 FROM    transactions A JOIN transactions_users B
                 ON      A.id = B.transaction_id
-                WHERE   A.id IN (?)
-                GROUP   BY A.id )tmp
+                WHERE   group_id = ?
+                AND     NOW() between ? AND ? ' +
+                ((params[:category].present? && params[:category] != "all") ? "AND category = '#{params[:category]}'" : " ") +
+                ((params[:query].present?) ? "AND remarks LIKE '%#{params[:query]}%'" : " ") +
+                'GROUP   BY A.id )tmp
       WHERE     type <> "none"
-      ORDER     BY txndate DESC, created_at DESC ', user,user,user,ids])
+      ORDER     BY txndate DESC, created_at DESC ', user.id, 
+                                                    user.id, 
+                                                    user.id,
+                                                    params[:groupid],
+                                                    (params[:transaction_start_date].blank? ? DateTime.new(1000,1,1) : params[:transaction_start_date]), 
+                                                    (params[:transaction_end_date].blank? ? DateTime.new(3000,1,1) : params[:transaction_end_date])], :page => params[:page] || 1, :per_page => 10)
   end
 
   def self.spend_by(parameter, user, start_time, end_time)
@@ -119,47 +80,13 @@ class Transaction < ActiveRecord::Base
                             GROUP	BY #{parameter}", user, user, user, user])
   end
 
-  def self.search(params, current_user)
-    tire.search(page: params[:page] || 1, per_page: 10) do
-      query { string params[:query], default_operator: "AND" } if params[:query].present?
-      filter :range, txndate: {gte: params[:transaction_start_date]} if params[:transaction_start_date].present?
-      filter :range, txndate: {lte: params[:transaction_end_date]} if params[:transaction_end_date].present?
-      filter :term, group_id: params[:groupid]
-      filter :term, category: params[:category] if params[:category].present? && params[:category] != "all"
-      filter :term, players: current_user.id
-      sort { by :txndate, 'desc' }
-    end
-  end
-
-  def to_indexed_json
-    to_json(methods: [:group_name, :players])
-  end
-
-  def group_name
-    self.group.name
-  end
-
-  def players
-    self.transactions_users.collect(&:user_id).push(self.user_id).uniq
-  end
-
   def self.get_user_transactions(user)
-    results = tire.search(per_page: 15) do
-      filter :term, players: user.id
-      sort { by :updated_at, 'desc' }
-    end
-
-    Transaction.find_by_sql(['
-    SELECT  A.id
-    FROM    transactions A 
-    WHERE   A.id IN (?)
-    ORDER   BY txndate DESC, IFNULL(A.updated_at, A.created_at) DESC',results.collect(&:id)])
-    
+    Transaction.where("user_id = ?", user.id).order("txndate DESC, IFNULL(updated_at, created_at) DESC").limit(15)
   end
 
   def self.user_balance_for(groups)
-    Transaction.find_by_sql(["  SELECT X.name user_name, investments, expenditures
-                                FROM  ( SELECT group_id, user_id, investments, IFNULL(expenditures, 0) expenditures
+    Transaction.find_by_sql(["  SELECT X.group_id, X.user_id, investments, expenditures
+                                FROM  ( SELECT A.group_id, A.user_id, investments, IFNULL(expenditures, 0) expenditures
                                         FROM    ( SELECT  group_id, user_id, SUM(amount) investments
                                                   FROM    transactions
                                                   WHERE   group_id in (?)
@@ -170,7 +97,7 @@ class Transaction < ActiveRecord::Base
                                         ON      A.user_id = B.beneficiary_id
                                         AND     A.group_id = B.group_id
                                         UNION
-                                        SELECT  group_id, beneficiary_id, IFNULL(investments,0), expenditures
+                                        SELECT  Z.group_id, beneficiary_id, IFNULL(investments,0), expenditures
                                         FROM    ( SELECT  group_id, user_id, SUM(amount) investments
                                                   FROM    transactions
                                                   WHERE   group_id in (?)

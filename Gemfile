@@ -28,7 +28,6 @@ gem "validates_existence", ">= 0.4"
 gem "cancan"
 gem "googlecharts", :require => "gchart"
 gem 'minitest'
-gem 'tire'
 gem 'select2-rails'
 
 # Use unicorn as the web server
