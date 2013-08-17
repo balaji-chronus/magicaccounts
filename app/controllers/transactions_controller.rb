@@ -128,8 +128,8 @@ class TransactionsController < ApplicationController
   end
 
   def user_profile
-    @usergroups = current_user.user_groups
-    @balance = Transaction.balance(current_user)
+    @usergroups = current_user.user_groups || []
+    @balance = Transaction.user_balance_for(@usergroups.collect(&:id))
     respond_to do |format|
       format.html
     end

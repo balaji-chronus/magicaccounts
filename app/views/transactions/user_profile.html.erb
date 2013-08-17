@@ -46,8 +46,6 @@
                 <thead>
                   <tr>
                     <th><i class="icon-user"></i> User</th>
-                    <th><i class="icon-arrow-down"></i> Investments</th>
-                    <th><i class="icon-arrow-up"></i> Expenditures</th>
                     <th><i class="icon-eye-open"></i> Actions</th>
                   </tr>
                 </thead>
@@ -57,15 +55,14 @@
                     <% total_investment = balance.investments.round %>
                     <% total_expenditure = balance.expenditures.round %>
                       <tr>
-                        <td><%= balance.user_name == User.find(current_user).name ? "Myself" : balance.user_name %></td>
-                        <td>Rs. <%= total_investment %></td>
-                        <td>Rs. <%= total_expenditure %></td>
-
+                        <td><%= balance.user_id == User.find(current_user).id ? "Myself" : User.find(balance.user_id).name %></td>
                         <td>
                           <% if total_investment - total_expenditure < 0 %>
                             <span class="balance-label label-important">Rs. <%= total_expenditure - total_investment %></span>
                           <% elsif total_investment - total_expenditure > 0  %>
                             <span class="balance-label label-success">Rs. <%= total_investment - total_expenditure %></span>
+                          <% else %>
+                            <span class="balance-label label-info">Rs. <%= "0 (Yay !)" %></span>
                           <% end -%>
                         </td>
                       </tr>
