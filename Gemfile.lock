@@ -186,7 +186,7 @@ DEPENDENCIES
   thin
   tire
   turn (= 0.8.2)
-  twitter-bootstrap-rails
+  twitter-bootstrap-rails (~> 2.0.3)
   uglifier
   validates_existence (>= 0.4)
   will_paginate (> 3.0)
