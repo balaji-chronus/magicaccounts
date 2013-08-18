@@ -82,7 +82,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.get_user_transactions(user)
-    Transaction.where("user_id = ?", user.id).order("txndate DESC, IFNULL(updated_at, created_at) DESC").limit(15)
+    Transaction.joins("JOIN transactions_users TU ON transactions.id = TU.transaction_id").where("transactions.user_id = ? OR TU.user_id = ?", user.id, user.id).order("transactions.txndate DESC, transactions.updated_at DESC").limit(15)
   end
 
   def self.user_balance_for(groups)

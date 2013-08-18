@@ -28,6 +28,6 @@ namespace :migration do
       transaction.update_attributes(:tag_list => transaction.tag_list.concat([transaction.category]).join(","))
     end
 
-    Transaction.record_timestamps=false
+    Transaction.record_timestamps=true
   end
 end
