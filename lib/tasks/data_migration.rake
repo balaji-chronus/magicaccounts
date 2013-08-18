@@ -19,4 +19,15 @@ namespace :migration do
       tran.update_attributes(:amount => tran.transactions_users.collect(&:amount).inject(:+))
     end
   end
+
+  desc "One Time migration to set the category to category tags"
+  task :migrate_category_tags => :environment do
+    Transaction.record_timestamps=false
+
+    Transaction.all.each do |transaction|
+      transaction.update_attributes(:tag_list => transaction.tag_list.concat([transaction.category]).join(","))
+    end
+
+    Transaction.record_timestamps=false
+  end
 end
