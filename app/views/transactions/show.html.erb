@@ -25,7 +25,7 @@
 
 <div class="clearfix">
   <label class="label"><%= t("activerecord.attributes.transaction.cndategory", :default => t("activerecord.labels.category", :default => "Category")) %>:</label>
-  <p><%= @transaction.category %></p>
+  <p><%= @transaction.tag_list.join(", ") %></p>
 </div>
 
 <div class="clearfix">

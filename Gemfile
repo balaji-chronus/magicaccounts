@@ -28,7 +28,9 @@ gem "validates_existence", ">= 0.4"
 gem "cancan"
 gem "googlecharts", :require => "gchart"
 gem 'minitest'
-gem 'select2-rails'
+gem "select2-rails"
+gem 'acts-as-taggable-on'
+gem 'debugger'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -37,12 +39,12 @@ gem 'select2-rails'
 # gem 'capistrano'
 
 # To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+# gem 'ruby-debug19'
 
 group :test do
   # Pretty printed test output
   gem 'turn', '0.8.2', :require => false
-  gem 'ruby-debug19'
+  
 end
 
 group :production do

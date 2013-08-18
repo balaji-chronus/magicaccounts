@@ -71,8 +71,44 @@ var Transaction = {
               data: jQuery.param({ group_id: group, format: 'js'}),
               type: 'GET'
           });
+        },
+
+        autocomplete: function(path, id, selectedData, placeholderText) {
+          jQuery(id).select2({
+            placeholder: placeholderText,
+            dropdownCssClass: "transaction_category_tags",
+            multiple: true,
+            minimumInputLength: 1,
+            tags: [],
+            ajax: { 
+                url: path,
+                data: function (term, page) {
+                    return {
+                        term: term, // search term
+                        page_limit: 10,
+                        page: page,
+                        selection: jQuery(id).select2("val")
+                    };
+                },
+                results: function (data, page) {
+                    var more = (data.length == 10);
+                    return {
+                        results: data,
+                        more: more
+                    };
+                }
+            },
+            createSearchChoice:function(term) {
+                    return {
+                        id:jQuery.trim(term),
+                        text:jQuery.trim(term)
+                    };
+            }
+          });
+          if(typeof selectedData != 'undefined')
+            jQuery(id).select2("data", selectedData);
         }
-    }    
+    }
 
     jQuery(document).ready(function() {
         jQuery.fn.submitWithAjax = function() {

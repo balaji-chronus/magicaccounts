@@ -5,8 +5,6 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
     @transactions = Transaction.view_transactions(current_user, params)
-    transaction_categories = Transaction::CATEGORIES.select{|cat| cat}
-    @transaction_categories = transaction_categories.push(["All", "all"])
 
     respond_to do |format|
       @defaultgroup = @groups.find_by_id(params[:groupid].to_i)
@@ -138,6 +136,12 @@ class TransactionsController < ApplicationController
     @group = Group.find_by_id(params[:group_id])
     authorize! :view, @group
     @user_group_balance = Transaction.user_balance_for(@group) if @group.present?
+  end
+
+  def autocomplete_category_tags
+    entries = Transaction.get_autocomplete_tags(params[:term], params[:page], params[:page_limit], params[:selection])
+    @entries_array = entries.collect{|entry| {"id" => entry.name, "text" => entry.name}} if entries
+    render :inline => @entries_array.to_json
   end
 
   private

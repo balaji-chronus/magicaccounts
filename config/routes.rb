@@ -16,7 +16,6 @@ Magicaccounts::Application.routes.draw do
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:groupid' => 'transactions#new'
   match 'profile' => "transactions#user_profile"
-  match 'accounts/new/:groupid' => 'accounts#new'
   match 'groups/sendinvites' => 'groups#sendinvites'
 
   controller :sessions do
@@ -33,15 +32,12 @@ Magicaccounts::Application.routes.draw do
     
     collection do
       get :get_group_balance
+      get :autocomplete_category_tags
     end
 
     resources :comments
   end
 
-  resources :accounts do
-    resources :comments
-  end
-  
   resources :users
 
   # The priority is based upon order of creation:

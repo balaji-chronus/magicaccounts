@@ -24,8 +24,9 @@ class Transaction < ActiveRecord::Base
     ["Group - Not Split Equally", "3"]
   ]
 
+  acts_as_taggable
+
   validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
-  validates :category,  :inclusion => { :in => CATEGORIES.collect {|val| val[1]}}
   validates :transactions_users, :presence => true
   validate  :check_group_user_access
 
@@ -35,6 +36,7 @@ class Transaction < ActiveRecord::Base
   has_many    :users, :through => :transactions_users
   has_many    :transactions_users, :dependent => :destroy
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
+  
 
   def self.view_transactions(user, params)
     Transaction.paginate_by_sql(['
@@ -58,9 +60,8 @@ class Transaction < ActiveRecord::Base
                 FROM    transactions A JOIN transactions_users B
                 ON      A.id = B.transaction_id
                 WHERE   group_id = ?
-                AND     NOW() between ? AND ? ' +
-                ((params[:category].present? && params[:category] != "all") ? "AND category = '#{params[:category]}'" : " ") +
-                ((params[:query].present?) ? "AND remarks LIKE '%#{params[:query]}%'" : " ") +
+                AND     txndate between ? AND ? ' +
+                ((params[:query].present?) ? "AND LOWER(remarks) LIKE '%#{params[:query].downcase}%'" : " ") +
                 'GROUP   BY A.id )tmp
       WHERE     type <> "none"
       ORDER     BY txndate DESC, created_at DESC ', user.id, 
@@ -108,6 +109,13 @@ class Transaction < ActiveRecord::Base
                                         ON      Y.user_id = Z.beneficiary_id
                                         AND     Y.group_id = Z.group_id ) X
                             ORDER     BY (investments - expenditures) DESC", groups, groups, groups, groups])
+  end
+
+  def self.get_autocomplete_tags(term, page = 1, per_page = 10, selection = [])
+    tags = Transaction.tag_counts_on(:tags)
+    tags = tags.where("LOWER(name) LIKE '%#{term.downcase}%'") if term.present?
+    tags = tags.where("name NOT IN (?)", selection) if selection.present?
+    return (tags || []).paginate(:page => page, :per_page => per_page)
   end
 
   private

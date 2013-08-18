@@ -1,0 +1,32 @@
+<%= form_tag transactions_path(params), :remote => true, method: :get, :id => "transaction_search_form", :before => 'jQuery("#transactions_loader").show();', :after => 'jQuery("#transactions_loader").hide();' do %>
+  <div class="transaction_search clearfix">
+    <div class="transaction_search_col1">
+      <%= label_tag :label_query, t("activerecord.attributes.transaction.txndate", :default => "Keywords"), :class => :label %>
+      <div class="input">
+        <%= text_field_tag :query, params[:query] %>
+      </div>
+    </div>
+    <div class="transaction_search_col2">
+      <%= hidden_field_tag :groupid, @defaultgroup.id %>
+      <%= submit_tag "Search", :class => "btn primary transaction_search_submit" %>
+      <%= link_to "Show Advanced", "javascript:void(0)",:id => "advanced_filter_link" %>
+    </div>
+    <div class="advanced_filter_container clearfix">
+      <div class="advanced_search_row_container">
+        <div class="advanced_search_column clearfix">
+          <%= label_tag :from, t("activerecord.attributes.transaction.txndate", :default => "From"), :class => "label advanced_label_left" %>
+          <div class="input">
+            <%= text_field_tag :transaction_start_date, params[:transaction_start_date], :class => "date_select advanced_search_param" %>
+          </div>
+        </div>
+        <div class="advanced_search_column clearfix">
+          <%= label_tag :to, t("activerecord.attributes.transaction.txndate", :default => "To"), :class => "label advanced_label_right" %>
+          <div class="input">
+            <%= text_field_tag :transaction_end_date, params[:transaction_end_date], :class => "date_select advanced_search_param" %>
+          </div>
+        </div>
+      </div>
+  	</div>
+    <%= hidden_field_tag :open_advanced_search, params[:open_advanced_search], :id => "toggle_advance_filter" %>
+  </div>
+<% end %>

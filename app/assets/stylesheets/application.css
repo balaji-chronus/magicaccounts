@@ -12,6 +12,11 @@
 */
 html{ overflow-y:scroll; }
 
+.form .text_field, .form .date_select {
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
 .txnamountuser {
     width: 100px;
     margin-bottom: 5px !important;
@@ -318,4 +323,14 @@ img.dev-image {
 #s2id_balance_group_select {
     margin: 10px 0 20px;
     width: 100%;
+}
+
+#s2id_category_tags {
+    min-width: 220px;
+    margin-bottom: 10px;
+}
+
+#s2id_category_tags .select2-choices {
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
