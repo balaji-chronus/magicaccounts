@@ -68,8 +68,8 @@ select {
     width: 220px;
 }
 
-.navbar .navlast {    
-    float: right;    
+.navbar .nav > li > a {
+    padding: 10px 10px 0;   
 }
 
 .wellsidebar {
@@ -132,6 +132,10 @@ a {  color: #000;}
     padding-left: 125px;
 }
 
+.dropdown-menu {
+    border: 1px solid;
+}
+
 .dropdown-menu, .dropdown-menu a {
     background-color: #333333;
     color: #999999;
@@ -163,6 +167,7 @@ a {  color: #000;}
 
 .table th, .table td {
     padding: 8px 13px;
+    vertical-align: middle;
 }
 
 .table th.center_align, .table td.center_align {
@@ -194,4 +199,21 @@ a {  color: #000;}
 
 blockquote {
     padding: 0px;
+}
+
+.navbar .pull-right > li > .dropdown-menu, .navbar .nav > li > .dropdown-menu.pull-right.dropdown-right {
+    right: 0;
+    left: auto;
+}
+.navbar .pull-right > li > .dropdown-menu::before, .navbar .nav > li > .dropdown-menu.pull-right.dropdown-right::before {
+    right: 0;
+    left: auto;
+}
+.navbar .pull-right > li > .dropdown-menu::after, .navbar .nav > li > .dropdown-menu.pull-right.dropdown-right::after {
+    right: 0;
+    left: auto;
+}
+
+.navbar .dropdown-menu:after{
+    content: none;
 }

@@ -45,7 +45,7 @@
               <table class="table table-striped table-bordered account_block">
                 <thead>
                   <tr>
-                    <th><i class="icon-user"></i> User</th>
+                    <th><i class="center_align icon-user"></i> User</th>
                     <th class="center_align"><i class="icon-eye-open"></i> Actions</th>
                   </tr>
                 </thead>
@@ -54,8 +54,9 @@
                     <% if balance %>
                     <% total_investment = balance.investments.round %>
                     <% total_expenditure = balance.expenditures.round %>
+                    <% balance_user = User.find(balance.user_id) %>
                       <tr>
-                        <td><%= balance.user_id == User.find(current_user).id ? "Myself" : User.find(balance.user_id).name %></td>
+                        <td class="center_align"><%= render_user_image(balance_user, :render_user_name => true) %></td>
                         <td class="center_align">
                           <% if total_investment - total_expenditure < 0 %>
                             <span class="balance-label label-important">Rs. <%= total_expenditure - total_investment %></span>

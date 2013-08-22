@@ -59,13 +59,13 @@
                 </li>
                 <li><%= link_to "Reports", reports_path  %></li>
               </ul>
-              <ul class="nav navlast">                
+              <ul class="nav pull-right">                
                 <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-                    <%= "Welcome " + current_user.name %>
-                    <b class="caret"></b>
+                  <a class="dropdown-toggle user-menu" data-toggle="dropdown" href="javascript:void(0)">
+                    <%= render_user_image(current_user, :size => "24x24", :render_user_name => true) %>
+                    <span class="caret"></span>
                   </a>
-                  <ul class="dropdown-menu">
+                  <ul class="dropdown-menu pull-right dropdown-right">
                     <li><%= link_to "Edit Profile", {:controller => 'users', :action => 'edit', :id => current_user}%></li>
                     <li><%= link_to "Logout", logout_url %></li>
                   </ul>

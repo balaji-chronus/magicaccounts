@@ -31,6 +31,7 @@ gem 'minitest'
 gem "select2-rails"
 gem 'acts-as-taggable-on'
 gem 'debugger'
+gem 'gravatar_image_tag'
 
 # Use unicorn as the web server
 # gem 'unicorn'

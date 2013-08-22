@@ -12,6 +12,29 @@
 */
 html{ overflow-y:scroll; }
 
+.gravatar_image {
+    float: left;
+}
+
+.gravatar_user_name {
+    float: left;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.navbar .nav > li > a.user-menu {
+    float: left;
+    padding: 5px 10px 0;
+}
+
+.user-menu span {
+    padding: 7% 0;
+}
+
+.user-menu span.caret {
+    margin-top: 15px;
+}
+
 .form .text_field, .form .date_select {
     border-radius: 5px;
     -webkit-border-radius: 5px;
