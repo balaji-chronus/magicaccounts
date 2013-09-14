@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.0'
+gem 'rails', '3.2.6'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -12,16 +12,20 @@ gem 'mysql2', "~> 0.3.11"
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.0"
-  gem 'coffee-rails', "~> 3.1.0"
+  gem 'coffee-rails', ">= 3.2"
   gem 'uglifier'
-  gem 'twitter-bootstrap-rails', "~> 2.0.3"
   gem 'jquery-rails'
   gem 'jquery-ui-rails'
+  gem 'sass-rails', '>= 3.2'
+  gem 'less-rails'
+  # twitter bootstrap css & javascript toolkit
+  gem 'twitter-bootswatch-rails', '~> 3.0.0'
+  # twitter bootstrap helpers gem, e.g., alerts etc...
+  gem 'twitter-bootswatch-rails-helpers'
 
+  gem "font-awesome-rails"
 end
 
-gem 'jquery-rails'
 gem 'client_side_validations'
 gem 'will_paginate', '> 3.0'
 gem "validates_existence", ">= 0.4"
@@ -32,6 +36,7 @@ gem "select2-rails"
 gem 'acts-as-taggable-on'
 gem 'debugger'
 gem 'gravatar_image_tag'
+gem 'therubyracer'
 
 # Use unicorn as the web server
 # gem 'unicorn'

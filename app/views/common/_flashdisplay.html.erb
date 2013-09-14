@@ -1,8 +1,10 @@
-<div class="flash-container">
+<div class="flash-container col-lg-12">
   <%flash.each do |name,msg| %>
-    <div id ="flash" class="alert alert-<%= name == :notice ? 'success' : 'error' %>">
-      <a class="close" data-dismiss="alert">×</a>
-      <%= msg %>
+    <% flash_data = FLASH_METADATA::FLASH_DATA[name] %>
+    <div id ='mg-flash' class="alert alert-dismissable alert-<%= flash_data[:alert_class] %>">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      <h4> <%= flash_data[:heading] %> </h4>
+      <p><%= msg %></p>
     </div>
   <%end%>
 </div>

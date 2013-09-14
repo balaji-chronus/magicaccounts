@@ -1,0 +1,13 @@
+<!--Body content-->
+<div class="span11">
+  <div class="jumbotron">
+  	<h1>Managing & splitting expenses made easy</h1>
+  	<%= render :partial => "common/user_testimonials" %>
+  	<p><a class="btn btn-danger btn-lg">Sign Up Today</a></p>
+	</div>
+</div>
+<div id="mg-four-col-feature">
+  <% STATIC_TEXT::FOUR_COLUMN_FEATURE_HOMEPAGE.each do |feature_item| %>
+    <%= render :partial => "common/feature_4_column_static", :locals => feature_item %>
+  <% end %>
+</div>

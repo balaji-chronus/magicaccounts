@@ -53,5 +53,9 @@ module Magicaccounts
     config.assets.version = '1.0'
 
     config.assets.initialize_on_precompile = false
+
+    config.assets.precompile += %w(flatly.js flatly.css)
+
+    config.app_generators.stylesheet_engine :less
   end
 end

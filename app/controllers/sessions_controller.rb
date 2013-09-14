@@ -8,7 +8,7 @@ skip_before_filter :authorize
   def create
     session[:user_id] = nil
     if request.post?
-       user = User.authenticate(params[:email], params[:password])
+       user = User.authenticate(params[:inputEmail], params[:inputPassword])
       if user
         session[:user_id] = user.id
         uri = session[:request_uri]
