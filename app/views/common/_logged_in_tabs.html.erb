@@ -1,0 +1,24 @@
+<ul class="nav navbar-nav">
+  <li>
+    <a id="mg-add-transaction" href="#">
+      <button type="button" class="btn btn-success btn-xs"><i class="icon-plus-sign"></i> &nbsp; Add Expense</button>
+    </a>
+  </li>
+  <li class="dropdown">
+    <a id="mg-recent-activity" href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <button type="button" class="btn btn-success btn-xs"><i class="icon-globe"></i> Activity</button>
+    </a>
+    <ul class="dropdown-menu panel panel-info panel-sm" id="mg-recent-activity-dropdown">
+      <div class="panel-heading">Recent Activity</div>
+      <div class="panel-body">
+        <%= render :partial => "common/recent_activity" %>
+      </div>
+      <div class="panel-footer"><button type="button" class="btn btn-default btn-xs">View All Activity</button></div>
+    </ul>
+  </li>
+</ul>
+<ul class="nav navbar-nav navbar-right pull-right">
+ <li>
+  <%= gravatar_image_tag('seetharaman.balaji@gmail.com', :gravatar => {:size => 48}, :class => "pull-right", :style => "-webkit-border-radius: 100px; border-radius: 100px; margin: 6px 20px;") %>
+  </li>
+</ul>

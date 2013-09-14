@@ -17,6 +17,11 @@ body { padding-top: 60px; }
 */
 
 /************* General Classes ****************/
+
+body, html {
+  height: 100%;
+}
+
 .circled {
   border-radius: 50% !important;
   -webkit-border-radius: 50%  !important;
@@ -24,16 +29,26 @@ body { padding-top: 60px; }
 
 .dropdown-menu {
   min-width: 325px !important;
+  max-height: 350px !important;
+  overflow-y: scroll !important;
 }
 
 .action-group {
   margin-bottom: 0 !important;
 }
 
+.navbar-brand {
+  letter-spacing: 1px;
+  padding: 22px 15px 20px !important;
+  text-shadow: 2px 1px  #2c3e50;
+}
+
+.nav > li > a {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
 /******* Non-Logged-In Pages Styles *******/
-#testimonial-carousel {
-  margin: 40px 5px 20px; 
-} 
 
 #mg-forgot-password-link {
   line-height: 31px;
@@ -43,4 +58,30 @@ body { padding-top: 60px; }
   padding: 10px 15px;
 }
 
+/****** Common Logged-in Page Styles *********/
+
+#mg-recent-activity-dropdown {
+  .panel-body { padding: 0 5px;}
+  .panel-footer { margin-top: 5px; }
+  .list-group { margin-top: 5px; margin-bottom: 0; }
+}
+
+#mg-page-wrap, #mg-app-container {
+  height: 100%;
+}
+
+#mg-left-pane {
+  height: 100%;
+  padding: 15px 5px;
+}
+
+#mg-center-pane {
+  height: 100%;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  -box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+#mg-right-pane {
+  height: 100%;
+}
 

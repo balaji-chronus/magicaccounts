@@ -1,0 +1,19 @@
+<% if @activitytran.empty? %>
+  <p>There is no activity for this section<p>
+<%else%>
+  <% @activitytran.each do |act| %>
+    <% activity_transaction = Transaction.find_by_id(act.commentable_id) %>
+    <% if activity_transaction.present? %>
+        <div class="list-group">
+          <a href="<%= transaction_path(activity_transaction) %>" class="list-group-item">
+            <h5 class="list-group-item-heading"><%= User.find_by_id(act.user_id).name+ " " +act.activity %> </h5>
+            <p class="list-group-item-text">
+              <small>
+                <%= activity_transaction.remarks %>
+              </small>
+            </p>
+          </a>
+        </div>
+    <% end %>
+  <% end %>
+<% end%>
