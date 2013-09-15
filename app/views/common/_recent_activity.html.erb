@@ -6,7 +6,9 @@
     <% if activity_transaction.present? %>
         <div class="list-group">
           <a href="<%= transaction_path(activity_transaction) %>" class="list-group-item">
-            <h5 class="list-group-item-heading"><%= User.find_by_id(act.user_id).name+ " " +act.activity %> </h5>
+            <h5 class="list-group-item-heading">
+              <%= raw(render_user_image(current_user, 
+                            :size => 32, :class_name => "img-circle") + render_activity(act)) %> </h5>
             <p class="list-group-item-text">
               <small>
                 <%= activity_transaction.remarks %>

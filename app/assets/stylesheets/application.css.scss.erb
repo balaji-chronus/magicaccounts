@@ -1,5 +1,5 @@
 // Bootstrap body padding for fixed navbar
-body { padding-top: 60px; }
+body { padding-top: 45px; }
 
 @import "font-awesome";
 
@@ -29,23 +29,49 @@ body, html {
 
 .dropdown-menu {
   min-width: 325px !important;
-  max-height: 350px !important;
-  overflow-y: scroll !important;
 }
 
 .action-group {
   margin-bottom: 0 !important;
 }
 
+.navbar {
+  min-height: 45px !important;
+}
+
 .navbar-brand {
   letter-spacing: 1px;
-  padding: 22px 15px 20px !important;
+  padding: 12px 15px 10px !important;
   text-shadow: 2px 1px  #2c3e50;
 }
 
 .nav > li > a {
-  padding-left: 5px !important;
-  padding-right: 5px !important;
+  padding: 10px 5px !important;
+}
+
+.navbar-toggle {
+  padding: 3px 7px !important;
+  margin: 7px 15px !important;
+}
+
+.navbar-nav {
+  margin: 0 !important;
+}
+ 
+/* The ghost, nudged to maintain perfect centering */
+.h-align-container:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+/* The element to be centered, can
+   also be of any width and height */ 
+.h-align {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /******* Non-Logged-In Pages Styles *******/
@@ -54,16 +80,24 @@ body, html {
   line-height: 31px;
 }
 
-#mg-four-col-feature .panel {
-  padding: 10px 15px;
+#mg-four-col-feature {
+  .panel { padding: 10px 15px;}
+  .well { margin-bottom: 0; }
+  h3 { margin-top: 10px; }
 }
 
 /****** Common Logged-in Page Styles *********/
+
+/**** Logged-in Header Styles *****/
 
 #mg-recent-activity-dropdown {
   .panel-body { padding: 0 5px;}
   .panel-footer { margin-top: 5px; }
   .list-group { margin-top: 5px; margin-bottom: 0; }
+}
+
+.mg-user-image {
+  margin-right: 5px;
 }
 
 #mg-page-wrap, #mg-app-container {

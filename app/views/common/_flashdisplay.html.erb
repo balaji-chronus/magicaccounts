@@ -1,4 +1,4 @@
-<div class="flash-container col-lg-12">
+<div class="flash-container">
   <%flash.each do |name,msg| %>
     <% flash_data = FLASH_METADATA::FLASH_DATA[name] %>
     <div id ='mg-flash' class="alert alert-dismissable alert-<%= flash_data[:alert_class] %>">
