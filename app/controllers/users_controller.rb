@@ -88,4 +88,8 @@ class UsersController < ApplicationController
       format.json { head :ok }
     end
   end
+
+  def dashboard
+    @balance = Transaction.user_balance
+  end
 end

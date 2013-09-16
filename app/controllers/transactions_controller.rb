@@ -124,18 +124,10 @@ class TransactionsController < ApplicationController
     end
   end
 
-  def user_profile
-    @usergroups = current_user.user_groups || []
-    @balance = Transaction.user_balance_for(@usergroups.collect(&:id))
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def get_group_balance
     @group = Group.find_by_id(params[:group_id])
     authorize! :view, @group
-    @user_group_balance = Transaction.user_balance_for(@group) if @group.present?
+    @user_group_balance = Transaction.user_balance(@group) if @group.present?
   end
 
   def autocomplete_category_tags

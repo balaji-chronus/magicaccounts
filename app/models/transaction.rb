@@ -38,6 +38,10 @@ class Transaction < ActiveRecord::Base
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
   
 
+  def search_transactions(options = {})
+    
+  end
+
   def self.view_transactions(user, params)
     Transaction.paginate_by_sql(['
       SELECT 	id,
@@ -53,14 +57,14 @@ class Transaction < ActiveRecord::Base
                               WHEN COUNT(CASE WHEN B.user_id = ? THEN 1 END) >= 1 THEN "beneficiary"
                               ELSE  "none" END type,
                         SUM(CASE WHEN B.user_id = ? THEN B.amount ELSE 0 END) net_amount,
-                        SUM(B.amount) amount,
+                        SUM(B.amount) amount, 
                         A.remarks,
                         A.txndate,
                         IFNULL(A.updated_at, A.created_at) created_at
                 FROM    transactions A JOIN transactions_users B
                 ON      A.id = B.transaction_id
-                WHERE   group_id = ?
-                AND     txndate between ? AND ? ' +
+                WHERE   txndate between ? AND ? +
+                ((params[:group_id].present?) ? "AND group_id = #{params[:group_id]}" : " ") +
                 ((params[:query].present?) ? "AND LOWER(remarks) LIKE '%#{params[:query].downcase}%'" : " ") +
                 'GROUP   BY A.id )tmp
       WHERE     type <> "none"
@@ -85,15 +89,15 @@ class Transaction < ActiveRecord::Base
     Transaction.joins("JOIN transactions_users TU ON transactions.id = TU.transaction_id").where("transactions.user_id = ? OR TU.user_id = ?", user.id, user.id).order("transactions.txndate DESC, transactions.updated_at DESC").limit(15)
   end
 
-  def self.user_balance_for(groups)
+  def self.user_balance(group)
     Transaction.find_by_sql(["  SELECT X.group_id, X.user_id, investments, expenditures
                                 FROM  ( SELECT A.group_id, A.user_id, investments, IFNULL(expenditures, 0) expenditures
                                         FROM    ( SELECT  group_id, user_id, SUM(amount) investments
                                                   FROM    transactions
-                                                  WHERE   group_id in (?)
+                                                  WHERE   group_id = #{group.id}
                                                   GROUP   BY group_id, user_id ) A LEFT JOIN (  SELECT  group_id, beneficiary_id, SUM(amount) expenditures
                                                                                       FROM    transactions_beneficiaries
-                                                                                      WHERE   group_id in (?)
+                                                                                      WHERE   group_id = #{group.id}
                                                                                       GROUP   BY group_id, beneficiary_id) B
                                         ON      A.user_id = B.beneficiary_id
                                         AND     A.group_id = B.group_id
@@ -101,14 +105,14 @@ class Transaction < ActiveRecord::Base
                                         SELECT  Z.group_id, beneficiary_id, IFNULL(investments,0), expenditures
                                         FROM    ( SELECT  group_id, user_id, SUM(amount) investments
                                                   FROM    transactions
-                                                  WHERE   group_id in (?)
+                                                  WHERE   group_id = #{group.id}
                                                   GROUP   BY group_id, user_id ) Y RIGHT JOIN ( SELECT  group_id, beneficiary_id, SUM(amount) expenditures
                                                                                       FROM    transactions_beneficiaries
-                                                                                      WHERE   group_id in (?)
+                                                                                      WHERE   group_id = #{group.id}
                                                                                       GROUP   BY group_id, beneficiary_id) Z
                                         ON      Y.user_id = Z.beneficiary_id
                                         AND     Y.group_id = Z.group_id ) X
-                            ORDER     BY (investments - expenditures) DESC", groups, groups, groups, groups])
+                            ORDER     BY (investments - expenditures) DESC"])
   end
 
   def self.get_autocomplete_tags(term, page = 1, per_page = 10, selection = [])
