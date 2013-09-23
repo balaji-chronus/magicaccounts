@@ -1,10 +1,28 @@
 <div id="mg-left-sidebar">
   <ul class="nav nav-pills nav-stacked">
-    <li class="active"><a href="#">Dashboard</a></li>
-    <li><a href="#">Transactions</a></li>
+    <li class="active"><a href="#">
+      <span class="icon-stack">
+        <i class="icon-sign-blank icon-stack-base"></i>
+        <i class="icon-dashboard icon-dark icon-child"></i>
+      </span>
+      <span class="mg-navigation-text">&nbsp; Dashboard</a></span>
+    </li>
+    <li>
+      <%= link_to transactions_path do %>
+        <span class="icon-stack">
+          <i class="icon-sign-blank icon-stack-base"></i>
+          <i class="icon-inr icon-light icon-child"></i>
+        </span>
+        <span class="mg-navigation-text">&nbsp; Expenses</span>
+      <% end %>
+    </li>
     <li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        Groups <span class="caret"></span>
+        <span class="icon-stack">
+          <i class="icon-sign-blank icon-stack-base"></i>
+          <i class="icon-group icon-light icon-child"></i>
+        </span>
+        <span class="mg-navigation-text">&nbsp; Groups <span class="caret"></span></span>
       </a>
       <ul class="dropdown-menu">
         <li><a href="#">Action</a></li>
@@ -13,6 +31,24 @@
         <li class="divider"></li>
         <li><a href="#">Separated link</a></li>
       </ul>
+    </li>
+    <li>
+      <a href="#">
+        <span class="icon-stack">
+          <i class="icon-sign-blank icon-stack-base"></i>
+          <i class="icon-user icon-light icon-child"></i>
+        </span>
+        <span class="mg-navigation-text">&nbsp; Friends</span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <span class="icon-stack">
+          <i class="icon-sign-blank icon-stack-base"></i>
+          <i class="icon-bar-chart icon-light icon-child"></i>
+        </span>
+        <span class="mg-navigation-text">&nbsp; Reports</span>
+      </a>
     </li>
   </ul>
 </div>

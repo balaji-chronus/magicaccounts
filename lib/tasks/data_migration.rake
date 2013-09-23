@@ -30,4 +30,22 @@ namespace :migration do
 
     Transaction.record_timestamps=true
   end
+
+  desc "One Time migration to set the amount paid in transactions_users"
+  task :migrate_amount_paid_to_transaction_user => :environment do
+    Transaction.all.each do |tran|
+      transaction_user = TransactionsUser.find_or_initialize_by_transaction_id_and_user_id(tran.id, tran.user_id)
+      (transaction_user.amount_paid = tran.amount) if tran.user_id == transaction_user.user_id
+      transaction_user.amount ||= 0.00
+      transaction_user.save! if transaction_user.changed? 
+    end
+  end
+
+  desc "One Time migration to migrate the actors"
+  task :migrate_actors => :environment do
+    Transaction.all.each do |tran|
+      tran.actors = "|#{tran.transactions_users.collect(&:user_id).join('|')}|"
+      tran.save!
+    end
+  end
 end

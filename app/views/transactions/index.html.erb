@@ -1,62 +1,11 @@
-<div id="newacctran" style="display: <%= params[:open_new_form] == "true" ? "block" : "none" %>">
-  <div class="group_header wellgroup">
-    <div class="group_image_container">
-      <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
-    </div>
-    <div class="group_information">
-      <h3> Add New Transaction </h3>
-      <button class="btn primary" id="hidetranbtn" type="button">Hide</button>
-    </div>
-  </div>
-  <%= form_for @transaction, :remote => true, :validate => true, :url => transactions_path, :html => { :class => :form } do |f| -%>
-    <%= render :partial => "form", :locals => {:f => f, :type => "new"} %>
-  <% end -%>
+<% @page_title = "Expenses" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<div id="mg-transactions-index">
+  <table class="table table-striped table-hover" id="mg-transactions-list">
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <%= render :partial => "transactions/transaction_entry", :locals => {:entry => transaction} %>
+      <% end %>
+    </tbody>
+  </table>
 </div>
-
-<div class="group_header wellgroup">
-  <div class="group_image_container">
-    <%= image_tag('icons/Transaction32x32.png', :size => "27x27") %>
-  </div>
-  <div class="group_information">
-    <h3> Transactions for <span id="view_transaction_for_account"><%=  @defaultgroup.name %></span></h3>
-    <button class="btn primary" id="newtranbtn" type="button"><%= params[:open_new_form] == "true" ? "Move up" : "New Transaction" %></button>
-  </div>
-</div>
-
-<%= render :partial => "transactions/search_form" %> 
-
-<div id="display_transactions_container">
-  <div id="transactions_loader">
-    <%= image_tag('icons/spinner.png')%>
-  </div>
-  <div id="transactions_list_container">
-    <%= render(:partial => 'transactions/tran', :locals => { :filtered_transactions => @transactions, :defaultgroup => @defaultgroup }) -%>
-  </div>
-</div>
-
-
-<script type="text/javascript">
-  jQuery(document).ready(function(){
-    jQuery("#new_transaction").submit(function() {
-      if(Transaction.calculateAmount() <=0)
-      {
-        jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => {:message => " An investor should have atleast one beneficiary with amount > 0 "}} ))%>');
-        return false;
-      }
-      jQuery("#transactions_save").attr('disabled','disabled').val("Saving..");
-      jQuery("#new_transaction").attr('disabled', 'disabled');
-      jQuery("#transactions_loader").show();
-      jQuery.post(this.action, jQuery(this).serialize(), null, "script");
-      return false;
-    });    
-
-    jQuery('#transaction_search_form')
-    .bind("ajax:beforeSend", function(evt, xhr, settings){
-      jQuery("#transactions_loader").show();
-    })
-    .bind('ajax:complete', function(evt, xhr, status){
-      jQuery("#transactions_loader").hide();
-    });
-  });
-  
-</script>

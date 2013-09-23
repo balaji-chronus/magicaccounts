@@ -1,0 +1,13 @@
+<div>
+  <blockquote>
+    <p>
+      <%= entry.remarks %>
+    </p>
+  </blockquote>
+</div>
+<div>
+  <% (entry.category || "").split(",").each do |category_name| %>
+    <h5 class="text-muted">Categories</h5>
+    <span class="label label-warning"><%= category_name %></span>
+  <% end %>
+</div>

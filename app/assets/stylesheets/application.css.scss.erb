@@ -6,7 +6,7 @@ body { padding-top: 45px; }
 /*
  * This is a manifest file that'll automatically include all the stylesheets available in this directory
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
- * the top of the compiled file, but it's generally better to create a new file per style scope.
+ * the top of the com`ed file, but it's generally better to create a new file per style scope.
  *= require_self
  *= require flatly/loader
  *= require flatly/bootswatch
@@ -37,11 +37,13 @@ body, html {
 
 .navbar {
   min-height: 45px !important;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-brand {
   letter-spacing: 1px;
-  padding: 12px 15px 10px !important;
+  padding: 12px 0px 10px !important;
   text-shadow: 2px 1px  #2c3e50;
 }
 
@@ -74,6 +76,38 @@ body, html {
   vertical-align: middle;
 }
 
+/******* Common App Styles *****************/
+
+.mg-date{
+  position: relative; 
+  color: #999; 
+  margin: 0 auto;
+
+  .mg-day {
+    position: absolute;
+    font-size: 30px;
+    line-height: 30px;
+    top: 25px;
+  }
+
+  .mg-month{
+    position: absolute;
+    top: 5px;
+    left: 3px;
+    font-size: 18px;
+    line-height: 18px;
+  }
+
+  .mg-year {
+    position: absolute;
+    top: 17px;
+    right: 0;
+    font-size: 20px;
+    rotation: -90deg !important;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+  }
+}
 /******* Non-Logged-In Pages Styles *******/
 
 #mg-forgot-password-link {
@@ -84,6 +118,7 @@ body, html {
   .panel { padding: 10px 15px;}
   .well { margin-bottom: 0; }
   h3 { margin-top: 10px; }
+  .well { background-color: #3498db;}
 }
 
 /****** Common Logged-in Page Styles *********/
@@ -105,17 +140,52 @@ body, html {
 }
 
 #mg-left-pane {
-  height: 100%;
   padding: 15px 5px;
+
+  .nav-pills {
+    [class^="icon-"] {
+      line-height: normal;
+    }
+
+    .icon-child {
+     line-height: 2em; 
+    }
+  }
+
+  .mg-navigation-text {
+    vertical-align: text-bottom;
+  }
 }
 
 #mg-center-pane {
-  height: 100%;
+  min-height: 100%;
+  padding: 0;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
   -box-shadow: 0 0 15px rgba(0,0,0,0.2);
+
+  #mg-page-title {
+    margin: 10px 0;
+  }
+
+  #mg-main-page-content {
+    padding: 0 10px;
+  }
 }
 
 #mg-right-pane {
-  height: 100%;
 }
 
+/********* Transactions Index *************/
+#mg-transactions-list {
+  td.mg-date-container {
+    width: 90px;
+  }
+
+  .lead {
+    margin-bottom: 0px;
+  }
+
+  .mg-transaction-entry {
+    cursor: pointer;
+  }
+} 

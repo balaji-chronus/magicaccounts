@@ -90,6 +90,6 @@ class UsersController < ApplicationController
   end
 
   def dashboard
-    @balance = Transaction.user_balance
+    
   end
 end

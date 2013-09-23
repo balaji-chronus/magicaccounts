@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : "Magic Accounts" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "Xpense Magick" %></title>
     <%= csrf_meta_tags %>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -25,13 +25,13 @@
     <div class="container-fluid" id="mg-page-wrap">
       <div class="row-fluid" id="mg-app-container">
         <div class="navbar <%= current_user ? "navbar-default" : "navbar-inverse" %> navbar-fixed-top">
-            <div class="navbar-header">
+            <div class="navbar-header col-sm-3">
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
                 <i class="icon-list" style="color: #FFF;"></i>
               </button>
-              <a class="navbar-brand" href="#">MAGIC ACCOUNTS</a>
+              <a class="navbar-brand" href="#">Xpense Magick</a>
             </div>
-            <nav class="navbar-collapse" id="navbar-main" role="navigation">
+            <nav class="navbar-collapse collapse in" id="navbar-main" role="navigation">
               <%= render :partial => "common/#{"non_" unless current_user}logged_in_tabs" %>
             </nav><!--/.nav-collapse -->
         </div>

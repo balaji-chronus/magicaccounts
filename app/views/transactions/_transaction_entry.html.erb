@@ -1,0 +1,32 @@
+<% transaction_user = entry.transactions_users.select{|transaction_user| transaction_user.user_id == current_user.id}.first %>
+<tr class="mg-transaction-entry accordion-toggle" data-toggle="collapse" id="#mg-entry-<%= entry.id %>" data-target="#collapse_<%= entry.id %>">
+  <td>
+    <span class="icon-stack icon-2x">
+      <i class="icon-sign-blank icon-stack-base"></i>
+      <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[((entry.category || "").split(",").first) || "miscellaneous"] %> icon-light icon-child"></i>
+    </span>
+  </td>
+  <td> 
+    <div class="col-sm-12">
+      <b><%= entry.remarks %></b>
+    </div>
+    <div class="col-sm-12">
+      <span class="label label-info"><%= entry.group.name %></span>
+    </div>
+  </td>
+  <td>
+    <%= render_user_transaction_balance(transaction_user) %>
+  </td>
+  <td class="mg-date-container">
+    <div class="clearfix mg-date">
+      <span class="mg-day"><%= entry.txndate.strftime("%d") %></span><br>
+      <span class="mg-month"><%= entry.txndate.strftime("%b") %></span><br>
+      <span class="mg-year"><%= entry.txndate.strftime("%Y") %></span>
+    </div>
+  </td>
+</tr>
+<tr class="accordian-body collapse in" id="collapse_<%= entry.id %>">
+  <td colspan="6">
+    <%= render :partial => "transactions/transaction_detail_entry", :locals => {:entry => entry} %>
+  </td>
+</tr>

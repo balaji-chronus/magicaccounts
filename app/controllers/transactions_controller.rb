@@ -4,22 +4,7 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.view_transactions(current_user, params)
-
-    respond_to do |format|
-      @defaultgroup = @groups.find_by_id(params[:groupid].to_i)
-      if @defaultgroup.present?
-        @transaction.group_id = params[:groupid]
-        @groupusers = @defaultgroup.users
-        @groupusers.each { |user| @transaction.transactions_users.build({:user => User.find_by_id(user.id)})}
-        format.html
-        format.js { render :content_type => 'text/javascript' }
-      else
-        flash[:error] = 'You cannot access this Group or Group doesnot exists'
-        format.html { redirect_to profile_url }
-        format.html { render }
-      end
-    end
+    @transactions = Transaction.search_transactions(:user_id => current_user.id)
   end
 
   # GET /transactions/1

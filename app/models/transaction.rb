@@ -18,6 +18,38 @@ class Transaction < ActiveRecord::Base
     ["Miscellaneous", "miscellaneous"]
   ]
 
+  CATEGORY_ICON_MAPPING = {
+    "general" => "puzzle-piece",
+    "food" => "food",
+    "fuel" => "tint",
+    "household" => "home",
+    "electricity" => "lightbulb",
+    "dues" => "money",
+    "party" => "glass",
+    "maintainance" => "wrench",
+    "entertainment" => "ticket",
+    "settlement" => "money",
+    "telephone" => "phone-sign",
+    "miscellaneous" => "puzzle-piece",
+    "games" => "gamepad",
+    "coffee" => "coffee",
+    "sports" => "dribble",
+    "loan" => "money",
+    "insurance" => "money",
+    "movies" => "film",
+    "internet" => "signal",
+    "medical" => "ambulance",
+    "shopping" => "shopping-cart",
+    "travel" => "plane",
+    "transportation" => "truck",
+    "trash" => "trash",
+    "music" => "music",
+    "rent" => "building",
+    "stationary" => "pushpin",
+    "loan-emi" => "calender",
+    "groceries" => "shopping-cart"
+  }
+
   TRANSACTION_TYPES = [
     ["Track a Personal Expense","1"],
     ["Group - Split Equally", "2"],
@@ -38,8 +70,9 @@ class Transaction < ActiveRecord::Base
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
   
 
-  def search_transactions(options = {})
-    
+  def self.search_transactions(options = {})
+    # Get rid of this LIKE query
+    return Transaction.where("actors like '%|#{options[:user_id]}|%'").includes(:transactions_users)
   end
 
   def self.view_transactions(user, params)
@@ -63,7 +96,7 @@ class Transaction < ActiveRecord::Base
                         IFNULL(A.updated_at, A.created_at) created_at
                 FROM    transactions A JOIN transactions_users B
                 ON      A.id = B.transaction_id
-                WHERE   txndate between ? AND ? +
+                WHERE   txndate between ? AND ? ' +
                 ((params[:group_id].present?) ? "AND group_id = #{params[:group_id]}" : " ") +
                 ((params[:query].present?) ? "AND LOWER(remarks) LIKE '%#{params[:query].downcase}%'" : " ") +
                 'GROUP   BY A.id )tmp
@@ -71,7 +104,6 @@ class Transaction < ActiveRecord::Base
       ORDER     BY txndate DESC, created_at DESC ', user.id, 
                                                     user.id, 
                                                     user.id,
-                                                    params[:groupid],
                                                     (params[:transaction_start_date].blank? ? DateTime.new(1000,1,1) : params[:transaction_start_date]), 
                                                     (params[:transaction_end_date].blank? ? DateTime.new(3000,1,1) : params[:transaction_end_date])], :page => params[:page] || 1, :per_page => 10)
   end

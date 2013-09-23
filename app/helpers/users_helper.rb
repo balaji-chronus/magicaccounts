@@ -1,7 +1,7 @@
 module UsersHelper
 	def render_user_image(user, options = {})
 		image_content = gravatar_image_tag(user.email, :class => "#{options[:class_name]} mg-user-image", :gravatar => {:size => options[:size] || 32})
-		image_content = ((content_tag(:span, user.name, :class => "btn btn-info btn-xs #{options[:user_name_class]}") if options[:user_name_class].present?) || "") + image_content
+		image_content = ((content_tag(:span, user.name, :class => "btn btn-default btn-xs #{options[:user_name_class]}") if options[:user_name_class].present?) || "") + image_content
 		return image_content
 	end
 
