@@ -1,43 +1,11 @@
-<div class="group_header wellgroup">
-  <div class="group_image_container">
-    <%= image_tag('icons/Group32x32.png', :size => "27x27") %>
-  </div>
-  <div class="group_information">
-    <h3> Groups </h3>
-    <button class="btn primary" onClick="Utilities.redirectTo(event,'<%= new_group_path %>');" type="button">Create Group</button>
-  </div>
+<% @page_title = "Groups" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<div id="mg-groups-index">
+  <table class="table" id="mg-groups-list">
+    <tbody id="mg-group-entries">
+      <%= render :partial => "groups/groups_entries", :locals => {:entries => @groups} %>
+    </tbody>
+  </table>
 </div>
-<% if @groups.empty? %>
-<div class="well">
-  You don't own any groups at this point
-</div>    
-<%else%>
-<table class="table table-striped">
- <thead>
-  <tr>    
-    <th>
-      <%= t("activerecord.attributes.group.name", :default => t("activerecord.labels.name", :default => "Name")) %>
-    </th>
-        <th>Created at</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>  
-  <% @groups.each do |group| -%>
-   <tr>    
-    <td><%= link_to group.name, group_path(group) %></td>
-    <td><%= group.created_at.strftime("%Y-%m-%d") %></td>
-    <td>
-      <%= link_to(edit_group_path(group)) do %>
-        <i class='icon-pencil'></i>
-      <% end %>
-      <%= link_to(group_path(group), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}") do %>
-        <i class='icon-trash'></i>
-      <% end %>      
-    </td>
-  </tr>
-  <% end end -%>
 
-  
-   </tbody>
-</table>
+<%= will_paginate(@groups) %>

@@ -1,0 +1,18 @@
+<tr>
+  <% user = User.find(balance_options[:user_id]) %>
+  <td class="text-left">
+    <%= render_user_image(user, 
+      :size => 42, 
+      :class_name => "img-circle mg-balance-user").html_safe %>
+  </td>
+  <td class="text-center">
+    <span class="badge balance <%= balance_options[:display_class] %>"><h5><%= balance_options[:balance] %></h5></span>
+  </td>
+  <td class="text-center">
+    <span class="badge"><h5><%= balance_options[:transaction_count] %></h5></span>
+  </td>
+</tr>
+
+<script type="text/javascript">
+  jQuery('.mg-balance-user').tooltip();
+</script>

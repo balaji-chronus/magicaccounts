@@ -1,6 +1,6 @@
 <% transaction_user = entry.transactions_users.select{|transaction_user| transaction_user.user_id == current_user.id}.first %>
 <tr class="mg-transaction-entry accordion-toggle" data-toggle="collapse" id="#mg-entry-<%= entry.id %>" data-target="#collapse_<%= entry.id %>">
-  <td>
+  <td class="text-center">
     <span class="icon-stack icon-2x">
       <i class="icon-sign-blank icon-stack-base"></i>
       <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[((entry.category || "").split(",").first) || "miscellaneous"] %> icon-light icon-child"></i>
@@ -11,10 +11,12 @@
       <b><%= entry.remarks %></b>
     </div>
     <div class="col-sm-12">
-      <span class="label label-info"><%= entry.group.name %></span>
+      <span class="label label-default">
+        View Details
+      </span>
     </div>
   </td>
-  <td>
+  <td class="text-center">
     <%= render_user_transaction_balance(transaction_user) %>
   </td>
   <td class="mg-date-container">

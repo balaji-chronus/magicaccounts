@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130818065531) do
+ActiveRecord::Schema.define(:version => 20130921045751) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(:version => 20130818065531) do
     t.datetime "txndate"
     t.integer  "account_id"
     t.integer  "user_id"
-    t.decimal  "amount",           :precision => 14, :scale => 2
+    t.decimal  "amount",                           :precision => 14, :scale => 2
     t.string   "category"
     t.text     "remarks"
     t.datetime "created_at"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20130818065531) do
     t.string   "enteredby"
     t.integer  "transaction_type"
     t.integer  "group_id"
+    t.string   "actors",           :limit => 2048
   end
 
   add_index "transactions", ["account_id"], :name => "fk_transactions_account_id"
@@ -113,6 +114,7 @@ ActiveRecord::Schema.define(:version => 20130818065531) do
     t.decimal  "amount",         :precision => 14, :scale => 2
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "amount_paid",    :precision => 14, :scale => 2, :default => 0.0
   end
 
   create_table "users", :force => true do |t|

@@ -1,21 +1,42 @@
-
-<label class="label"><%= t("activerecord.attributes.group.name", :default => t("activerecord.labels.name", :default => "Name")) %>:</label>
-<p><%= @group.name %></p>
-
-<label class="label"><%= t("activerecord.attributes.group.status", :default => t("activerecord.labels.status", :default => "Status")) %>:</label>
-<p><%= @group.status %></p>
-
-<label class="label"><%= t("activerecord.attributes.group.user_id", :default => t("activerecord.labels.user_id", :default => "Owner")) %>:</label>
-<p><%= User.find(@group.user_id).name %></p>
-
-<label class="label"><%= t("activerecord.attributes.group.code", :default => t("activerecord.labels.code", :default => "Group Code")) %>:</label>
-<p><%= @group.code %></p>
-<br/>
-<div id="invite_friends">
-  <%= form_tag({:action => "sendinvites"}, :remote => true, :method => "post", :class => "well", :id => "form_invite") do -%>
-    <%= hidden_field_tag :groupid, @group.id, :class => 'text_field' %>
-    <%= text_field_tag :emailids, params[:emailids],  {:class => 'span3', :placeholder => "Enter email ids…"} %>
-    <span class="help-inline">Invite your friends to this group</span><br/>
-    <button type="submit" class="btn-success">Send Invites</button>
-  <%end%>
+<% @page_title = "Groups - #{@group.name}" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<div id="mg-groups-show" class="mg-wrap-container">
+  <div class="bs-example bs-example-tabs">
+    <ul id="myTab" class="nav nav-tabs lead">
+      <li class="active"><a href="#group-balance" data-toggle="tab"><i class="icon-exchange"></i></a></li>
+      <li class=""><a href="#profile" data-toggle="tab"><i class="icon-info"></i></a></li>
+      <li class=""><a href="#dropdown1" data-toggle="tab"><i class="icon-tasks"></i></a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div class="tab-pane fade active in" id="group-balance">
+        <table class="table table-condensed">
+          <thead>
+          <tr>
+            <th>User</th>
+            <th class="text-center">Balance</th>
+            <th class="text-center"># of Expenses</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% @balances.each do |balance_entry| %>
+              <%= render :partial => "groups/balance_entry", :locals => {:balance_options => balance_entry} %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="profile">
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+      </div>
+      <div class="tab-pane fade" id="dropdown1">
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script type="text/javascript">
+  jQuery('#myTab a').click(function (e) {
+    e.preventDefault();
+    jQuery(this).tab('show');
+  })
+</script>

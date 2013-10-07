@@ -44,10 +44,14 @@ body, html {
 .navbar-brand {
   letter-spacing: 1px;
   padding: 12px 0px 10px !important;
-  text-shadow: 2px 1px  #2c3e50;
+  text-shadow: 2px 3px  #2c3e50;
 }
 
-.nav > li > a {
+.navbar-brand:hover {
+  text-shadow: none;
+}
+
+#navbar-main .nav > li > a {
   padding: 10px 5px !important;
 }
 
@@ -74,6 +78,20 @@ body, html {
 .h-align {
   display: inline-block;
   vertical-align: middle;
+}
+
+.element-reverse {
+  rotation: -180deg !important;
+  -webkit-transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+}
+
+.collapse {
+  -webkit-transition: height 1s;
+  -moz-transition: height 1s;
+  -ms-transition: height 1s;
+  -o-transition: height 1s;
+  transition: height 1s;
 }
 
 /******* Common App Styles *****************/
@@ -108,7 +126,37 @@ body, html {
     -moz-transform: rotate(-90deg);
   }
 }
+
+.mg-action-links {
+  white-space: nowrap;
+}
+
+.mg-wrap-container {
+  padding: 15px;
+}
+
+.badge.positive {
+  background-color: #18bc9c;
+}
+
+.badge.negative {
+  background-color: #e74c3c;
+}
+
 /******* Non-Logged-In Pages Styles *******/
+
+.jumbotron {
+  background: url('<%= asset_path('blurred-background-1.jpg') %>') center center repeat;
+
+  h1 {
+    font-weight: bold;
+  }
+
+  blockquote {
+    padding: 25px 0;
+    border: none;
+  }
+}
 
 #mg-forgot-password-link {
   line-height: 31px;
@@ -117,7 +165,10 @@ body, html {
 #mg-four-col-feature {
   .panel { padding: 10px 15px;}
   .well { margin-bottom: 0; }
-  h3 { margin-top: 10px; }
+  h3 { 
+    margin-top: 10px; 
+    font-weight: bold;
+  }
   .well { background-color: #3498db;}
 }
 
@@ -163,8 +214,14 @@ body, html {
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
   -box-shadow: 0 0 15px rgba(0,0,0,0.2);
 
-  #mg-page-title {
-    margin: 10px 0;
+  #mg-main-pane-container {
+    .well {
+      margin-bottom: 0;
+    }
+
+    #mg-page-title {
+      margin: 10px 0;
+    }
   }
 
   #mg-main-page-content {
@@ -177,15 +234,70 @@ body, html {
 
 /********* Transactions Index *************/
 #mg-transactions-list {
+  margin-bottom: 0;
   td.mg-date-container {
     width: 90px;
+  }
+
+  tr:nth-child(even) > td {
+      -webkit-box-shadow:  inset 0 5px 7px -5px rgba(0,0,0,0.25),inset 0 -3px 7px -5px rgba(0,0,0,0.25);
+      box-shadow: inset 0 5px 7px -5px rgba(0,0,0,0.25),inset 0 -3px 7px -5px rgba(0,0,0,0.25);
   }
 
   .lead {
     margin-bottom: 0px;
   }
 
+  .accordian-body {
+    border: 1px solid #CCC;
+    border-radius: 5px;
+    background: #FCFCFC;
+  }
+
   .mg-transaction-entry {
     cursor: pointer;
   }
-} 
+
+  .transaction_detail_entry {
+    padding: 0 20px;
+
+    .well {
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      margin-top: 20px;
+      background: transparent;
+    }
+
+    .mg-category-tags {
+      margin: 20px 0 30px;
+    }
+
+    .list-group-item {
+      padding: 0;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+      margin: 10px 0;
+      background: transparent;
+
+      img {
+        margin: 7px 0;
+      }
+    }
+
+    div {
+      margin: 0 0 7px;
+    }
+
+    .progress {
+      margin-bottom: 10px;
+      height: 10px;
+    }
+  }
+}
+
+/*********** Groups Index *************/
+
+/*********** Groups Show *************/
+#group-balance  {
+  .badge.balance {
+    min-width: 120px;  
+  }
+}

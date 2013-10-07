@@ -10,6 +10,7 @@
 //= require flatly/bootswatch
 //= require rails.validations
 //= require select2
+//= require pagination
 
 jQuery.ajaxSetup({
     'beforeSend': function(xhr) {xhr.setRequestHeader("Accept","text/javascript")}

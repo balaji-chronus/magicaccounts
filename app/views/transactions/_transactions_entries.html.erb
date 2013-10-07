@@ -1,0 +1,3 @@
+<% entries.each do |transaction| %>
+  <%= render :partial => "transactions/transaction_entry", :locals => {:entry => transaction} %>
+<% end %>

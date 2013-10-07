@@ -4,7 +4,7 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.search_transactions(:user_id => current_user.id)
+    @transactions = Transaction.search_transactions(:user_id => current_user.id).page(params[:page]).per_page(10)
   end
 
   # GET /transactions/1

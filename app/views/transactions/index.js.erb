@@ -1,4 +1,6 @@
-$("#viewacctran").replaceWith("<%= escape_javascript(render(
-    :partial => 'transactions/tran',
-    :locals => { :filtered_transactions => @transactions, :defaultgroup => @defaultgroup }))%>");
-jQuery("#transactions_loader").hide();
+jQuery('#mg-transaction-entries').append('<%= j render(:partial => "transactions/transactions_entries", :locals => {:entries => @transactions}) %>');
+<% if @transactions.next_page %>
+  jQuery('.pagination').replaceWith('<%= j will_paginate(@transactions) %>');
+<% else %>
+  jQuery('.pagination').remove();
+<% end %>

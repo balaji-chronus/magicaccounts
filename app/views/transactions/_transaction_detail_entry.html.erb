@@ -1,13 +1,93 @@
-<div>
-  <blockquote>
-    <p>
-      <%= entry.remarks %>
-    </p>
-  </blockquote>
+<div class="transaction_detail_entry">
+  <div class="well well-sm">
+    <h4><i class="icon-quote-left"></i> &nbsp; &nbsp; <span><%= entry.remarks %></span></h4>
+  </div>
+
+  <p class="clearfix ">
+    <div class="mg-category-tags">
+      <div>
+        <span class="icon-stack">
+          <i class="icon-circle icon-stack-base"></i>
+          <i class="icon-tags icon-light icon-child"></i>
+        </span><small>&nbsp;</small>
+        <% (entry.category || "").split(",").each do |category| %>
+        <span class="label label-info">
+            <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[category] || Transaction::CATEGORY_ICON_MAPPING["miscellaneous"] %> icon icon-child"></i> &nbsp; <%= category %>
+          </span>
+        <% end %>
+      </div>
+      <div>
+        <span class="icon-stack">
+          <i class="icon-circle icon-stack-base"></i>
+          <i class="icon-group icon-light icon-child"></i>
+        </span><small>&nbsp;</small>
+        <span class="label label-warning">
+          <%= entry.group.name %>
+        </span>
+      </div>
+    </div>
+  </p>
+
+  <p>
+    <ul class="list-group">
+      <% entry.transactions_users.each do |tu| %>
+        <li class="list-group-item clearfix">
+          <div class="col-xs-5 text-center">
+            <div class="text-danger">
+              <small><i class="icon-minus-sign-alt"></i> &nbsp; <%= tu.amount %></small>
+            </div>
+            <div class="progress element-reverse">
+              <div class="progress-bar progress-bar-danger" width-value="<%= "#{tu.amount * 100/entry.amount}%" %>" style= "width: 0%;height: 100%;"></div>
+            </div>
+          </div>
+          
+          <div class="col-xs-2 text-center">
+            <%= render_user_image(tu.user, :size => 32, :class_name => "img-circle").html_safe %>
+          </div>
+          
+          <div class="col-xs-5 text-center">
+            <div class="text-success">
+              <small><i class="icon-plus-sign-alt"></i> &nbsp; <%= tu.amount_paid %></small>
+            </div>
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" width-value="<%= "#{tu.amount_paid * 100/entry.amount}%" %>"style="width: 0%; height: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="col-xs-12 text-center">
+            <span class="label label-info"></span>
+            <% display_string, display_class, text_class = render_user_transaction_balance_detail(tu) %>
+            <h5 class="<%= text_class %>"><%= "#{tu.user.name} #{display_string}" %></h5>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </p>
+
+  <p>
+    <%= render_user_image(entry.entered_user, :size => 32, :class_name => "img-circle").html_safe %>
+    <span class="text-muted">
+      <small> added this on <%= entry.created_at.strftime("%d %b %Y %H:%m") %></small>
+    </span>
+    <span class="pull-right">
+      <i class="icon-barcode icon-2x"></i><i class="icon-barcode icon-2x"></i>
+    </span>
+  </p>
 </div>
-<div>
-  <% (entry.category || "").split(",").each do |category_name| %>
-    <h5 class="text-muted">Categories</h5>
-    <span class="label label-warning"><%= category_name %></span>
-  <% end %>
-</div>
+
+<script type="text/javascript">
+  jQuery('#collapse_<%= entry.id %>').on('shown.bs.collapse', function () {
+    setTimeout(
+    jQuery('#collapse_<%= entry.id %> .progress-bar').each(function() {
+      jQuery(this).css("width", jQuery(this).attr("width-value"));
+    }), 250);
+  });
+
+  jQuery('#collapse_<%= entry.id %>').on('hidden.bs.collapse', function () {
+    jQuery('#collapse_<%= entry.id %> .progress-bar').each(function () {
+      jQuery(this).css("width", "0%");
+    });
+  });
+
+  jQuery(".collapse").collapse();
+</script>

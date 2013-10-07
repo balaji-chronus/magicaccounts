@@ -63,6 +63,7 @@ class Transaction < ActiveRecord::Base
   validate  :check_group_user_access
 
   belongs_to  :user
+  belongs_to  :entered_user, :foreign_key => "enteredby", :class_name => "User" 
   belongs_to  :group
   has_many    :comments, :as => :commentable
   has_many    :users, :through => :transactions_users
@@ -72,7 +73,7 @@ class Transaction < ActiveRecord::Base
 
   def self.search_transactions(options = {})
     # Get rid of this LIKE query
-    return Transaction.where("actors like '%|#{options[:user_id]}|%'").includes(:transactions_users)
+    return Transaction.where("actors like '%|#{options[:user_id]}|%'").order("txndate desc").includes(:transactions_users)
   end
 
   def self.view_transactions(user, params)
@@ -122,29 +123,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.user_balance(group)
-    Transaction.find_by_sql(["  SELECT X.group_id, X.user_id, investments, expenditures
-                                FROM  ( SELECT A.group_id, A.user_id, investments, IFNULL(expenditures, 0) expenditures
-                                        FROM    ( SELECT  group_id, user_id, SUM(amount) investments
-                                                  FROM    transactions
-                                                  WHERE   group_id = #{group.id}
-                                                  GROUP   BY group_id, user_id ) A LEFT JOIN (  SELECT  group_id, beneficiary_id, SUM(amount) expenditures
-                                                                                      FROM    transactions_beneficiaries
-                                                                                      WHERE   group_id = #{group.id}
-                                                                                      GROUP   BY group_id, beneficiary_id) B
-                                        ON      A.user_id = B.beneficiary_id
-                                        AND     A.group_id = B.group_id
-                                        UNION
-                                        SELECT  Z.group_id, beneficiary_id, IFNULL(investments,0), expenditures
-                                        FROM    ( SELECT  group_id, user_id, SUM(amount) investments
-                                                  FROM    transactions
-                                                  WHERE   group_id = #{group.id}
-                                                  GROUP   BY group_id, user_id ) Y RIGHT JOIN ( SELECT  group_id, beneficiary_id, SUM(amount) expenditures
-                                                                                      FROM    transactions_beneficiaries
-                                                                                      WHERE   group_id = #{group.id}
-                                                                                      GROUP   BY group_id, beneficiary_id) Z
-                                        ON      Y.user_id = Z.beneficiary_id
-                                        AND     Y.group_id = Z.group_id ) X
-                            ORDER     BY (investments - expenditures) DESC"])
+    Transaction.joins("JOIN transactions_users tu ON transactions.id = tu.transaction_id AND transactions.group_id = #{group.id}").group("tu.user_id").order("(SUM(amount_paid) - SUM(tu.amount)) DESC").select("tu.user_id, (SUM(amount_paid) - SUM(tu.amount)) balance, COUNT(distinct transaction_id) transactions")
   end
 
   def self.get_autocomplete_tags(term, page = 1, per_page = 10, selection = [])

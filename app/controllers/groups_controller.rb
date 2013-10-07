@@ -1,20 +1,23 @@
 class GroupsController < ApplicationController
-  # GET /groups
-  # GET /groups.json
   def index
-    @groups = Group.get_user_owned_groups(current_user)
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @groups }
-    end
+    # Get all user's groups
+    @groups = current_user.user_groups.page(params[:page]).per_page(10)
   end
 
   # GET /groups/1
   # GET /groups/1.json
   def show
     @group = Group.find_by_id(params[:id])
+    @balances = Transaction.user_balance(@group).collect do |entry| 
+      { 
+        :user_id => entry.user_id, 
+        :balance => entry.balance.abs.to_s, 
+        :transaction_count => entry.transactions,
+        :display_class => entry.balance > 0 ? "positive" : "negative"
+      }
+    end
     respond_to do |format|
-      if Group.find_all_by_user_id(current_user).include?(@group)
+      if true
         format.html # show.html.erb
         format.json { render json: @group }
       else

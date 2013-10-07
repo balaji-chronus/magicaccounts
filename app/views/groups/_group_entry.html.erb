@@ -1,0 +1,32 @@
+<tr class="mg-group-entry">
+  <td class="text-center">
+    <span class="icon-stack">
+      <i class="icon-sign-blank icon-stack-base"></i>
+      <i class="icon-group icon-light icon-child"></i>
+    </span>
+  </td>
+  <td> 
+    <%= link_to(group_path(entry), :class=>"text-primary") do %>
+      <b><%= entry.name %></b>
+    <% end %>
+  </td>
+  <td>
+    <span class="badge"><%= entry.users.count %></span>
+  </td>
+  <td> 
+    <% display_text, display_class = get_owner_member_details(current_user, entry) %>
+    <span class="label label-<%= display_class %>">
+      <%= display_text %>
+    </span>
+  </td>
+  <td class="text-center">
+    <div class="clearfix mg-action-links">
+      <%= link_to(edit_group_path(entry), :class=>"text-primary") do %>
+        <i class='icon-pencil'></i>
+      <% end %>
+      <%= link_to(group_path(entry), :method => :delete, :confirm => "Are you sure you want to delete this group?", :class=>"text-primary") do %>
+        <i class='icon-trash'></i>
+      <% end %>
+    </div>
+  </td>
+</tr>
