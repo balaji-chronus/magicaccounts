@@ -1,4 +1,6 @@
-Magicaccounts::Application.routes.draw do  
+Magicaccounts::Application.routes.draw do   
+  match '/auth/:provider/callback' => 'authentications#create'
+  
   controller :reports do
     get 'reports' => :index
     get "spend_by_category" => "reports#spend_by_category"
@@ -11,7 +13,7 @@ Magicaccounts::Application.routes.draw do
   end
 
   resources :comments
-
+  resources :authentications
   root :to => 'users#dashboard'
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:groupid' => 'transactions#new'

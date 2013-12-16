@@ -1,6 +1,6 @@
 require 'digest/sha2'
 class User < ActiveRecord::Base  
-
+  has_many :authentications , :dependent => :destroy
   has_many :transactions
   has_many :groups
   has_and_belongs_to_many :user_groups, :class_name => "Group", :uniq => true
@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   attr_accessor :password_confirmation
   
   validates :name,
-            :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must have at least one alphabet and contain only alphabets, digits, or underscores'},
+            :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must start with an alphabet and contain only alphabets, digits, or underscores'},
             :uniqueness => {:message => "Unavailable. Please choose another name"},
             :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
 

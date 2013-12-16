@@ -1,13 +1,28 @@
 <!--Body content-->
 <div class="col-sm-12">
   <div class="jumbotron">
-  	<h1>Managing expenses made easy</h1>
-  	<%= render :partial => "common/user_testimonials" %>
-  	<p><a class="btn btn-danger btn-lg">Sign Up Today</a></p>
-	</div>
+    <% if @user.present? %>
+      <%= yield %>
+    <% else %>
+      <h1>Managing expenses made easy</h1>
+      <%= render :partial => "common/user_testimonials" %>
+      <p> <%= link_to "/users/new", :class=>"btn btn-danger btn-lg" do %>
+        Sign Up with Email <%= image_tag "email_icon.png", :size => "32x32",:alt=> "Email" %>
+      <% end %></p>
+      <p>  <%= link_to "/auth/twitter", :class=>"btn btn-info btn-lg" do %>
+        Sign up with Twitter<%= image_tag "twitter_32.png", :size => "32x32",:alt=> "Twitter" %>
+      <% end %> </p>
+      <p><%= link_to "/auth/facebook", :class=>"btn btn-primary btn-lg" do %>
+        Sign up with Facebook<%= image_tag "facebook_32.png",:size => "32x32",:alt=>"Facebook"%>
+      <% end %></p>
+      <p>   <%= link_to "/auth/google_oauth2", :class=>"btn btn-success btn-lg" do %>
+        Sign up with Google<%= image_tag "google_32.png",:size => "32x32",:alt=> "Google" %>
+      <% end %></p>
+    <% end %> 
+  </div>
 </div>
 <div id="mg-four-col-feature">
-  <% STATIC_TEXT::FOUR_COLUMN_FEATURE_HOMEPAGE.each do |feature_item| %>
-    <%= render :partial => "common/feature_4_column_static", :locals => feature_item %>
-  <% end %>
+    <% STATIC_TEXT::FOUR_COLUMN_FEATURE_HOMEPAGE.each do |feature_item| %>
+      <%= render :partial => "common/feature_4_column_static", :locals => feature_item %>
+    <% end %>
 </div>

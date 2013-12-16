@@ -1,4 +1,9 @@
-<h1> Add User </h1><br/>
+<%if current_user %>
+<h1> Add User </h1>
+<%else %>
+<h1> Hi! Welcome! </h1>
+<% end %>
+<br/>
 <%= form_for @user, :validate => true, :url => users_path, :html => { :class => :form } do |f| -%>
   <%= render :partial => "form", :locals => {:f => f} %>
 <% end -%>

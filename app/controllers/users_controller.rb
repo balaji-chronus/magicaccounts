@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_filter :authorize, :only => [:new, :create]
+  skip_before_filter :authorize, :only => [:new, :create,:oauth_failure]
   # GET /users
   # GET /users.json
   def index    
@@ -44,7 +44,9 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
-
+    if session[:omniauth]
+      @user.authentications.build(:provider => session[:omniauth]['provider'], :uid => session[:omniauth]['uid'])
+    end
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
@@ -91,5 +93,10 @@ class UsersController < ApplicationController
 
   def dashboard
     
+  end
+
+  def oauth_failure
+    flash[:error] = "Access denied by the user"
+    redirect_to login_url 
   end
 end
