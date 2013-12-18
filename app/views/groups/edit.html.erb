@@ -1,4 +1,6 @@
-<%= form_for @group, :validate => true, :url => group_path(@group), :html => { :class => "edit_group", :id => "edit_group" } do |f| -%>
+<% @page_title = "Edit Group" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<%= form_for @group, :validate => true, :url => group_path(@group), :html => { :class => "edit_group mg-group-create-edit", :id => "edit_group" } do |f| -%>
   <input name="_method" type="hidden" value="put" />
   <%= render :partial => "form", :locals => {:f => f} %>
 <% end -%>

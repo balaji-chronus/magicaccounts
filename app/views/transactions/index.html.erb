@@ -1,7 +1,7 @@
 <% @page_title = "Expenses" %>
 <%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
 <div id="mg-transactions-index">
-  <table class="table" id="mg-transactions-list">
+  <table class="table shadow-row" id="mg-transactions-list">
     <tbody id="mg-transaction-entries">
       <%= render :partial => "transactions/transactions_entries", :locals => {:entries => @transactions} %>
     </tbody>

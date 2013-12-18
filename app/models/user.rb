@@ -1,6 +1,11 @@
 require 'digest/sha2'
 class User < ActiveRecord::Base  
 
+  module INVITE_STATUS
+    REGISTERED = "registered"
+    NOT_REGISTERED = "not_registered"
+  end
+
   has_many :transactions
   has_many :groups
   has_and_belongs_to_many :user_groups, :class_name => "Group", :uniq => true
@@ -12,7 +17,6 @@ class User < ActiveRecord::Base
   
   validates :name,
             :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must have at least one alphabet and contain only alphabets, digits, or underscores'},
-            :uniqueness => {:message => "Unavailable. Please choose another name"},
             :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
 
   validates :phone,
@@ -67,7 +71,7 @@ class User < ActiveRecord::Base
     User.joins("JOIN groups_users UG ON users.id = UG.user_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",current_user).select("DISTINCT users.id user_id, users.name user_name")
   end
 
-private  
+  private
 
   def create_new_salt
     self.salt = self.object_id.to_s + rand.to_s
@@ -77,5 +81,4 @@ private
     string_to_hash = pwd + "takraw" + salt
     Digest::SHA2.hexdigest(string_to_hash)
   end
-
 end

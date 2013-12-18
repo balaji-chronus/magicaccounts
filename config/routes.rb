@@ -10,7 +10,11 @@ Magicaccounts::Application.routes.draw do
     get "avg_spend_by_account" => "reports#avg_spend_by_account"
   end
 
-  resources :comments
+  resources :comments do
+    collection do
+      get :recent_activities
+    end
+  end
 
   root :to => 'users#dashboard'
   match 'groups/:code/adduser' => 'groups#adduser'

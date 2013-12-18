@@ -7,6 +7,10 @@ class TransactionsController < ApplicationController
     @transactions = Transaction.search_transactions(:user_id => current_user.id).page(params[:page]).per_page(10)
   end
 
+  def new
+    @transaction = Transaction.new
+  end
+
   # GET /transactions/1
   # GET /transactions/1.json
   def show

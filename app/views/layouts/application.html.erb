@@ -31,9 +31,11 @@
               </button>
               <a class="navbar-brand" href="#">Xpense Magick</a>
             </div>
-            <nav class="navbar-collapse collapse in" id="navbar-main" role="navigation">
-              <%= render :partial => "common/#{"non_" unless current_user}logged_in_tabs" %>
-            </nav><!--/.nav-collapse -->
+            <% unless current_user %>
+              <nav class="navbar-collapse collapse in" id="navbar-main" role="navigation">
+                <%= render(:partial => "common/non_logged_in_tabs") %>
+              </nav><!--/.nav-collapse -->
+            <% end %>
         </div>
 
         <%# Flash Container %>

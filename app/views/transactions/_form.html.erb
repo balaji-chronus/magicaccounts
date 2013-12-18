@@ -1,96 +1,235 @@
-<div class="clearfix">
-  <%= f.label :txndate, t("activerecord.attributes.transaction.txndate", :default => "Txn Date"), :class => :label %>
-  <div class="input">
-    <%= f.text_field :txndate, :value => f.object.txndate || Date.today, :class => 'date_select' %>
-  </div>
+<!-- Modal -->
+<div class="modal fade" id="mg-expense-date" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Transaction Date</strong></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+  jQuery('#mg-expense-date .modal-body').datepicker({
+    todayHighlight: true,
+    todayBtn: "linked"
+  });
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="mg-expense-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Select Group</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          <% current_user.user_groups.each_with_index do |group, index| %>
+            <a href="#" class="list-group-item <%= index == 0 ? "active" : "" %>">
+              <%= group.name %>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="mg-expense-payer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Expense Paid By</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          <% current_user.user_groups.collect(&:users).flatten.uniq.each_with_index do |user, index| %>
+            <a href="#" class="list-group-item <%= index == 0 ? "active" : "" %>">
+              <%= render_user_image(user, {:class_name => "img-circle",:user_name_class => "name"}).html_safe %>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="mg-expense-beneficiary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Expense Benefactors</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="btn-group btn-group-justified" data-toggle="buttons">
+          <label class="btn btn-info">
+            <input type="radio" name="options" id="mg-split-equally"> <i class="icon-align-justify icon-light"></i>
+          </label>
+          <label class="btn btn-info">
+            <input type="radio" name="options" id="mg-split-unequally"> <i class="icon-align-center icon-light"></i>
+          </label>
+          <label class="btn btn-info">
+            <input type="radio" name="options" id="mg-personal-expense"> <i class="icon-circle icon-light"></i>
+          </label>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+ <div id="mg-transaction-create">
+    <fieldset>
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-money icon-light icon-child"></i>
+          </span>
+        </span>
+        <input type="number" class="text-center form-control" id="mg-expense-money" placeholder="0.00">
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-font icon-light icon-child"></i>
+          </span>
+        </span>
+        <textarea class="form-control text-center img-circle" rows="2" id="textArea"  placeholder="Enter Expense Summary"></textarea>
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-calendar icon-light icon-child"></i>
+          </span>
+        </span>
+        <!-- Green to Red -->
+        <div class="mg-expense-toggle off toggle btn btn-lg btn-success" target-element="#mg-expense-date"  data-toggle="toggle">
+          <input type="checkbox" checked>
+          <div class="toggle-group">
+            <label class="toggle-on btn btn-lg btn-success">12-12-2013</label>
+            <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Date</strong></label>
+            <span class="toggle-handle btn btn-lg btn-primary"></span>     
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+    
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-group icon-light icon-child"></i>
+          </span>
+        </span>
+        <!-- Green to Red -->
+        <div class="mg-expense-toggle toggle off btn btn-lg btn-success" target-element="#mg-expense-group" data-toggle="toggle">
+          <input type="checkbox" checked>
+          <div class="toggle-group">
+            <label class="toggle-on btn btn-lg btn-success">Chennai Warriors CC</label>
+            <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Group</strong></label>
+            <span class="toggle-handle btn btn-lg btn-primary"></span>     
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-user icon-light icon-child"></i>
+          </span>
+        </span>
+        <!-- Green to Red -->
+        <div class="mg-expense-toggle off toggle btn btn-lg btn-success" data-toggle="toggle" target-element="#mg-expense-payer">
+          <input type="checkbox" checked>
+          <div class="toggle-group">
+            <label class="toggle-on btn btn-lg btn-success">Balaji</label>
+            <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Spender</strong></label>
+            <span class="toggle-handle btn btn-lg btn-primary"></span>     
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-sitemap icon-light icon-child"></i>
+          </span>
+        </span>
+        <!-- Green to Red -->
+        <div class="mg-expense-toggle toggle off btn btn-lg btn-success" data-toggle="toggle"  target-element="#mg-expense-beneficiary" >
+          <input type="checkbox" checked>
+          <div class="toggle-group">
+            <label class="toggle-on btn btn-lg btn-success">Split Equally</label>
+            <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Benefactors</strong></label>
+            <span class="toggle-handle btn btn-lg btn-primary"></span>     
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+          <span class="icon-stack">
+            <i class="icon-sign-blank icon-stack-base"></i>
+            <i class="icon-tags icon-light icon-child"></i>
+          </span>
+        </span>
+        <!-- Green to Red -->
+        <div class="toggle off btn btn-lg btn-success" data-toggle="toggle">
+          <input type="checkbox" checked>
+          <div class="toggle-group">
+            <label class="toggle-on btn btn-lg btn-success">Food, Entertainment +2</label>
+            <label class="toggle-off btn btn-lg btn-default"><strong>Choose Categories</strong></label>
+            <span class="toggle-handle btn btn-lg btn-primary"></span>     
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+          <i class="icon-pencil icon-light icon-child"></i>
+        </a>
+      </div>
+      
+      <br/>    
+      <div class="form-group pull-right">
+        <div class="col-xs-12">
+          <button class="btn btn-default">Cancel</button> 
+          <%= f.submit "Save", id: "mg-transactions-create-btn", class: "btn btn-primary", disable_with: "Saving..." %>
+        </div>
+      </div>
+    </fieldset>
 </div>
 
-<% if type == "edit" %>
-  <div class="clearfix">
-    <%= f.label :group_id, t("activerecord.attributes.transaction.account_id", :default => "Group"), :class => :label %>
-    <div class="input">
-      <%= f.select :group_id, [[@defaultgroup.name, @defaultgroup.id]], {}, { :selected => @defaultgroup.name, :class => 'selectwidth', :disabled => true} %>
-    </div>
-  </div>
-<% else %>
-  <div class="clearfix">
-    <%= f.label :group_id, t("activerecord.attributes.transaction.account_id", :default => "Group"), :class => :label %>
-    <div class="input">
-      <%= f.select :group_id, @groups.collect {|grp| [grp.name, grp.id, {:redirectUrl => transactions_path(:groupid => grp.id, :open_new_form => "true")}]}, {:prompt => 'Select Group' }, { :selected => @defaultgroup.name, :class => 'selectwidth', :onchange => "Utilities.redirectTo(event,jQuery('option:selected', this).attr('redirectUrl'))" } %>
-    </div>
-  </div>
-<% end %>
-
-<div class="clearfix">
-  <%= f.label :user_id, t("activerecord.attributes.transaction.user_id", :default => "Investor"), :class => :label %>
-  <div class="input">
-    <%= f.select  :user_id,
-      [[f.object.user.name,f.object.user.id]],
-      { :selected => f.object.user.id},
-      { :class => 'selectwidth' } %>
-  </div>
-</div>
-
-<div class="clearfix">
-  <%= f.label :transaction_type, t("activerecord.attributes.transaction.account_id", :default => "Transaction Type"), :class => :label %>
-  <div class="input">
-    <%= f.select :transaction_type, Transaction::TRANSACTION_TYPES, {}, { :default => "Track a Personal Expense", :class => 'selectwidth' } %>
-  </div>
-</div>
-
-<% partial_name = case (f.object.transaction_type)
-when 2 then "group_equal"
-when 3 then "group_unequal"
-else "personal"
-end %>
-
-<%= render(:partial => "transactions/transaction_types/#{partial_name}", :locals =>  {:f => f}) %>
-
-<div class="clearfix">
-  <%= f.label :tag_list, "Category Tags" , :class => "label" %>
-  <div class="input">
-    <%= f.hidden_field :tag_list, :id => "category_tags" %>
-    <% selected_data = f.object.tag_list.blank? ? [] : f.object.tag_list.collect{|tag| {:id => tag, :text => tag}} %>
-    <%= javascript_tag( <<-eos
-                          Transaction.autocomplete('#{autocomplete_category_tags_transactions_url}.json', '#category_tags', #{selected_data.to_json}, 'Start typing category tags ...');
-                        eos
-                      ) %>
-  </div>
-</div>
-
-<div class="clearfix">
-  <%= f.label :remarks, t("activerecord.attributes.transaction.remarks", :default => "Remarks"), :class => :label %>
-  <div class="input">
-    <%= f.text_area :remarks, :class => 'text_area', :rows => 5  %>
-  </div>
-</div>
-
-<div class="clearfix">
-  <div class="input">
-    <%= f.hidden_field  :enteredby, :value => current_user.id %>
-  </div>
-</div>
-
-<div class="form-actions">
-  <%= f.submit "Save", id: "transactions_save", class: "btn primary", disable_with: "Submitting..." %>
-  </div>
-
-  <script type="text/javascript">
-    jQuery(document).ready(function(){
-    jQuery('#transaction_transaction_type').change(function() {
-        var transaction_type = jQuery(this).val();
-        if (transaction_type == "1") {
-          jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/personal', :locals =>  {:f => f}))%>");
-          Transaction.cleanUpTransactionUsers();
-          Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
-        }
-        else if(transaction_type == "2") {
-          jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_equal', :locals =>  {:f => f}))%>");
-          Transaction.setTransactionUserAmount();
-        }
-        else if(transaction_type == "3") {
-          jQuery("#transaction_user_amount").replaceWith("<%= escape_javascript(render(:partial => 'transactions/transaction_types/group_unequal', :locals =>  {:f => f}))%>");
-        }
-      });
-    });
-  </script>
+<script type="text/javascript">
+  jQuery('.mg-expense-toggle').on('switch-on', this, function(){
+    jQuery(jQuery(this).attr('target-element')).modal('show');
+  })
+</script>

@@ -27,8 +27,25 @@
     </div>
   </td>
 </tr>
-<tr class="accordian-body collapse in" id="collapse_<%= entry.id %>">
+<tr class="accordian-body fade collapse in" id="collapse_<%= entry.id %>">
   <td colspan="6">
     <%= render :partial => "transactions/transaction_detail_entry", :locals => {:entry => entry} %>
   </td>
 </tr>
+
+<script type="text/javascript">
+  jQuery('#collapse_<%= entry.id %>').on('shown.bs.collapse', function () {
+    setTimeout(
+    jQuery('#collapse_<%= entry.id %> .progress-bar').each(function() {
+      jQuery(this).css("width", jQuery(this).attr("width-value"));
+    }), 250);
+  });
+
+  jQuery('#collapse_<%= entry.id %>').on('hidden.bs.collapse', function () {
+    jQuery('#collapse_<%= entry.id %> .progress-bar').each(function () {
+      jQuery(this).css("width", "0%");
+    });
+  });
+
+  jQuery(".collapse").collapse({parent: '#mg-transactions-index'});
+</script>

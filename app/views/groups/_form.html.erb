@@ -1,29 +1,42 @@
-
-<div class="clearfix">
-   <%= f.label :name, t("activerecord.attributes.group.name", :default => "Name"), :class => :label %>
-  <div class="input">
-    <%= f.text_field :name, :class => 'text_field' %>
-  </div>
-</div>
-
-<div class="clearfix">
-   <%= f.label :status, t("activerecord.attributes.group.status", :default => "Status"), :class => :label %>
-  <div class="input">
-    <%= f.select :status, Group::GROUPSTATUS, { :prompt => false }, { :class => 'selectwidth', :default => 'Enabled' } %>
-  </div>
-</div>
-
-<div class="clearfix">  
-  <div class="input">
+<div class="well">
+  <fieldset>
     <%= f.hidden_field  :user_id, :value => current_user.id %>
-  </div>
-</div>
-<div class="clearfix">
-  <div class="input">
     <%= f.hidden_field  :code, :value => Digest::SHA1.hexdigest(Time.now.to_s + rand.to_s) %>
-  </div>
-</div>
-<div class="form-actions">
-  <button class="btn primary" type="submit">Save</button> or
-	<%= link_to "Cancel", groups_path %>
+    <%= f.hidden_field  :status, :value => Group::GROUPSTATUS::ENABLED %>
+    <div class="form-group">
+      <label for="inputEmail" class="col-xs-2 control-label">Name</label>
+      <div class="col-xs-10">
+        <%= f.text_field :name, :class => 'text_field form-control', :placeholder => "Group Name" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="col-xs-2 control-label">Users</label>
+      <div class="col-xs-10">
+        <div id="mg-group-users">
+          <%= render :partial => "group_user", :collection => f.object.users %>
+        </div>
+        <div class="clearfix mg-add-group-user">
+          <div class="col-xs-11 remove-left-gutter">
+            &nbsp;
+          </div>
+          <%= link_to(new_user_path, :remote => true) do %>
+            <div class="col-xs-1 remove-left-gutter remove-right-gutter text-danger">
+              <button type="button" class="btn btn-success btn add-remove-users pull-right" onclick="">
+                <i class="icon-plus-sign"></i>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-2">
+        &nbsp;
+      </div>
+      <div class="col-xs-10">
+        <%= link_to "Cancel", groups_path, :class=>"btn btn-default" %>
+        <button type="submit" class="btn btn-primary">Submit</button> 
+      </div>
+    </div>
+  </fieldset>
 </div>

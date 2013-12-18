@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130921045751) do
+ActiveRecord::Schema.define(:version => 20131012055200) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(:version => 20130921045751) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "user_type"
+    t.string   "invite_status",   :default => "not_registered"
   end
 
 end
