@@ -1,6 +1,6 @@
 <% transaction_user = entry.transactions_users.select{|transaction_user| transaction_user.user_id == current_user.id}.first %>
 <tr class="mg-transaction-entry accordion-toggle" data-toggle="collapse" id="#mg-entry-<%= entry.id %>" data-target="#collapse_<%= entry.id %>">
-  <td class="text-center">
+  <td class="text-center hidden-xs">
     <span class="icon-stack icon-2x">
       <i class="icon-sign-blank icon-stack-base"></i>
       <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[((entry.category || "").split(",").first) || "miscellaneous"] %> icon-light icon-child"></i>
