@@ -7,9 +7,9 @@
         <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Expense Paid By</strong></h4>
       </div>
       <div class="modal-body">
-        <ul class="list-group">
+        <div class="list-group">
           <% friends.each do |user| %>
-            <li class="list-group-item clearfix">
+            <a href="javascript:void(0)" class="clearfix list-group-item">
               <div class="col-xs-10">
                 <%= render_user_image(user, {:class_name => "img-circle", :user_name_class => "username"}).html_safe %>
               </div>
@@ -19,9 +19,9 @@
                   <i class="icon-ok icon-light icon-child"></i>
                 </span>
               </div>
-            </li>
+            </a>
           <% end %>
-        </ul>
+        </div>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

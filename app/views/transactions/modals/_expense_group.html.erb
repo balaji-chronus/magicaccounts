@@ -9,8 +9,16 @@
       <div class="modal-body">
         <div class="list-group">
           <% current_user.user_groups.each do |group| %>
-            <a href="#" class="list-group-item">
-              <%= group.name %>
+            <a href="javascript:void(0)" class="clearfix list-group-item">
+              <div class="col-xs-10">
+                <%= group.name %>
+              </div>
+              <div class="col-xs-2">
+                <span class="icon-stack text-success pull-right">
+                  <i class="icon-circle icon-stack-base"></i>
+                  <i class="icon-ok icon-light icon-child"></i>
+                </span>
+              </div>
             </a>
           <% end %>
         </div>

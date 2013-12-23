@@ -8,7 +8,7 @@
           <i class="icon-money icon-light icon-child"></i>
         </span>
       </span>
-      <input type="number" class="text-center form-control" id="mg-expense-money" placeholder="0.00">
+      <%= f.text_field :amount, :value => f.object.amount, :type => 'number', :class => "text-center form-control", :placeholder => "0.00" %>
       <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
         <i class="icon-pencil icon-light icon-child"></i>
       </a>
@@ -21,7 +21,7 @@
           <i class="icon-font icon-light icon-child"></i>
         </span>
       </span>
-      <textarea class="form-control text-center img-circle" rows="2" id="textArea"  placeholder="Enter Expense Summary"></textarea>
+      <%= f.text_area :remarks, :class => 'form-control text-center img-circle', :rows => 2 , :placeholder => "Enter Expense Summary" %>
       <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
         <i class="icon-pencil icon-light icon-child"></i>
       </a>
@@ -35,10 +35,10 @@
         </span>
       </span>
       <!-- Green to Red -->
-      <div class="mg-expense-toggle off toggle btn btn-lg btn-success" target-element="#mg-expense-date"  data-toggle="toggle">
+      <div id="mgexpensedate" class="mg-expense-toggle off toggle btn btn-lg btn-success" target-element="#mg-expense-date"  data-toggle="toggle">
         <input type="checkbox" checked>
         <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success">12-12-2013</label>
+          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
           <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Date</strong></label>
           <span class="toggle-handle btn btn-lg btn-primary"></span>     
         </div>
@@ -59,7 +59,7 @@
       <div class="mg-expense-toggle toggle off btn btn-lg btn-success" target-element="#mg-expense-group" data-toggle="toggle">
         <input type="checkbox" checked>
         <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success">Chennai Warriors CC</label>
+          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
           <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Group</strong></label>
           <span class="toggle-handle btn btn-lg btn-primary"></span>     
         </div>
@@ -80,7 +80,7 @@
       <div class="mg-expense-toggle off toggle btn btn-lg btn-success" data-toggle="toggle" target-element="#mg-expense-payer">
         <input type="checkbox" checked>
         <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success">Balaji</label>
+          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
           <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Spender</strong></label>
           <span class="toggle-handle btn btn-lg btn-primary"></span>     
         </div>
@@ -101,7 +101,7 @@
       <div class="mg-expense-toggle toggle off btn btn-lg btn-success" data-toggle="toggle"  target-element="#mg-expense-beneficiary" >
         <input type="checkbox" checked>
         <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success">Split Equally</label>
+          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
           <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Benefactors</strong></label>
           <span class="toggle-handle btn btn-lg btn-primary"></span>     
         </div>
@@ -122,7 +122,7 @@
       <div class="toggle off btn btn-lg btn-success" data-toggle="toggle">
         <input type="checkbox" checked>
         <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success">Food, Entertainment +2</label>
+          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
           <label class="toggle-off btn btn-lg btn-default"><strong>Choose Categories</strong></label>
           <span class="toggle-handle btn btn-lg btn-primary"></span>     
         </div>
@@ -142,7 +142,7 @@
   </fieldset>
 </div>
 
-<%= render :partial => "transactions/modals/expense_date" %>
+<%= render :partial => "transactions/modals/expense_date", :locals => {:f => f} %>
 <%= render :partial => "transactions/modals/expense_group" %>
 <%= render :partial => "transactions/modals/expense_spender", :locals => {:friends => user_friends}  %>
 <%= render :partial => "transactions/modals/expense_benefactors", :locals => {:friends => user_friends} %>

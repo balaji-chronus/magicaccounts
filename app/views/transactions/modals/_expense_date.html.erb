@@ -11,9 +11,24 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<%= f.hidden_field :txndate, :value => f.object.txndate %>
+
 <script type="text/javascript">
   jQuery('#mg-expense-date .modal-body').datepicker({
     todayHighlight: true,
-    todayBtn: "linked"
+    todayBtn: "linked",
+    format: "yyyy-mm-dd"
+  }).on('changeDate', function(e){
+    jQuery("#transaction_txndate").val(e.format('yyyy-mm-dd'));
+    jQuery('#mg-expense-date').modal('hide');
+  });
+
+  jQuery('#mg-expense-date').on('hide.bs.modal', function(e){
+    date = jQuery("#transaction_txndate").val();
+    
+    if(date)
+      jQuery('#mgexpensedate .toggle-on').text(date);
+    else
+      jQuery('#mgexpensedate').click();
   });
 </script>
