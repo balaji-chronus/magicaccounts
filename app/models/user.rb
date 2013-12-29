@@ -10,25 +10,25 @@ class User < ActiveRecord::Base
 
   attr_accessor :password_confirmation
   
-  validates :name,
-            :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must start with an alphabet and contain only alphabets, digits, or underscores'},
-            :uniqueness => {:message => "Unavailable. Please choose another name"},
-            :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
+  validates :name, :presence => true
+           # :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must start with an alphabet and contain only alphabets, digits, or underscores'},
+           # :uniqueness => {:message => "Unavailable. Please choose another name"},
+           # :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
 
   validates :phone,
-            :length => { :in => 10..11, :message => "Enter a phone number between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
+            :length => { :in => 10..11, :message => "must be between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
             :format => { :with => /^[0-9]+$/, :message => "Only numbers are allowed in this section", :allow_blank => true}            
 
   validates :password,            
-            :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'},
-            :confirmation => true
+            :length => {:in => 6..15, :message => 'must be between 6 and 15 chars'},
+            :confirmation => true 
 
   validates :password_confirmation,            
-            :length => {:in => 6..15, :message => 'should be between 6 and 15 characters'}  
+            :length => {:in => 6..15, :message => 'must be between 6 and 15 chars'} 
 
   validates :email,            
-            :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :message => "Please enter a valid email. ex: johndoe@mail.com"},
-            :length => {:maximum => 128, :message => "email should not exceed 128 characters"},
+            :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :message => "Please enter a valid email."},
+            :length => {:maximum => 128, :message => "must not exceed 128 characters"},
             :uniqueness => {:message => "Already registered"}
 
   validates :company,
@@ -50,9 +50,13 @@ class User < ActiveRecord::Base
 
   def self.authenticate(email,password)
     user = User.find_by_email(email)
-    if user
-      expected_pwd = User.encrypted_password(password, user.salt)
-      if expected_pwd != user.hashed_password
+    if user 
+      if user.salt
+        expected_pwd = User.encrypted_password(password, user.salt)
+        if expected_pwd != user.hashed_password
+          user = nil
+        end
+      else
         user = nil
       end
     end

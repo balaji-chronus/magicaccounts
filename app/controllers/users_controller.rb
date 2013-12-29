@@ -29,6 +29,7 @@ class UsersController < ApplicationController
     @user = User.new
 
     respond_to do |format|
+      format.js
       format.html # new.html.erb
       format.json { render json: @user }
     end
@@ -44,9 +45,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
-    if session[:omniauth]
-      @user.authentications.build(:provider => session[:omniauth]['provider'], :uid => session[:omniauth]['uid'])
-    end
+  
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
@@ -54,6 +53,7 @@ class UsersController < ApplicationController
         format.html { redirect_to profile_path, notice: "User '#{@user.name}' was successfully created." }
         format.json { render json: @user, status: :created, location: @user }
       else
+        format.js 
         format.html { render action: "new" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end

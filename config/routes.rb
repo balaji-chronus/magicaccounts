@@ -1,6 +1,6 @@
 Magicaccounts::Application.routes.draw do   
   match '/auth/:provider/callback' => 'authentications#create'
-  
+    get "/auth/failure" => "users#oauth_failure"
   controller :reports do
     get 'reports' => :index
     get "spend_by_category" => "reports#spend_by_category"

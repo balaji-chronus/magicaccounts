@@ -41,39 +41,37 @@ class AuthenticationsController < ApplicationController
   # POST /authentications
   # POST /authentications.json
   def create
-  #   @authentication = Authentication.new(params[:authentication])
-#@authentication = true
-  #   respond_to do |format|
-  #     if @authentication.save
-  #       format.html { redirect_to @authentication, notice: 'Authentication was successfully created.' }
-  #       format.json { render json: @authentication, status: :created, location: @authentication }
-  #     else
-  #       format.html { render action: "new" }
-  #       format.json { render json: @authentication.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-  omniauth = request.env["omniauth.auth"]
-  authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
-  if authentication
-    flash[:notice] = "Signed in successfully."
-    user = authentication.user
-    session[:user_id] = user.id
-        uri = session[:request_uri]
-        session[:request_uri] = nil
-        redirect_to (uri || profile_url)
+    if current_user
+      flash[:notice] = "You are already signed in"
+      redirect_to profile_url
+      return 
+    end
+    omniauth = request.env["omniauth.auth"]
+    authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
+    
+    if authentication
+      authentication.update_attributes(:token => omniauth["credentials"]["token"])
+      user = authentication.user
+      flash[:notice] = "Signed in successfully."
+    else
+      user = User.find_by_email(omniauth['info']['email'])
+      
+      if !user 
+        user = User.new
+        user.name = omniauth['info']['name']
+        user.email = omniauth['info']['email']
+        user.user_type = "User"
+        user.authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'],:token => omniauth["credentials"]["token"])
+        user.save(:validate => false)
+        flash[:notice] = "User '#{user.name}' was successfully created."
+      else
+      user.authentications.create(:provider => omniauth['provider'], :uid => omniauth['uid'],:token => omniauth["credentials"]["token"])
+      flash[:notice] = "Authentication successful."
+      end
 
-          elsif current_user
-    current_user.authentications.create(:provider => omniauth['provider'], :uid => omniauth['uid'])
-    flash[:notice] = "Authentication successful."
-    redirect_to authentications_url
-
-  else
-    session[:omniauth] = omniauth.except('extra')
-    redirect_to new_user_path  
-
+    end
+    sign_in_and_redirect(user)
   end
-end
 
   # PUT /authentications/1
   # PUT /authentications/1.json

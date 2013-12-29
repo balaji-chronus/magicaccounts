@@ -15,6 +15,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def sign_in_and_redirect(user)
+    session[:user_id] = user.id
+    uri = session[:request_uri]
+    session[:request_uri] = nil
+    redirect_to (uri || profile_url)
+  end
+
   rescue_from CanCan::AccessDenied do |exception|
       flash[:error] = "Access denied."
     redirect_to root_url

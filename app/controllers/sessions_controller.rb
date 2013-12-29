@@ -10,10 +10,7 @@ skip_before_filter :authorize
     if request.post?
        user = User.authenticate(params[:inputEmail], params[:inputPassword])
       if user
-        session[:user_id] = user.id
-        uri = session[:request_uri]
-        session[:request_uri] = nil
-        redirect_to (uri || profile_url)
+       sign_in_and_redirect(user)
       else
         flash[:error] = "Incorrect Username/Password"
         redirect_to login_url
