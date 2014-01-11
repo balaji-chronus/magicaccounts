@@ -33,6 +33,9 @@ class GroupsController < ApplicationController
   def new
     @group = Group.new    
 
+    @group.users << (current_user)
+    @group.users << User.new
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @group }
@@ -59,12 +62,12 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = Group.new(params[:group])
-    @group.users << (current_user) if @group
     respond_to do |format|
       if @group.save          
-        format.html { redirect_to profile_path, notice: "Group '#{@group.name}' was successfully created." }
+        format.html { redirect_to groups_path, notice: "Group '#{@group.name}' was successfully created." }
         format.json { render json: @group, status: :created, location: @group }
       else
+        flash[:error] = "Sorry, your group was not created. #{@group.errors.full_messages.to_sentence}"
         format.html { render action: "new" }
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end

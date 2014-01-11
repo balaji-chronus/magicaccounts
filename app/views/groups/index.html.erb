@@ -1,11 +1,13 @@
 <% @page_title = "Groups" %>
 <%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+
 <div id="mg-groups-index">
-  <table class="table" id="mg-groups-list">
+  <table class="table shadow-row" id="mg-groups-list">
     <tbody id="mg-group-entries">
       <%= render :partial => "groups/groups_entries", :locals => {:entries => @groups} %>
     </tbody>
   </table>
 </div>
+
 
 <%= will_paginate(@groups) %>

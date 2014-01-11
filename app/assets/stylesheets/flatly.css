@@ -3,4 +3,10 @@
  *= require_self
  *= require flatly/loader
  *= require flatly/bootswatch
+ *= require font-awesome
+ *= require jquery.ui.core
+ *= require jquery.ui.theme
+ *= require select2
+ *= require bootstrap-toggle
+ *= require datepicker 
 */

@@ -1,0 +1,28 @@
+<!-- _expense_spender.html.erb -->
+<div class="modal fade" id="mg-expense-payer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header info">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Expense Paid By</strong></h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          <% friends.each do |user| %>
+            <a href="javascript:void(0)" class="clearfix list-group-item">
+              <div class="col-xs-10">
+                <%= render_user_image(user, {:class_name => "img-circle", :user_name_class => "username"}).html_safe %>
+              </div>
+              <div class="col-xs-2">
+                <span class="icon-stack text-success pull-right">
+                  <i class="icon-circle icon-stack-base"></i>
+                  <i class="icon-ok icon-light icon-child"></i>
+                </span>
+              </div>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

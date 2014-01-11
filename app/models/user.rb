@@ -1,6 +1,15 @@
 require 'digest/sha2'
 class User < ActiveRecord::Base  
+<<<<<<< HEAD
   has_many :authentications , :dependent => :destroy
+=======
+
+  module INVITE_STATUS
+    REGISTERED = "registered"
+    NOT_REGISTERED = "not_registered"
+  end
+
+>>>>>>> release_ui_refresh
   has_many :transactions
   has_many :groups
   has_and_belongs_to_many :user_groups, :class_name => "Group", :uniq => true
@@ -10,10 +19,16 @@ class User < ActiveRecord::Base
 
   attr_accessor :password_confirmation
   
+<<<<<<< HEAD
   validates :name, :presence => true
            # :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must start with an alphabet and contain only alphabets, digits, or underscores'},
            # :uniqueness => {:message => "Unavailable. Please choose another name"},
            # :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
+=======
+  validates :name,
+            :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must have at least one alphabet and contain only alphabets, digits, or underscores'},
+            :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
+>>>>>>> release_ui_refresh
 
   validates :phone,
             :length => { :in => 10..11, :message => "must be between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
@@ -71,7 +86,7 @@ class User < ActiveRecord::Base
     User.joins("JOIN groups_users UG ON users.id = UG.user_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",current_user).select("DISTINCT users.id user_id, users.name user_name")
   end
 
-private  
+  private
 
   def create_new_salt
     self.salt = self.object_id.to_s + rand.to_s
@@ -81,5 +96,4 @@ private
     string_to_hash = pwd + "takraw" + salt
     Digest::SHA2.hexdigest(string_to_hash)
   end
-
 end

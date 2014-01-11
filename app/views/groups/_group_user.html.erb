@@ -1,0 +1,17 @@
+<div class="mg-group-user">
+  <%= fields_for("group[user_attributes][#{group_user.object_id}]", group_user) do |user_form| %>
+    <div class="well well-sm remove-left-gutter remove-right-gutter">
+      <div class="input-group">
+        <%= user_form.text_field :name, {:class => 'text_field form-control', :placeholder => "User Name"} %>
+        <span class="input-group-btn">
+          <%= link_to("javascript:void(0)", {:onclick => "jQuery(this).parents('.mg-group-user').remove();"}) do %>
+            <%= content_tag(:button, content_tag(:i, "", :class => "icon-minus-sign"), {:class => "btn btn-danger", :type =>"button"}.merge(group_user == current_user ? {:disabled => "disabled"}  : {})) %>
+          <% end %>
+        </span>
+      </div><!-- /input-group -->
+      <div class="clearfix">
+        <%= user_form.text_field :email, {:class => 'text_field form-control', :placeholder => "Email Address"} %>
+      </div>
+    </div>
+  <% end %>
+</div>

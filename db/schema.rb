@@ -11,7 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20131225141811) do
+=======
+ActiveRecord::Schema.define(:version => 20131012055200) do
+>>>>>>> release_ui_refresh
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -137,6 +141,7 @@ ActiveRecord::Schema.define(:version => 20131225141811) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
     t.string   "user_type"
+    t.string   "invite_status",   :default => "not_registered"
   end
 
 end

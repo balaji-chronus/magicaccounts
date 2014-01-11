@@ -48,4 +48,9 @@ namespace :migration do
       tran.save!
     end
   end
+
+  desc "One Time migration to migrate invite type to existing users"
+  task :migrate_invite_type => :environment do
+    User.update_all("invite_status = 'registered'")
+  end  
 end

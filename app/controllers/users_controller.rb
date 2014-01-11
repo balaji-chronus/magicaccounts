@@ -27,12 +27,15 @@ class UsersController < ApplicationController
   # GET /users/new.json
   def new
     @user = User.new
+<<<<<<< HEAD
 
     respond_to do |format|
       format.js
       format.html # new.html.erb
       format.json { render json: @user }
     end
+=======
+>>>>>>> release_ui_refresh
   end
 
   # GET /users/1/edit

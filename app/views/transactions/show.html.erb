@@ -1,38 +1,22 @@
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.txndate", :default => t("activerecord.labels.txndate", :default => "Txndate")) %>:</label>
-  <p><%= @transaction.txndate %></p>
+<% @page_title = "Expense Details" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<div id="mg-transactions-index">
+  <table class="table" id="mg-transactions-list">
+    <tbody id="mg-transaction-entries">
+      <tr>
+        <td colspan="6">
+          <%= render :partial => "transactions/transaction_detail_entry", :locals => {:entry => @transaction} %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.account_id", :default => t("activerecord.labels.account_id", :default => "Group")) %>:</label>
-  <p><%= @transaction.group.name %></p>
-</div>
-
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.user_id", :default => t("activerecord.labels.user_id", :default => "User")) %>:</label>
-  <p><%= User.find_by_id(@transaction.user_id).name %></p>
-</div>
-
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.beneficiary_id", :default => t("activerecord.labels.beneficiary_id", :default => "Beneficiary")) %>:</label>
-  <p><%= @transaction.transactions_users.collect(&:user).collect(&:name).join(",") %></p>
-</div>
-
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.amount", :default => t("activerecord.labels.amount", :default => "Amount")) %>:</label>
-  <p><%= @transaction.transactions_users.collect(&:amount).inject(:+).round %></p>
-</div>
-
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.cndategory", :default => t("activerecord.labels.category", :default => "Category")) %>:</label>
-  <p><%= @transaction.tag_list.join(", ") %></p>
-</div>
-
-<div class="clearfix">
-  <label class="label"><%= t("activerecord.attributes.transaction.remarks", :default => t("activerecord.labels.remarks", :default => "Remarks")) %>:</label>
-  <p><%= @transaction.remarks %></p>
-</div>
-
-<div class="form-actions">
-  <%= link_to "Back", transactions_path(:groupid => @transaction.group_id), :class => 'btn'  %>
-</div>
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    setTimeout(
+      jQuery('.progress-bar').each(function() {
+          jQuery(this).css("width", jQuery(this).attr("width-value"));
+    }), 250);
+  });
+</script>
