@@ -58,8 +58,9 @@ class Transaction < ActiveRecord::Base
 
   acts_as_taggable
 
-  validates :txndate,   :remarks, :presence => {:message => "Cannot be blank"}
-  validates :transactions_users, :presence => true
+  validates :txndate, :remarks, :presence => {:message => "cannot be blank"}
+  validates :user_id, :presence => {:message => "/Expense spender cannot be blank"}
+  validates :transactions_users, :presence => {:message => ": one or more expense benefactors should have an amount more than zero"}
   validate  :check_group_user_access
 
   belongs_to  :user
@@ -69,6 +70,8 @@ class Transaction < ActiveRecord::Base
   has_many    :users, :through => :transactions_users
   has_many    :transactions_users, :dependent => :destroy
   accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
+
+  before_save  :set_actors
   
 
   def self.search_transactions(options = {})
@@ -137,13 +140,18 @@ class Transaction < ActiveRecord::Base
   
   def check_group_user_access
     if !(Group.get_groups_for_current_user(self.user_id).collect(&:id).include?(self.group_id))
-      errors.add(:group_id, "is not valid")
+      errors.add(:Expense, "spender does not belong to this group")
     else
       players = self.transactions_users.collect(&:user_id).push(self.user_id).uniq
       if !(players & Group.find_by_id(self.group_id).users.collect(&:id) == players.uniq)
-        errors.add(:user_id, "/Beneficiaries are not valid")
+        errors.add(:one, " or more benefactors does not belong to this group")
       end
     end
+  end
+
+  def set_actors
+    players = self.transactions_users.collect(&:user_id).push(self.user_id).uniq
+    self.actors = "|#{players.join('|')}|"
   end
 end
 

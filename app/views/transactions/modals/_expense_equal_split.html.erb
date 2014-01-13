@@ -1,0 +1,30 @@
+<div class="tab-pane fade active in" id="mg-split-equally">
+  <h4 class="text-center lead text-muted">Divide Amount Equally</h4>
+
+  <div class="list-group">
+    <% friends.each do |user| %>
+      <a href="javascript:void(0)" class="clearfix list-group-item" user_name="<%= user.name %>" user_id="<%= user.id %>">
+        <div class="col-xs-6">
+          <%= render_user_image(user, {:class_name => "img-circle", :user_name_class => "clearfix"}).html_safe %>
+        </div>
+        <div class="col-xs-4">
+          <span class="text-muted">0.00</span>
+        </div>
+        <div class="col-xs-2">
+          <span class="icon-stack text-success pull-right hidden user_<%= user.id %>">
+            <i class="icon-circle icon-stack-base"></i>
+            <i class="icon-ok icon-light icon-child"></i>
+          </span>
+        </div>
+      </a>
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+  jQuery(document).on('click', "#mg-split-equally .list-group-item", function(e){
+    var user_id = jQuery(this).attr('user_id');
+    jQuery(".user_" + user_id).toggleClass("hidden");
+    Transaction.setEqualAmount();
+  });
+</script>

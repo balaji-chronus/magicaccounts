@@ -5,9 +5,18 @@
     <% end %>
   </div>
   <div class="col-xs-3">
-    <%= link_to(new_transaction_path, :class => "btn btn-danger btn-sm") do %>
+    <%= link_to(new_transaction_path, :class => "btn btn-danger btn-sm dropdown-toggle", :id =>"mg-add-expense-button", "data-toggle" => "dropdown") do %>
       <i class="icon-plus-sign"></i> &nbsp; Expense
     <% end %>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="mg-add-expense-button">
+      <% current_user.user_groups.each do |group| %>
+        <li role="presentation">
+          <%= link_to(new_transaction_path(:groupid => group.id), :role => "menuitem", :tabindex=>"-1") do %>
+            <% group.name %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
   </div>
   <div class="col-xs-3">
     <button type="button" class="btn btn-success btn-sm">

@@ -9,6 +9,15 @@ class TransactionsController < ApplicationController
 
   def new
     @transaction = Transaction.new
+    
+    @defaultgroup = @groups.find_by_id(params[:groupid].to_i)
+    if @defaultgroup.present? && current_user.can?(:view, @defaultgroup)
+      @transaction.group_id = params[:groupid]
+      @groupusers = @defaultgroup.users
+      @groupusers.each { |user| @transaction.transactions_users.build({:user => User.find_by_id(user.id)})}
+    else
+      flash[:error] = 'Invalid Group'
+    end
   end
 
   # GET /transactions/1
@@ -21,7 +30,7 @@ class TransactionsController < ApplicationController
       if @groups.find_by_id(@transaction.group.id)
         format.html # show.html.erb
       else
-        flash[:error] = "Transaction was not found"
+        flash[:error] = "Invalid Expense"
         format.html { redirect_to action: "index" }
       end
     end
@@ -40,7 +49,7 @@ class TransactionsController < ApplicationController
           end
           format.html        
       else
-        flash[:error] = "Transaction was not found"
+        flash[:error] = "Invalid Expense"
         format.html { redirect_to action: "index" }
       end
     end
@@ -50,25 +59,18 @@ class TransactionsController < ApplicationController
   # POST /transactions.json
   def create
     @transaction = Transaction.new(params[:transaction])
-    
-    respond_to do |format|
-      if @transaction.user == current_user
-        if @transaction.save
-          @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
-          @comment.save
-          @transaction.transactions_users.each do |transaction|
-            if !(@transaction.user == transaction.user)
-              MagicMailer.transaction_notification(@transaction, "Added", transaction.amount, transaction.user).deliver
-            end
-          end
-          flash.now[:notice] = "Transaction was successfully created"
-        else
-          flash.now[:error] = @transaction.errors.full_messages.compact.uniq.join("\n")
+
+    if @transaction.save
+      @comment = @transaction.comments.create( {:activity => " added ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
+      @comment.save
+      @transaction.transactions_users.each do |transaction|
+        if !(@transaction.user == transaction.user)
+          MagicMailer.transaction_notification(@transaction, "Added", transaction.amount, transaction.user).deliver
         end
-      else
-        flash.now[:error] = "Investor is not valid"
-      end      
-      format.js
+      end
+      flash[:notice] = "Expense was successfully created"
+    else
+      flash.now[:error] = @transaction.errors.full_messages.compact.uniq.join("<br/>")
     end
   end
 
