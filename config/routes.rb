@@ -1,6 +1,9 @@
 Magicaccounts::Application.routes.draw do   
   match '/auth/:provider/callback' => 'authentications#create'
+    match "/contacts/gmail/callback" => "users#contacts"
     get "/auth/failure" => "users#oauth_failure"
+        get "/contacts/failure" => "users#oauth_failure"
+
   controller :reports do
     get 'reports' => :index
     get "spend_by_category" => "reports#spend_by_category"
@@ -12,17 +15,13 @@ Magicaccounts::Application.routes.draw do
     get "avg_spend_by_account" => "reports#avg_spend_by_account"
   end
 
-<<<<<<< HEAD
-  resources :comments
   resources :authentications
-=======
   resources :comments do
     collection do
       get :recent_activities
     end
   end
 
->>>>>>> release_ui_refresh
   root :to => 'users#dashboard'
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:groupid' => 'transactions#new'

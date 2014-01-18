@@ -141,19 +141,43 @@ class GroupsController < ApplicationController
   def sendinvites
     @toemail = params[:emailids]
     @group = Group.find_by_id(params[:groupid].to_i)
-    begin
-      if @toemail && @toemail != "" && @toemail =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
-        MagicMailer.group_invite(@group,@toemail).deliver
-        flash.now[:notice] = "Invites sent successfully"
-      else
-        flash.now[:error] = "Email is not valid"
+       begin
+        if @toemail && @toemail != "" && @toemail =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
+          if handle_add_group_user()
+          MagicMailer.group_invite(@group,@toemail).deliver
+          flash.now[:notice] = "Invites sent successfully"
+          else
+          flash.now[:error] = "Already in the group"
+          end
+        else
+          flash.now[:error] = "Email is not valid"
+        end
+      rescue
+        flash.now[:error] = "Error sending invites"
       end
-    rescue
-      flash.now[:error] = "Error sending invites"
-    end
     respond_to do |format|
-      format.html { render action: "show"}
+      format.html { render @group}
       format.js
     end
   end
+
+  def handle_add_group_user()
+    user = User.find_by_email(@toemail)
+    if user 
+      if @group.users.include?(user)
+        return user.invite_status != "registered"
+      else
+        @group.users << user
+        return true
+      end
+    else
+      user = User.new(:name => @toemail.split('@').first, :email => @toemail)
+      user.save(:validate => false)
+      @group.users << user
+      return true
+    end
+  end
+
 end
+
+

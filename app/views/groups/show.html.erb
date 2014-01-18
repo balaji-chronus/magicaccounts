@@ -6,6 +6,7 @@
       <li class="active"><a href="#group-balance" data-toggle="tab"><i class="icon-exchange"></i></a></li>
       <li class=""><a href="#profile" data-toggle="tab"><i class="icon-info"></i></a></li>
     </ul>
+
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane fade active in" id="group-balance">
         <table class="table table-condensed">
@@ -24,7 +25,33 @@
         </table>
       </div>
       <div class="tab-pane fade" id="profile">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+      </br>
+        <a href="#" data-toggle="modal" data-target="#modal3" class="pull-center">
+ <button id="invite" type="button" class="btn btn-success col-sm-12 "><i class="icon-group icon-2x"></i> &nbsp; Invite Friends</button></a></br></br>
+
+ <div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= render :partial => "groups/add_friends" %>
+        </div>
+
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+            <th class="col-xs-3">Image</th>
+            <th class="text-center col-xs-6">Name</th>
+            <th class="col-xs-3">State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @group.users.each do |user| %>
+            <tr>
+            <td  class="col-xs-3"> 
+              <%= render_user_image(user,:size => 42,:class_name => "img-circle").html_safe %></td>
+            <td class="text-center col-xs-6"><%= link_to user.name, user_path(user) %></td>
+            <td "col-xs-3"><%= user.invite_status.gsub('_',' ').titleize %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -35,4 +62,10 @@
     e.preventDefault();
     jQuery(this).tab('show');
   })
+</script>
+
+<script type="text/javascript">
+   jQuery('#invite').click(function () {
+  jQuery(".modal-dialog").replaceWith('<%= escape_javascript(render(:partial => 'groups/add_friends'))%>');
+     })
 </script>

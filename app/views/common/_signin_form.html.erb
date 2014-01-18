@@ -1,4 +1,13 @@
-<%= form_tag({:controller => "sessions", :action => "create", :method => :post, }, {:id => "mg-sign-in-form", :class => "form-horizontal"}) do %>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+      &times;</button>
+      <h4 class="modal-title">Hi! Welcome! </h4>
+    </div>
+    <div class="modal-body">
+
+      <%= form_tag({:controller => "sessions", :action => "create", :method => :post }) do %>
   <fieldset>
     <div class="form-group">
       <div class="col-sm-12">
@@ -17,10 +26,22 @@
       </div>
     </div>
     <div class="form-group action-group">
-      <div class="col-sm-10">
+      <div class="col-sm-12">
         <button type="submit" class="btn btn-primary btn-sm pull-left">Sign-in</button>
-        <span class="pull-left col-sm-8"> <%= link_to("javascript:void", :id => "mg-forgot-password-link", :class => "text-primary"){ raw("Forgot Password ") + content_tag(:i, "", :class=>"icon-question-sign")} %> </span>
+        <span class="pull-left col-sm-6"> or Sign in with 
+            <a href="/auth/facebook" data-placement="top" data-toggle="tooltip" data-original-title="Facebook">
+            <%= image_tag "facebook_64.png",:size =>"32x32",:alt=>"Facebook"%>
+            </a>
+            <a href= "/auth/google_oauth2" data-placement="top" data-toggle="tooltip" data-original-title="Google">
+            <%= image_tag "google_64.png",:size => "32x32",:alt=> "Google" %>
+            </a>
+          </span>
+          <span class="pull-right col-sm-4"> <%= link_to("javascript:void", :id => "mg-forgot-password-link", :class => "text-primary"){ raw("Forgot Password ") + content_tag(:i, "", :class=>"icon-question-sign")} %>             </span>
       </div>
     </div>
   </fieldset>
 <% end %>
+
+</div>
+</div>
+

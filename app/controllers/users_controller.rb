@@ -27,15 +27,7 @@ class UsersController < ApplicationController
   # GET /users/new.json
   def new
     @user = User.new
-<<<<<<< HEAD
-
-    respond_to do |format|
-      format.js
-      format.html # new.html.erb
-      format.json { render json: @user }
-    end
-=======
->>>>>>> release_ui_refresh
+    
   end
 
   # GET /users/1/edit
@@ -48,7 +40,11 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
-  
+    user = User.find_by_email(@user.email)
+    if user.try(:invite_status) == "not_registered"
+          user.update_attributes(params[:user])
+          sign_in_and_redirect(user)
+    else
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
@@ -61,6 +57,7 @@ class UsersController < ApplicationController
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
+  end
   end
 
   # PUT /users/1
@@ -102,4 +99,15 @@ class UsersController < ApplicationController
     flash[:error] = "Access denied by the user"
     redirect_to login_url 
   end
+
+  def contacts
+    @contacts = request.env['omnicontacts.contacts']
+  # puts "List of contacts of #{user[:name]} obtained from #{params[:importer]}:"
+  @contacts.each do |contact|
+      current_user.contacts.create(:name => contact[:name], :email => contact[:email])
+  end
+  flash.now[:notice]="contacts added"
+redirect_to login_url
 end
+end
+

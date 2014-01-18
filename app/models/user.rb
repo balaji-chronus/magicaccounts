@@ -1,15 +1,13 @@
 require 'digest/sha2'
 class User < ActiveRecord::Base  
-<<<<<<< HEAD
   has_many :authentications , :dependent => :destroy
-=======
+  has_many :contacts , :dependent => :destroy
 
   module INVITE_STATUS
     REGISTERED = "registered"
     NOT_REGISTERED = "not_registered"
   end
-
->>>>>>> release_ui_refresh
+scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
   has_many :transactions
   has_many :groups
   has_and_belongs_to_many :user_groups, :class_name => "Group", :uniq => true
@@ -19,17 +17,11 @@ class User < ActiveRecord::Base
 
   attr_accessor :password_confirmation
   
-<<<<<<< HEAD
   validates :name, :presence => true
            # :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must start with an alphabet and contain only alphabets, digits, or underscores'},
            # :uniqueness => {:message => "Unavailable. Please choose another name"},
            # :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
-=======
-  validates :name,
-            :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must have at least one alphabet and contain only alphabets, digits, or underscores'},
-            :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
->>>>>>> release_ui_refresh
-
+ 
   validates :phone,
             :length => { :in => 10..11, :message => "must be between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
             :format => { :with => /^[0-9]+$/, :message => "Only numbers are allowed in this section", :allow_blank => true}            
@@ -64,16 +56,14 @@ class User < ActiveRecord::Base
   end  
 
   def self.authenticate(email,password)
-    user = User.find_by_email(email)
-    if user 
-      if user.salt
+    user = User.registered_users.find_by_email(email)
+    if user && user.salt
         expected_pwd = User.encrypted_password(password, user.salt)
         if expected_pwd != user.hashed_password
           user = nil
         end
-      else
+    else
         user = nil
-      end
     end
     user
   end

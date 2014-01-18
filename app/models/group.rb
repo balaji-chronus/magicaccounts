@@ -43,10 +43,11 @@ class Group < ActiveRecord::Base
         user = User.new(attributes)
         user.password = (0...8).map{ ('a'..'z').to_a[rand(26)] }.join
         user.password_confirmation = user.password
-        user.invite_status = User::INVITE_STATUS::NOT_REGISTERED
         user.save!
       end
       self.users << user
     end
   end
 end
+
+

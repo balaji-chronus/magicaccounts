@@ -1,1 +1,6 @@
+<% if current_user %>
 jQuery('#mg-group-users').append('<%= j(render(:partial => "groups/group_user", :object => @user)) %>');
+<% else %>
+<%= render(:partial => "users/sign_up", :object => @user, :remote => true) %>
+<% end %>
+

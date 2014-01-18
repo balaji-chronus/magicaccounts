@@ -1,24 +1,7 @@
-<% if current_user %>
 	<h1> Add User </h1>
-<% else %>
-	<div class="modal-dialog">
-	<div class="modal-content">
-	<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-	&times;</button>
-	<h4 class="modal-title">Hi! Welcome! </h4>
-	</div>
-	<div class="modal-body">
-<% end %>
+	
 <br/>
 <%= form_for @user, :validate => true, :url => users_path, :html => { :class => :form } do |f| -%>
   <%= render :partial => "form", :locals => {:f => f} %>
 <% end -%>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#modal').on('shown.bs.modal', function () {
-			  $(this).find('input:visible:first').focus().end().find('form').enableClientSideValidations();
-		});
-	});
-</script>
