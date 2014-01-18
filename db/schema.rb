@@ -11,7 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20140115172058) do
+=======
+ActiveRecord::Schema.define(:version => 20131214045105) do
+>>>>>>> 9a0584b0a581b75b7a10560e062a2e5163741bc2
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -30,7 +34,10 @@ ActiveRecord::Schema.define(:version => 20140115172058) do
     t.string   "uid"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+<<<<<<< HEAD
     t.string   "token"
+=======
+>>>>>>> 9a0584b0a581b75b7a10560e062a2e5163741bc2
   end
 
   create_table "comments", :force => true do |t|

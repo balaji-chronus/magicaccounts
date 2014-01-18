@@ -32,35 +32,88 @@ var Utilities = {
 
 var Transaction = {
         setTransactionUserAmount: function(){
-          var amount = jQuery('#transaction_equal_amount').val() ? jQuery('#transaction_equal_amount').val() : 0;
-          var active_users = jQuery(".txnamountuser.active");
-          if(active_users)
-            active_users.siblings(".txnuseramount").val(amount/active_users.length);
+          var transaction_type = jQuery("#mg-transaction-type li.active").attr("transaction-type");
+          
+          if(transaction_type == "1") {
+            Transaction.splitEqually();
+            Transaction.setEqualAmount();
+            jQuery("#mgexpensebeneficiary .toggle-on").text("Split Equally");
+          }
+          else if(transaction_type == "2") {
+            Transaction.splitUnEqually();
+            Transaction.setAmountLeft();
+            jQuery("#mgexpensebeneficiary .toggle-on").text("Split by Exact Amount");
+          }
+          else if(transaction_type == "3") {
+            jQuery("#mgexpensebeneficiary .toggle-on").text("Personal Expense");
+          }
         },
-        setActiveTransactionUsers: function(e){
-          jQuery(e).siblings(".txnuserdestroy").val(!(jQuery(e).hasClass("active")));
+        splitEqually: function(e){
+          jQuery("#mg-split-equally .list-group-item").each(function(i){
+            var element = jQuery(this).children(".col-xs-2").children(".icon-stack").first();
+            var user_id = jQuery(this).attr("user_id");
+
+            if(element.hasClass("hidden")) {
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-destroy").val(true);
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val("");
+            }
+            else {
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-destroy").val(false);
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val(Transaction.splitAmount());
+            }
+          })
+        },
+        setEqualAmount: function(){
+          jQuery("#mg-split-equally .list-group-item .col-xs-4 span").text("0.00");
+          jQuery("#mg-split-equally .list-group-item .col-xs-2").children(".icon-stack:not(.hidden)").each(function(i){
+            jQuery(this).parent().siblings('.col-xs-4').children('span').text(Transaction.splitAmount());
+          });
+        },
+        splitUnEqually: function(e){
+          jQuery("#mg-split-unequally .list-group-item").each(function(i){
+            var user_id = jQuery(this).attr("user_id");
+            var amount = jQuery(this).children(".mg-exact-user-amount").children("input").first().val();
+            var exact_amount = parseFloat(amount);
+            exact_amount = isNaN(exact_amount) || exact_amount < 0 ? 0.00 : exact_amount;
+
+            if(exact_amount == 0.00) {
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-destroy").val(true);
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val("");
+            }
+            else {
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-destroy").val(false);
+              jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val(amount);
+            }
+          });
+        },
+        setAmountLeft: function(){
+          var exact_amount_sum = 0.00;
+          jQuery("#mg-split-unequally .list-group-item .mg-exact-user-amount input").each(function(){
+            var exact_amount = parseFloat(jQuery(this).val());
+            exact_amount = isNaN(exact_amount) || exact_amount < 0 ? 0.00 : exact_amount;
+            exact_amount_sum += exact_amount;
+          });
+          jQuery('#mg-amount-left').text((Transaction.getExpenseAmount() - exact_amount_sum).toFixed(2));
+        },
+        setPersonalTransaction: function(){
+          Transaction.cleanUpTransactionUsers();
+            
         },
         cleanUpTransactionUsers: function(){
-            jQuery('.txnuserdestroy').val(true);
-            jQuery('.txnamountuser').removeClass("active")
-            jQuery('.txnuseramount').val("");
-            jQuery('.prepended_amount_input').val("").removeClass("active");
+            jQuery('.mg-txn-user-destroy').val(true);
+            jQuery('.mg-txn-user-amount').val("");
         },
-        setUpTransactionUsers: function(e){
-            var user = jQuery(e).val();
-            if(user)
-                jQuery("input.txn_user_amt_id[value='" + user + "']").siblings(".txnamountuser").addClass("active").siblings(".txnuseramount").val(jQuery("#transaction_equal_amount").val()).siblings(".txnuserdestroy").val(false);
+        splitAmount: function() {
+          var amount = Transaction.getExpenseAmount();
+          var benefactors = jQuery("#mg-split-equally .list-group-item .col-xs-2 .icon-stack:not(.hidden)").length;
+          return (amount/benefactors).toFixed(2);
         },
-        calculateAmount: function() {
-            var amount = 0;
-            jQuery(".txnuseramount,.prepended_amount_input").each(function() {
-                if(!isNaN(this.value) && this.value.length!=0) {
-                    amount += parseFloat(this.value);
-                }
-            });
-            return amount.toFixed(2);
+        getExpenseAmount: function(){
+          var amount = parseFloat(jQuery("#transaction_amount").val());
+          if(isNaN(amount))
+            amount = 0.00;
+          return amount;
         },
-
         getUserBalance: function(url, group) {
 
           if(this.xhr && this.xhr.readyState != 4){
@@ -119,33 +172,6 @@ var Transaction = {
         })
         return this;
     };
-
-   // Transaction Form   
-
-   jQuery(document).on("click", '.txnamountuser', function(){
-        jQuery(this).toggleClass("active");
-        Transaction.setActiveTransactionUsers(this);
-        Transaction.setTransactionUserAmount();
-    });
-
-   jQuery(document).on("blur", "#transaction_equal_amount", function(){
-        Transaction.setTransactionUserAmount();
-   });
-
-   jQuery(document).on("blur", ".prepended_amount_input", function(){
-        var amount = jQuery(this).val();
-        if(amount && amount > 0 )
-            jQuery(this).addClass("active");
-        else
-            jQuery(this).removeClass("active");        
-        Transaction.setActiveTransactionUsers(this);
-   });
-
-   jQuery('#transaction_user_id').change(function(){       
-       Transaction.cleanUpTransactionUsers();
-       Transaction.setUpTransactionUsers(this);
-   });
-
 
    // Reports Page
    jQuery("#report_date_option").change(function(){

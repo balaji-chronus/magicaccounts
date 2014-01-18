@@ -1,15 +1,21 @@
-<% user_friends = current_user.user_groups.collect(&:users).flatten.uniq %>
+<% user_friends = @defaultgroup.users %>
 <div id="mg-transaction-create">
   <fieldset>
     <div class="input-group">
       <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-money icon-light icon-child"></i>
+          <i class="icon-group icon-light icon-child"></i>
         </span>
       </span>
-      <%= f.text_field :amount, :value => f.object.amount, :type => 'number', :class => "text-center form-control", :placeholder => "0.00" %>
-      <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+      <!-- Green to Red -->
+      <div id="mgexpensegroup" class="mg-expense-toggle toggle btn btn-lg btn-success" target-element="#mg-expense-group">
+        <input type="checkbox" checked>
+        <div class="toggle-group">
+          <label class="toggle-on btn btn-lg btn-success"><%= @defaultgroup.name %></label>
+        </div>
+      </div>
+      <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter" data-toggle="modal" data-target="#mg-expense-group">
         <i class="icon-pencil icon-light icon-child"></i>
       </a>
     </div>
@@ -21,7 +27,28 @@
           <i class="icon-font icon-light icon-child"></i>
         </span>
       </span>
-      <%= f.text_area :remarks, :class => 'form-control text-center img-circle', :rows => 2 , :placeholder => "Enter Expense Summary" %>
+      <%= f.text_field :remarks, :class => 'form-control text-center img-circle', :rows => 2 , :placeholder => "Enter Expense Summary" %>
+      <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
+        <i class="icon-pencil icon-light icon-child"></i>
+      </a>
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
+        <span class="icon-stack">
+          <i class="icon-sign-blank icon-stack-base"></i>
+          <i class="icon-user icon-light icon-child"></i>
+        </span>
+      </span>
+      <!-- Green to Red -->
+      <div id ="mgexpensepayer" class="mg-expense-toggle off toggle btn btn-lg btn-success" data-toggle="toggle" target-element="#mg-expense-payer">
+        <input type="checkbox" checked>
+        <div class="toggle-group">
+          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
+          <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Spender</strong></label>
+          <span class="toggle-handle btn btn-lg btn-primary"></span>     
+        </div>
+      </div>
       <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
         <i class="icon-pencil icon-light icon-child"></i>
       </a>
@@ -47,48 +74,6 @@
         <i class="icon-pencil icon-light icon-child"></i>
       </a>
     </div>
-  
-    <div class="input-group">
-      <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
-        <span class="icon-stack">
-          <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-group icon-light icon-child"></i>
-        </span>
-      </span>
-      <!-- Green to Red -->
-      <div class="mg-expense-toggle toggle off btn btn-lg btn-success" target-element="#mg-expense-group" data-toggle="toggle">
-        <input type="checkbox" checked>
-        <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
-          <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Group</strong></label>
-          <span class="toggle-handle btn btn-lg btn-primary"></span>     
-        </div>
-      </div>
-      <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
-        <i class="icon-pencil icon-light icon-child"></i>
-      </a>
-    </div>
-
-    <div class="input-group">
-      <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
-        <span class="icon-stack">
-          <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-user icon-light icon-child"></i>
-        </span>
-      </span>
-      <!-- Green to Red -->
-      <div class="mg-expense-toggle off toggle btn btn-lg btn-success" data-toggle="toggle" target-element="#mg-expense-payer">
-        <input type="checkbox" checked>
-        <div class="toggle-group">
-          <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
-          <label class="toggle-off btn btn-lg btn-danger"><strong>Choose Expense Spender</strong></label>
-          <span class="toggle-handle btn btn-lg btn-primary"></span>     
-        </div>
-      </div>
-      <a href="javascript:void(0)" class="input-group-addon expense-param-edit remove-top-gutter remove-bottom-gutter">
-        <i class="icon-pencil icon-light icon-child"></i>
-      </a>
-    </div>
 
     <div class="input-group">
       <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
@@ -98,7 +83,7 @@
         </span>
       </span>
       <!-- Green to Red -->
-      <div class="mg-expense-toggle toggle off btn btn-lg btn-success" data-toggle="toggle"  target-element="#mg-expense-beneficiary" >
+      <div id="mgexpensebeneficiary" class="mg-expense-toggle toggle off btn btn-lg btn-success" data-toggle="toggle"  target-element="#mg-expense-beneficiary" >
         <input type="checkbox" checked>
         <div class="toggle-group">
           <label class="toggle-on btn btn-lg btn-success"><i class="icon-spinner icon-spin icon-large"></i></label>
@@ -132,20 +117,20 @@
       </a>
     </div>
     
-    <br/>    
-    <div class="form-group pull-right">
-      <div class="col-xs-12">
-        <button class="btn btn-default">Cancel</button> 
-        <%= f.submit "Save", id: "mg-transactions-create-btn", class: "btn btn-primary", disable_with: "Saving..." %>
-      </div>
+    <br/>
+    <div class="text-center">
+      <button class="btn btn-default">Cancel</button> 
+      <%= f.submit "Save", id: "mg-transactions-create-btn", class: "btn btn-primary", disable_with: "Saving..." %>
     </div>
+    <%= f.hidden_field :enteredby, :value => (f.object.enteredby || current_user.id.to_s) %>
+    <%= f.hidden_field :actors, :value => f.object.actors %>
   </fieldset>
 </div>
 
 <%= render :partial => "transactions/modals/expense_date", :locals => {:f => f} %>
-<%= render :partial => "transactions/modals/expense_group" %>
-<%= render :partial => "transactions/modals/expense_spender", :locals => {:friends => user_friends}  %>
-<%= render :partial => "transactions/modals/expense_benefactors", :locals => {:friends => user_friends} %>
+<%= render :partial => "transactions/modals/expense_group", :locals => {:f => f} %>
+<%= render :partial => "transactions/modals/expense_spender", :locals => {:friends => user_friends, :f => f}  %>
+<%= render :partial => "transactions/modals/expense_benefactors", :locals => {:friends => user_friends, :f => f} %>
 
 <script type="text/javascript">
   jQuery('.mg-expense-toggle').on('switch-on', this, function(){

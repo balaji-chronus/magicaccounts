@@ -1,0 +1,22 @@
+<div class="tab-pane fade" id="mg-split-unequally">
+  <h4 class="text-center lead text-muted">Assign Exact Amounts</h4>
+  <ul class="list-group">
+    <% friends.each do |user| %>
+      <li class="list-group-item clearfix" user_name="<%= user.name %>" user_id="<%= user.id %>">
+        <div class="col-xs-6">
+          <%= render_user_image(user, {:class_name => "img-circle", :user_name_class => "clearfix"}).html_safe %>
+        </div>
+        <div class="col-xs-6 mg-exact-user-amount">
+          <input type="number" class="text-center form-control" placeholder="0.00">
+        </div>
+      </li>
+    <% end %>
+  </ul>
+  <div class="pull-right lead text-muted"><span id="mg-amount-left">0.00</span> left</div>
+</div>
+
+<script type="text/javascript">
+  jQuery(document).on('blur', "#mg-split-unequally .list-group-item input", function(e){    
+    Transaction.setAmountLeft();
+  });
+</script>

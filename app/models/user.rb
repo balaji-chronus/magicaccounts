@@ -14,6 +14,7 @@ scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
   has_many :transaction_items, :class_name => "Transaction", :through => :transactions_users
   has_many :transactions_users
   has_many :comments
+  scope :registered_users, :conditions => {:registered => true}
 
   attr_accessor :password_confirmation
   
@@ -57,12 +58,18 @@ scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
 
   def self.authenticate(email,password)
     user = User.registered_users.find_by_email(email)
+<<<<<<< HEAD
     if user && user.salt
         expected_pwd = User.encrypted_password(password, user.salt)
         if expected_pwd != user.hashed_password
           user = nil
         end
     else
+=======
+    if user
+      expected_pwd = User.encrypted_password(password, user.salt)
+      if expected_pwd != user.hashed_password
+>>>>>>> 9a0584b0a581b75b7a10560e062a2e5163741bc2
         user = nil
     end
     user
@@ -74,6 +81,26 @@ scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
 
   def self.get_userlist_for_current_user(current_user)
     User.joins("JOIN groups_users UG ON users.id = UG.user_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",current_user).select("DISTINCT users.id user_id, users.name user_name")
+  end
+
+  def ability
+    @ability = Ability.new(self)
+  end
+
+  def reset_ability
+    @ability = nil
+  end
+
+  def get_ability
+    @ability ||= Ability.new(self)
+  end
+
+  def can?(permission, object)
+    get_ability.can?(permission, object)
+  end
+
+  def cannot?(permission, object)
+    !get_ability.can?(permission, object)
   end
 
   private

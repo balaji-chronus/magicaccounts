@@ -1,30 +1,6 @@
 <% if @transaction.errors.blank? %>
-<% params = { :groupid => @transaction.group.id } %>
-window.setTimeout(function (){jQuery("#view_transaction_for_account").text("<%=  @transaction.group.name %>");}, 1000);
-<% filtered_transactions = Transaction.view_transactions(current_user, params) %>
-jQuery("#viewacctran").replaceWith("<%= escape_javascript(render(
-    :partial => 'transactions/tran',
-    :locals => { :filtered_transactions => filtered_transactions, :defaultgroup => @transaction.group }))%>");
-
-jQuery("#tranact").replaceWith("<%= escape_javascript(render(
-    :partial => 'transactions/activitytransactions',
-    :object => Comment.where(["commentable_type = 'Transaction' AND commentable_id IN (?)", Transaction.get_user_transactions(current_user).collect(&:id)]).order("created_at DESC"), :locals =>  {:type => 'transactions', :limit => 15}))%>");
-
-jQuery('#transaction_user_id').val("");
-Transaction.cleanUpTransactionUsers();
-var transaction_type = jQuery("#transaction_transaction_type").val();
-if (transaction_type == "1") {    
-  Transaction.setUpTransactionUsers(jQuery('#transaction_user_id'));
-}
-else if(transaction_type == "2") {
-  Transaction.setTransactionUserAmount();
-}
-jQuery('#transaction_remarks').val("");
-jQuery("#newtranbtn").text("Move up");
-jQuery(".transaction_search select#category").val("all");
-jQuery(".transaction_search input[type='text']").val("");
+  window.location = '<%= transactions_path %>'
+<% else %>
+  jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
 <% end %>
-jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
-jQuery("#new_transaction").removeAttr('disabled');
-jQuery("#transactions_save").removeAttr('disabled').val("Save");
-jQuery("#transactions_loader").hide();
+
