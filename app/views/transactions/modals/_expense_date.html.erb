@@ -11,7 +11,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<%= f.hidden_field :txndate, :value => f.object.txndate %>
+<%= f.hidden_field :txndate, :value => (f.object.txndate  || Time.now).strftime("%F") %>
 
 <script type="text/javascript">
   jQuery('#mg-expense-date .modal-body').datepicker({
@@ -22,6 +22,8 @@
     jQuery("#transaction_txndate").val(e.format('yyyy-mm-dd'));
     jQuery('#mg-expense-date').modal('hide');
   });
+
+  jQuery('#mg-expense-date .modal-body').datepicker('update', '<%= (f.object.txndate  || Time.now).strftime("%F") %>');
 
   jQuery('#mg-expense-date').on('hide.bs.modal', function(e){
     date = jQuery("#transaction_txndate").val();

@@ -41,7 +41,7 @@ class Ability
       end
 
       can :change, Transaction do |transaction|
-        transaction.user == user
+        transaction.transactions_users.collect(&:user).push(transaction.user).include?(user)
       end
 
       can :show, Transaction do |transaction|

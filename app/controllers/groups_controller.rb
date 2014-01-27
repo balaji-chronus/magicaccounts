@@ -34,7 +34,6 @@ class GroupsController < ApplicationController
     @group = Group.new    
 
     @group.users << (current_user)
-    @group.users << User.new
 
     respond_to do |format|
       format.html # new.html.erb

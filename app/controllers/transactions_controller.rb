@@ -42,14 +42,18 @@ class TransactionsController < ApplicationController
     authorize! :change, @transaction
     respond_to do |format|
       if @transaction.present?
-        @defaultgroup = @transaction.group        
+        @keywords_query = @transaction.category.split(",").collect(&:strip).collect do |tag|
+          {:id => tag, :text => tag, :icon_class => "icon-#{Transaction::CATEGORY_ICON_MAPPING[tag]}"}
+        end
+        @defaultgroup = @transaction.group
           @groupusers = @transaction.group.users
-          (User.find_all_by_id(@groupusers.collect(&:id)) - @transaction.transactions_users.collect(&:user)).each do |user|
+          (@groupusers - @transaction.transactions_users.collect(&:user)).each do |user|
             @transaction.transactions_users.build({:user => user})
           end
           format.html        
       else
         flash[:error] = "Invalid Expense"
+        debugger
         format.html { redirect_to action: "index" }
       end
     end
@@ -78,21 +82,20 @@ class TransactionsController < ApplicationController
   # PUT /transactions/1.json
   def update
     @transaction = Transaction.find_by_id(params[:id])
+    @show_error = false
     authorize! :change, @transaction
-    @transaction.users = User.find(params[:user_ids]) if params[:user_ids]
-    respond_to do |format|
-      if @transaction.present?
-        if @transaction.update_attributes(params[:transaction])
-          @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
-          @comment.save
-          format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
-        else
-          format.html { render action: "edit" }
-        end
+    
+    if @transaction.present?
+      if @transaction.update_attributes(params[:transaction])
+        @comment = @transaction.comments.create( {:activity => " changed ", :content => @transaction.remarks, :user_id => current_user.id, :group_id => @transaction.group.id})
+        @comment.save!
+        flash[:notice] = 'Expense was successfully updated.'
       else
-        flash[:error] = "Transaction was not found"
-        format.html { redirect_to action: "index" }
+        flash.now[:error] = @transaction.errors.full_messages.compact.uniq.join("<br/>")
       end
+    else
+      flash.now[:error] = "Expense was not found"
+      @show_error = true
     end
   end
 
@@ -123,7 +126,7 @@ class TransactionsController < ApplicationController
 
   def autocomplete_category_tags
     entries = Transaction.get_autocomplete_tags(params[:term], params[:page], params[:page_limit], params[:selection])
-    @entries_array = entries.collect{|entry| {"id" => entry.name, "text" => entry.name}} if entries
+    @entries_array = entries.collect{|entry| {"icon_class" => "icon-#{Transaction::CATEGORY_ICON_MAPPING[entry]}", "text" => entry.capitalize, "id" => entry }} if entries
     render :inline => @entries_array.to_json
   end
 

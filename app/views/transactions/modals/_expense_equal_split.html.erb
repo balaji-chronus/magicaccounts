@@ -1,17 +1,17 @@
-<div class="tab-pane fade active in" id="mg-split-equally">
-  <h4 class="text-center lead text-muted">Divide Amount Equally</h4>
+<div class="tab-pane transaction_type_1 fade" id="mg-split-equally">
+  <h4 class="text-center lead text-muted">Divide Amount Equally (<span class=" mg-transaction-total-amount"><%= f.object.amount || 0 %></span>)</h4>
 
   <div class="list-group">
-    <% friends.each do |user| %>
-      <a href="javascript:void(0)" class="clearfix list-group-item" user_name="<%= user.name %>" user_id="<%= user.id %>">
+    <% f.object.transactions_users.each do |transaction_user| %>
+      <a href="javascript:void(0)" class="clearfix list-group-item" user_name="<%= transaction_user.user.name %>" user_id="<%= transaction_user.user.id %>">
         <div class="col-xs-6">
-          <%= render_user_image(user, {:class_name => "img-circle", :user_name_class => "clearfix"}).html_safe %>
+          <%= render_user_image(transaction_user.user, {:class_name => "img-circle", :user_name_class => "clearfix"}).html_safe %>
         </div>
         <div class="col-xs-4">
-          <span class="text-muted">0.00</span>
+          <span class="text-muted"><%= transaction_user.amount || 0.00 %></span>
         </div>
         <div class="col-xs-2">
-          <span class="icon-stack text-success pull-right hidden user_<%= user.id %>">
+          <span class="icon-stack text-success pull-right <%= (transaction_user.amount || 0.00) > 0 ? "" : "hidden" %> user_<%= transaction_user.user.id %>">
             <i class="icon-circle icon-stack-base"></i>
             <i class="icon-ok icon-light icon-child"></i>
           </span>

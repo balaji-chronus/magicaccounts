@@ -1,4 +1,5 @@
-<%= form_for @transaction, :validate => true, :url => transaction_path(@transaction), :html => { :class => "edit_transaction", :id => "edit_transaction" } do |f| -%>
-  <input name="_method" type="hidden" value="put" />
-  <%= render :partial => "form", :locals => {:f => f, :type => "edit"} %>
+<% @page_title = "Create Expense" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<%= form_for @transaction, :validate => true, :remote => true, :url => transaction_path(@transaction), :method => :put, :html => { :class => "form form-horizontal" } do |f| -%>
+    <%= render :partial => "form", :locals => {:f => f, :type => "edit"} %>
 <% end -%>

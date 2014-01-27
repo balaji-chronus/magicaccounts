@@ -1,12 +1,12 @@
 <div id="mg-app-buttons" class="clearfix">
-  <div class="col-xs-3">
+  <div class="col-xs-3 remove-left-gutter remove-right-gutter">
     <%= link_to(new_group_path, :class => "btn btn-primary btn-sm") do %>
-      <i class="icon-plus-sign"></i> &nbsp; Group
+      Group
     <% end %>
   </div>
-  <div class="col-xs-3">
+  <div class="col-xs-3 remove-left-gutter remove-right-gutter">
     <%= link_to(new_transaction_path, :class => "btn btn-danger btn-sm dropdown-toggle", :id =>"mg-add-expense-button", "data-toggle" => "dropdown") do %>
-      <i class="icon-plus-sign"></i> &nbsp; Expense
+      Expense
     <% end %>
     <ul class="dropdown-menu" role="menu" aria-labelledby="mg-add-expense-button">
       <% current_user.user_groups.each do |group| %>
@@ -18,14 +18,14 @@
       <% end %>
     </ul>
   </div>
-  <div class="col-xs-3">
+  <div class="col-xs-3 remove-left-gutter remove-right-gutter">
     <button type="button" class="btn btn-success btn-sm">
-      <i class="icon-flag-checkered"></i> &nbsp; Settle Up
+      Settle Up
     </button>
   </div>
-  <div class="col-xs-3">
+  <div class="col-xs-3 remove-left-gutter remove-right-gutter">
     <%= link_to(recent_activities_comments_path, :class => "btn btn-info btn-sm") do %>
-      <i class="icon-globe"></i> &nbsp; Activity
+      Activity
     <% end %>
   </div>
 </div>

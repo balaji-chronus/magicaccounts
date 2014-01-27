@@ -8,13 +8,13 @@
       </div>
       <div class="modal-body">
         <div class="list-group">
-          <% friends.each do |user| %>
+          <% f.object.transactions_users.collect(&:user).each do |user| %>
             <a href="javascript:void(0)" class="clearfix list-group-item" payer_name="<%= user.name %>" payer_id="<%= user.id %>">
               <div class="col-xs-10">
                 <%= render_user_image(user, {:class_name => "img-circle", :user_name_class => "username"}).html_safe %>
               </div>
               <div class="col-xs-2">
-                <span class="icon-stack text-success pull-right hidden payer_<%= user.id %>">
+                <span class="icon-stack text-success pull-right <%= user.id == f.object.user_id ? "" : "hidden" %> payer_<%= user.id %>">
                   <i class="icon-circle icon-stack-base"></i>
                   <i class="icon-ok icon-light icon-child"></i>
                 </span>
@@ -26,7 +26,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<%= f.hidden_field :user_id, :value => f.object.user_id %>
+<%= f.hidden_field :user_id, :value => f.object.user_id, :payer_name => f.object.user.try(:name) %>
 
 <script type="text/javascript">
   jQuery(document).on('click', "#mg-expense-payer .list-group-item", function(e){
@@ -35,6 +35,9 @@
     jQuery("#mg-expense-payer .list-group-item .icon-stack").addClass("hidden");
     jQuery(".payer_" + user_id).removeClass("hidden");
     jQuery("#transaction_user_id").val(user_id).attr("payer_name", user_name);
+    if(jQuery("#mg-transaction-type li.active").attr("transaction-type") == "3")
+      Transaction.setPersonalTransaction();
+    Transaction.setAmountPaid();
     jQuery('#mg-expense-payer').modal('hide');
   });
 
@@ -42,7 +45,9 @@
     var user_name = jQuery("#transaction_user_id").attr("payer_name");
     
     if(user_name != "" && user_name != undefined)
-      jQuery('#mgexpensepayer .toggle-on').text("Paid By " + user_name);
+    {
+      jQuery('#mgexpensepayer .toggle-on').text("Paid By " + user_name).siblings('label').removeClass('toggle-off');
+    }
     else
       jQuery('#mgexpensepayer').click();
   });

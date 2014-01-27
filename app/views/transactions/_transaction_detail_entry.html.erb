@@ -12,7 +12,7 @@
         </span><small>&nbsp;</small>
         <% (entry.category || "").split(",").each do |category| %>
         <span class="label label-info">
-            <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[category] || Transaction::CATEGORY_ICON_MAPPING["miscellaneous"] %> icon icon-child"></i> &nbsp; <%= category %>
+            <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[category.strip] || Transaction::CATEGORY_ICON_MAPPING["general"] %> icon icon-child"></i> &nbsp; <%= category %>
           </span>
         <% end %>
       </div>
@@ -37,7 +37,7 @@
               <small><i class="icon-minus-sign-alt"></i> &nbsp; <%= tu.amount %></small>
             </div>
             <div class="progress element-reverse">
-              <div class="progress-bar progress-bar-danger" width-value="<%= "#{tu.amount * 100/entry.amount}%" %>" style= "width: 0%;height: 100%;"></div>
+              <div class="progress-bar progress-bar-danger" width-value="<%= "#{(tu.amount || 0) * 100/entry.amount}%" %>" style= "width: 0%;height: 100%;"></div>
             </div>
           </div>
           

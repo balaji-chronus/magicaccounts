@@ -3,7 +3,7 @@
   <td class="text-left col-xs-3">
     <%= render_user_image(user, 
       :size => 42, 
-      :class_name => "img-circle mg-balance-user").html_safe %>
+      :class_name => "img-circle mg-balance-user mg-tooltip").html_safe %>
   </td>
   <td class="text-center col-xs-6">
     <span class="badge balance <%= balance_options[:display_class] %>"><h5><%= balance_options[:balance] %></h5></span>
@@ -12,7 +12,3 @@
     <span class="badge"><h5><%= balance_options[:transaction_count] %></h5></span>
   </td>
 </tr>
-
-<script type="text/javascript">
-  jQuery('.mg-balance-user').tooltip();
-</script>

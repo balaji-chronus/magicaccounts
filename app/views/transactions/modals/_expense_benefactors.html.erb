@@ -4,6 +4,7 @@
     <%= tu_form.hidden_field :user_id, :value => tu_form.object.user_id %>
     <%= tu_form.hidden_field :transaction_id, :value => tu_form.object.transaction_id %>
     <%= tu_form.hidden_field :amount, :value => tu_form.object.amount, :class => "mg-txn-user-amount" %>
+    <%= tu_form.hidden_field :amount_paid, :value => tu_form.object.amount_paid, :class => "mg-txn-user-amount-paid" %>
     <%= tu_form.hidden_field :_destroy, :value => tu_form.object.amount.blank?, :class => "mg-txn-user-destroy" %>
   </div>
 <% end %>
@@ -21,27 +22,17 @@
 
         <div id="mg-expense-type">
           <ul id="mg-transaction-type" class="nav nav-tabs lead">
-            <li transaction-type="1" class="active col-xs-4 text-center"><a href="#mg-split-equally" data-toggle="tab"><i class="text-info icon-align-justify"></i></a></li>
+            <li transaction-type="1" class=" col-xs-4 text-center"><a href="#mg-split-equally" data-toggle="tab"><i class="text-info icon-align-justify"></i></a></li>
             <li transaction-type="2" class=" col-xs-4 text-center"><a href="#mg-split-unequally" data-toggle="tab"><i class="text-warning icon-align-center"></i></a></li>
             <li transaction-type="3" class=" col-xs-4 text-center"><a href="#mg-personal-expense" data-toggle="tab"><i class="text-danger icon-circle"></i></a></li>
           </ul>
           <br/>
 
-          <div class="input-group">
-            <span class="input-group-addon remove-top-gutter remove-bottom-gutter">
-              <span class="icon-stack">
-                <i class="icon-sign-blank icon-stack-base"></i>
-                <i class="icon-money icon-light icon-child"></i>
-              </span>
-            </span>
-            <%= f.text_field :amount, :value => f.object.amount, :type => 'number', :class => "text-center form-control", :placeholder => "0.00" %>
-          </div>
-
           <div id="myTabContent" class="tab-content">
-            <%= render :partial => "transactions/modals/expense_equal_split", :locals => {:f => f, :friends => friends} %>
-            <%= render :partial => "transactions/modals/expense_exact_amount", :locals => {:f => f, :friends => friends} %>
-            <div class="tab-pane fade" id="mg-personal-expense">
-              <h4 class="text-center lead text-muted"> Record a Personal Expense </h4>
+            <%= render :partial => "transactions/modals/expense_equal_split", :locals => {:f => f} %>
+            <%= render :partial => "transactions/modals/expense_exact_amount", :locals => {:f => f} %>
+            <div class="tab-pane transaction_type_3 fade" id="mg-personal-expense">
+              <h4 class="text-center lead text-muted"> Record a Personal Expense (<span class=" mg-transaction-total-amount"><%= f.object.amount || 0 %></span>)</h4>
             </div>
           </div>
         </div>
@@ -70,18 +61,18 @@
   // Set the form and state of the benefactors on hide
   jQuery('#mg-expense-beneficiary').on('hide.bs.modal', function(e){
     var transaction_type = jQuery("#transaction_transaction_type").val();
-    
-    if(jQuery.inArray(transaction_type, ["1","2","3"]) != -1) {
+    var beneficiary_text_hash = {"1": "Split Equally", "2": "Split By Exact Amount", "3": "Personal Expense"} 
+    if(jQuery.inArray(transaction_type, ["1","2","3"]) != -1)
+    {
       Transaction.setTransactionUserAmount();
+      jQuery("#mgexpensebeneficiary .toggle-on").text(beneficiary_text_hash[transaction_type]).siblings('label').removeClass('toggle-off');;
     }
     else
-    {
       jQuery('#mgexpensebeneficiary').click();
-    }
   });
 
   // setting the form values on changing the amount value
-  jQuery('#transaction_amount').on("blur", function(){
+  jQuery('#transaction_amount').on("input", function(){
     Transaction.setTransactionUserAmount();  
   });
 </script>

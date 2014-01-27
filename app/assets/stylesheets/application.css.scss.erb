@@ -95,6 +95,10 @@ body, html {
   transition: height 1s;
 }
 
+.remove-gutter {
+  padding: 0 !important;  
+}
+
 .remove-left-gutter {
   padding-left: 0 !important;
 }
@@ -208,6 +212,15 @@ table.shadow-row tr td {
 /****** Common Logged-in Page Styles *********/
 
 /**** Logged-in Header Styles *****/
+.select2-container {
+  width: 100%;
+  display: block !important;  
+}
+
+.select2-results .select2-highlighted {
+  background: #ecf0f1 !important;
+  color: inherit !important;
+}
 
 #mg-recent-activity {
   .panel-body { padding: 0 5px;}
@@ -230,6 +243,14 @@ table.shadow-row tr td {
       line-height: normal;
     }
 
+    li.active a {
+      color: #FFFFFF;
+    }
+
+    a {
+      color: #2c3e50;
+    }
+
     .icon-child {
      line-height: 2em; 
     }
@@ -249,10 +270,11 @@ table.shadow-row tr td {
 
   #mg-app-buttons {
     div {
-      padding: 5px;
+      padding: 5px 0;
 
       button, a {
         width: 100%;
+        border-radius: 0;
       }
     }
   }
@@ -308,6 +330,10 @@ table.shadow-row tr td {
 
     .mg-category-tags {
       margin: 20px 0 30px;
+
+      span {
+        margin-right: 5px;
+      }
     }
 
     .list-group-item {
@@ -358,7 +384,7 @@ table.shadow-row tr td {
 /************ Transactions Create *************/
 #mg-transaction-create {
   .btn-lg {
-    padding: 18px 27px;
+    padding: 25px 25px;
     font-size: 13px;
     line-height: 0.33;
     border: 1px solid;

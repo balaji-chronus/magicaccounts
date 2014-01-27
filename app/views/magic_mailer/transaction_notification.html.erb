@@ -24,7 +24,7 @@ Dear <%=  @beneficiary.name%>,<br/> <br/>
 </div>
 <div style="margin-bottom:10px">
   <span style="float:left;width:120px;"><strong>How Much?</strong> </span>
-  <span>Rs. <%=  @transaction.transactions_users.collect(&:amount).inject(:+).round%></span>
+  <span>Rs. <%=  @transaction.transactions_users.collect(&:amount).compact.inject(:+).round%></span>
 </div>
 <div style="margin-bottom:10px">
   <span style="float:left;width:120px;"><strong>My Share ?</strong> </span>
