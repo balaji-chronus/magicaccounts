@@ -7,21 +7,17 @@ class User < ActiveRecord::Base
     REGISTERED = "registered"
     NOT_REGISTERED = "not_registered"
   end
-scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
+  
+  scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
   has_many :transactions
   has_many :groups
   has_and_belongs_to_many :user_groups, :class_name => "Group", :uniq => true
   has_many :transaction_items, :class_name => "Transaction", :through => :transactions_users
   has_many :transactions_users
   has_many :comments
-  scope :registered_users, :conditions => {:registered => true}
-
   attr_accessor :password_confirmation
   
   validates :name, :presence => true
-           # :format => {:with => /^[a-zA-Z]+[a-zA-Z0-9_]*[a-zA-Z0-9]+$/, :message => 'Name must start with an alphabet and contain only alphabets, digits, or underscores'},
-           # :uniqueness => {:message => "Unavailable. Please choose another name"},
-           # :length => {:in => 4..32, :message => "should be between 4 and 15 characters"}
  
   validates :phone,
             :length => { :in => 10..11, :message => "must be between with 10 or 11 digits", :allow_blank => true, :allow_nil => true },
@@ -58,18 +54,12 @@ scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
 
   def self.authenticate(email,password)
     user = User.registered_users.find_by_email(email)
-<<<<<<< HEAD
     if user && user.salt
         expected_pwd = User.encrypted_password(password, user.salt)
         if expected_pwd != user.hashed_password
           user = nil
         end
     else
-=======
-    if user
-      expected_pwd = User.encrypted_password(password, user.salt)
-      if expected_pwd != user.hashed_password
->>>>>>> 9a0584b0a581b75b7a10560e062a2e5163741bc2
         user = nil
     end
     user
@@ -103,6 +93,9 @@ scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
     !get_ability.can?(permission, object)
   end
 
+  def translate_status(status)
+    status == "registered" ? "Registered" : "Invited"
+  end
   private
 
   def create_new_salt
@@ -113,4 +106,6 @@ scope :registered_users,where(:invite_status => INVITE_STATUS::REGISTERED)
     string_to_hash = pwd + "takraw" + salt
     Digest::SHA2.hexdigest(string_to_hash)
   end
+
+  
 end

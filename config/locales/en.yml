@@ -13,7 +13,4 @@ en:
   errors:
     messages:
       email: "is not valid. Please enter a valid email. ex: johndoe@mail.com"
-  group:
-    invite_status:
-      not_registered: "NOT REGISTERED"
-      registered: "REGISTERED"
+ 

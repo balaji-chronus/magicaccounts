@@ -44,10 +44,17 @@ class Group < ActiveRecord::Base
         user.password = (0...8).map{ ('a'..'z').to_a[rand(26)] }.join
         user.password_confirmation = user.password
         user.save!
+        MagicMailer.group_invite(self,attributes[:email]).deliver
       end
       self.users << user
+
     end
   end
+
+ def self.autocomplete_results(named_query,user)
+      results = user.contacts.find(:all, :conditions => ['email LIKE ?', "%#{named_query}%"])
+  end
+
 end
 
 

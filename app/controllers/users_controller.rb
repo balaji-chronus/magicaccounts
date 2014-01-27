@@ -26,8 +26,7 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.json
   def new
-    @user = User.new
-    
+    @user = User.new 
   end
 
   # GET /users/1/edit
@@ -92,7 +91,6 @@ class UsersController < ApplicationController
   end
 
   def dashboard
-    
   end
 
   def oauth_failure
@@ -102,12 +100,13 @@ class UsersController < ApplicationController
 
   def contacts
     @contacts = request.env['omnicontacts.contacts']
-  # puts "List of contacts of #{user[:name]} obtained from #{params[:importer]}:"
-  @contacts.each do |contact|
-      current_user.contacts.create(:name => contact[:name], :email => contact[:email])
-  end
-  flash.now[:notice]="contacts added"
-redirect_to login_url
-end
-end
+    @contacts.each do |contact|
+      current_user.contacts << Contact.new(:name => contact[:name], :email => contact[:email])
+    end
+    flash.now[:notice]="contacts added"
+    uri = session[:original_uri]
+    session[:original_uri] = nil
+    redirect_to uri + "#profile"
+    end
+ end
 

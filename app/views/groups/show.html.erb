@@ -47,7 +47,7 @@
             <td  class="col-xs-3"> 
               <%= render_user_image(user,:size => 42,:class_name => "img-circle").html_safe %></td>
             <td class="text-center col-xs-6"><%= link_to user.name, user_path(user) %></td>
-            <td "col-xs-3"><%= user.invite_status.gsub('_',' ').titleize %></td>
+            <td "col-xs-3"><%= user.translate_status(user.invite_status)%></td>
             </tr>
             <% end %>
           </tbody>
@@ -62,6 +62,14 @@
     e.preventDefault();
     jQuery(this).tab('show');
   })
+
+  jQuery(function() {
+      var hash = window.location.hash;
+      hash == "#profil" && $('ul.nav a[href="#profile"]').tab('show');
+      hash == "#profile" && $('ul.nav a[href="' + hash + '"]').tab('show');
+      hash == "#profile" && jQuery(".modal-dialog").replaceWith('<%= escape_javascript(render(:partial => 'groups/send_invites'))%>');
+      hash == "#profile" && jQuery('#modal3').modal('show');
+    });
 </script>
 
 <script type="text/javascript">
@@ -69,3 +77,4 @@
   jQuery(".modal-dialog").replaceWith('<%= escape_javascript(render(:partial => 'groups/add_friends'))%>');
      })
 </script>
+

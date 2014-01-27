@@ -1,18 +1,22 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-body">
-   <h3><span class="help-inline"><i class="icon-user"></i> &nbsp; Invite your friends to this group</span><br/></h3>
-  <%= form_tag({:action => "sendinvites"}, :remote => true, :method => "post", :class => "well", :id => "form_invite") do -%>
-    <%= hidden_field_tag :groupid, @group.id, :class => 'text_field' %>
-    <%= text_field_tag :emailids, params[:emailids],  {:class => 'form-control', :placeholder => "Enter email id"} %></br>
-    <button id="send_mail" type="submit" class="btn btn-success">Send Invites</button>
-  <%end%>
-</div>
-</div>
+      <h3><span class="help-inline"><i class="icon-user"></i> &nbsp; Invite your friends to this group</span><br/></h3>
+      <%= form_tag({:action => "sendinvites"}, :method => "post", :class => "well", :id => "form_invite") do -%>
+        <%= hidden_field_tag :groupid, @group.id, :class => 'text_field' %>
+        <%= text_field_tag :emailids, params[:emailids] %></br></br>
+        <button id="send_mail" type="submit" class="btn btn-success">Send Invites</button>
+      <%end%>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
   jQuery('#send_mail').click(function () {
-  jQuery("#modal3").modal('hide');
-     })
+    jQuery("#modal3").modal('hide');
+  })
+
+  $(document).ready(function() {
+    Group.autocomplete("/groups/autocomplete","#emailids","Enter email ids ... ");
+  })
 </script>

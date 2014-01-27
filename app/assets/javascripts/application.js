@@ -30,6 +30,41 @@ var Utilities = {
     }
 }
 
+var Group = {
+        autocomplete: function(path,id,placeholder) {
+          $(id).select2({
+            placeholder: placeholder,
+            allowClear: true,
+            width: '300px',
+            tags: [],
+            ajax: { 
+              url: path,
+              data: function (term, page) {
+                return {
+                  term: term, // search term
+                  page_limit: 10,
+                  page: page,
+                  selection: jQuery(id).select2("val")
+                };
+              },
+              results: function (data, page) {
+                var more = (data.length == 10);
+                return {
+                  results: data,
+                  more: more
+                };
+              }
+            },
+            createSearchChoice:function(term) {
+            return {
+            id:jQuery.trim(term),
+            text:jQuery.trim(term)
+            };
+            }
+          })
+        }
+      }
+
 var Transaction = {
         setTransactionUserAmount: function(){
           var transaction_type = jQuery("#mg-transaction-type li.active").attr("transaction-type");

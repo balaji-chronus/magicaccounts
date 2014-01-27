@@ -8,6 +8,7 @@ class GroupsController < ApplicationController
   # GET /groups/1.json
   def show
     @group = Group.find_by_id(params[:id])
+      session[:original_uri] = request.url
     @balances = Transaction.user_balance(@group).collect do |entry| 
       { 
         :user_id => entry.user_id, 
@@ -19,6 +20,7 @@ class GroupsController < ApplicationController
     respond_to do |format|
       if true
         format.html # show.html.erb
+        format.js
         format.json { render json: @group }
       else
         flash[:error] = "Group was not found"
@@ -141,28 +143,38 @@ class GroupsController < ApplicationController
   def sendinvites
     @toemail = params[:emailids]
     @group = Group.find_by_id(params[:groupid].to_i)
-       begin
-        if @toemail && @toemail != "" && @toemail =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
-          if handle_add_group_user()
-          MagicMailer.group_invite(@group,@toemail).deliver
-          flash.now[:notice] = "Invites sent successfully"
+    error_msg = []
+    @toemail.split(',').each do |email|
+      begin
+        if email =~ /[0-9]*/ 
+          email = Contact.where(:id => email.to_i).first.try(:email) || email
+        end
+        if email && email != "" && email =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
+          if handle_add_group_user(email)
+            MagicMailer.group_invite(@group,email).deliver
           else
-          flash.now[:error] = "Already in the group"
+            error_msg << email
           end
         else
-          flash.now[:error] = "Email is not valid"
+          error_msg << email
         end
-      rescue
+      rescue Exception
         flash.now[:error] = "Error sending invites"
       end
+    end
+      if error_msg.empty?
+        flash[:notice] = "Invites sent successfully"
+      else
+        flash[:error] = "Invitation(s) were not sent for " + error_msg.join(',')
+      end
     respond_to do |format|
-      format.html { render @group}
-      format.js
+      format.html { redirect_to session[:original_uri] + "#profil"}
+      format.js { redirect_to session[:original_uri] + "#profil"}
     end
   end
 
-  def handle_add_group_user()
-    user = User.find_by_email(@toemail)
+  def handle_add_group_user(email)
+    user = User.find_by_email(email)
     if user 
       if @group.users.include?(user)
         return user.invite_status != "registered"
@@ -171,13 +183,17 @@ class GroupsController < ApplicationController
         return true
       end
     else
-      user = User.new(:name => @toemail.split('@').first, :email => @toemail)
+      user = User.new(:name => email.split('@').first, :email => email)
       user.save(:validate => false)
       @group.users << user
       return true
     end
   end
 
+  def autocomplete
+    @entries = Group.autocomplete_results(params[:term],current_user)
+    @entries = @entries.collect{|e| {id: e.id || params[:term], text: e.email || params[:term]}}
+    render :inline => @entries.to_json
+  end
+
 end
-
-

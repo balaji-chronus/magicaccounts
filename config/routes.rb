@@ -1,8 +1,9 @@
 Magicaccounts::Application.routes.draw do   
   match '/auth/:provider/callback' => 'authentications#create'
-    match "/contacts/gmail/callback" => "users#contacts"
-    get "/auth/failure" => "users#oauth_failure"
-        get "/contacts/failure" => "users#oauth_failure"
+  match "/contacts/gmail/callback" => "users#contacts"
+  get "/auth/failure" => "users#oauth_failure"
+  get "/contacts/failure" => "users#oauth_failure"
+  match "/groups/autocomplete" => "groups#autocomplete"
 
   controller :reports do
     get 'reports' => :index
