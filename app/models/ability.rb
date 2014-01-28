@@ -41,11 +41,11 @@ class Ability
       end
 
       can :change, Transaction do |transaction|
-        transaction.transactions_users.collect(&:user).push(transaction.user).include?(user)
+        transaction.expense_users.include?(user)
       end
 
       can :show, Transaction do |transaction|
-        transaction.user == user || transaction.users.include?(user)
+        transaction.expense_users.include?(user)
       end
 
       can :view, Group do |group|

@@ -53,7 +53,6 @@ class TransactionsController < ApplicationController
           format.html        
       else
         flash[:error] = "Invalid Expense"
-        debugger
         format.html { redirect_to action: "index" }
       end
     end

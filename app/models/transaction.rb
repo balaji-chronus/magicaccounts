@@ -133,6 +133,10 @@ class Transaction < ActiveRecord::Base
     return (tags || []).paginate(:page => page, :per_page => per_page)
   end
 
+  def expense_users
+    self.transactions_users.collect(&:user).push(self.user)
+  end
+
   private
   
   def transaction_validations
@@ -140,7 +144,7 @@ class Transaction < ActiveRecord::Base
       errors.add(:expense, " amount must be greater than zero")
     end
 
-    players = self.transactions_users.collect(&:user_id).push(self.user_id).compact.uniq || []
+    players = self.expense_users.collect(&:id).compact.uniq || []
     if players.count > 0 && (players - Group.find_by_id(self.group_id).users.collect(&:id)).count > 0
       errors.add(:some, " of the users in the expense don't belong to this group")
     end
