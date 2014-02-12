@@ -1,0 +1,52 @@
+<% groups_query = session[:groups].collect{|entry| {"icon_class" => "icon-#{Transaction::CATEGORY_ICON_MAPPING[entry]}", "text" => entry.capitalize, "id" => entry }} if session[:groups].present? %>
+<% friends_query = session[:friends].collect{|entry| {"icon_class" => "icon-user", "text" => User.find(entry).name.capitalize, "id" => entry }} if session[:friends].present? %>
+
+<div class="tab-pane fade active in" id="mg-search-expense">  
+    <%= form_tag transactions_path, :method => :get do %>
+      <fieldset>
+        <legend class="text-center">Search Expenses</legend>
+        <div class="form-group">
+          <div>
+            <%= text_field_tag :expense_search_query, session[:expense_search_query], :placeholder => "Search by Keywords", :class => "form-control text-center" %>
+          </div>
+        </div>
+        
+        <%= hidden_field_tag :groups_list, "" %>
+        <%= javascript_tag(<<-eos
+            Transaction.autocomplete('#{autocomplete_category_tags_transactions_url}.json', '#groups_list', jQuery.parseJSON('#{groups_query.blank? ? [] : groups_query.to_json}'), "Search by Categories");
+          eos
+        ) %>
+
+        <%= hidden_field_tag :friends_list, "" %>
+        <%= javascript_tag(<<-eos
+            Transaction.autocomplete('#{autocomplete_friends_users_url}.json', '#friends_list', jQuery.parseJSON('#{friends_query.blank? ? [] : friends_query.to_json}'), "Search by Friends");
+          eos
+        ) %>
+
+        <div class="input-daterange input-group" id="datepicker">
+          <%= text_field_tag :start, session[:start], :placeholder => "Start", :class => "form-control text-center" %>
+          <span class="input-group-addon">to</span>
+          <%= text_field_tag :end, session[:end], :placeholder => "End", :class => "form-control text-center" %>
+        </div>
+        <br/>
+
+        <div class="form-group">
+          <div class="text-center">
+            <button type="button" class="btn btn-danger" onclick="Transaction.clearSearch();"><i class="icon-refresh"></i></button> 
+            <button type="submit" class="btn btn-success"><i class="icon-search"></i></button> 
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
+  
+</div>
+
+
+
+<script type="text/javascript">
+  jQuery('.input-daterange').datepicker({
+    todayHighlight: true,
+    todayBtn: "linked",
+    format: "yyyy-mm-dd"
+  })
+</script>

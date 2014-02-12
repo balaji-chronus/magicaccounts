@@ -8,14 +8,14 @@
       </div>
       <div class="modal-body clearfix">
         <div class="col-xs-11 clearfix remove-left-gutter remove-right-gutter">
-          <%= hidden_field_tag("keywords_query", "", :style => 'display:none')%>
+          <%= hidden_field_tag("keywords_query", "")%>
           <%= javascript_tag(<<-eos
               Transaction.autocomplete('#{autocomplete_category_tags_transactions_url}.json', '#keywords_query', jQuery.parseJSON('#{@keywords_query.blank? ? [] : @keywords_query.to_json}'), "Start Typing Categories");
             eos
           ) %>
         </div>
         <div class="text-center col-xs-1  remove-left-gutter remove-right-gutter">
-          <button type="button" class="btn btn-success btn-sm" onclick="jQuery('#mg-expense-categories').modal('hide')"><i class="icon-ok"></i></button> 
+          <button type="button" class="btn btn-success" onclick="jQuery('#mg-expense-categories').modal('hide')"><i class="icon-ok"></i></button> 
         </div>
       </div>
     </div><!-- /.modal-content -->

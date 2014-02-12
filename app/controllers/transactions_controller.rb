@@ -4,12 +4,37 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.search_transactions(:user_id => current_user.id).page(params[:page]).per_page(10)
+    options = {}
+    options[:expense_search_query] = params[:expense_search_query] || ""
+    options[:friends] = (params[:friends_list] || "").split(",")
+    options[:groups] = (params[:groups_list] || "").split(",")
+    options[:start] = params[:start].blank? ? DEFAULT_START_DATE : params[:start] 
+    options[:end] = params[:end].blank? ? DEFAULT_END_DATE : params[:end] 
+    options[:user_id] = current_user.id
+    @transactions = Transaction.search_transactions(options).paginate(:page => (params[:page] || 1), :per_page => 10)
+    set_search_params(options)
   end
 
   def new
     @transaction = Transaction.new
     
+    @defaultgroup = @groups.find_by_id(params[:groupid].to_i)
+    if @defaultgroup.present? && current_user.can?(:view, @defaultgroup)
+      @transaction.group_id = params[:groupid]
+      @groupusers = @defaultgroup.users
+      @groupusers.each { |user| @transaction.transactions_users.build({:user => User.find_by_id(user.id)})}
+    else
+      flash[:error] = 'Invalid Group'
+    end
+  end
+
+  def settle_up
+    @transaction = Transaction.new
+    @transaction.user = current_user
+    @transaction.category = "settlement"
+    @transaction.transaction_type = 4
+    @transaction.remarks = "Payment"
+
     @defaultgroup = @groups.find_by_id(params[:groupid].to_i)
     if @defaultgroup.present? && current_user.can?(:view, @defaultgroup)
       @transaction.group_id = params[:groupid]

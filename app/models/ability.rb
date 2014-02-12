@@ -33,7 +33,7 @@ class Ability
       end
 
       can :show, User do |usr|
-        User.get_userlist_for_current_user(user).collect(&:user_id).include?(usr)
+        user.get_userlist_for_current_user.collect(&:user_id).include?(usr)
       end
 
       can :destroy, User do |usr|

@@ -52,6 +52,9 @@ var Transaction = {
     Transaction.setAmountPaid();
   },
   splitEqually: function(e){
+    var benefactors_count = Transaction.getBenefactorsCount();
+    var split_amount = Transaction.splitAmount();
+    var ref_count = Math.round(((split_amount * benefactors_count) - Transaction.getExpenseAmount())/0.01);
     jQuery("#mg-split-equally .list-group-item").each(function(i){
       var element = jQuery(this).children(".col-xs-2").children(".icon-stack").first();
       var user_id = jQuery(this).attr("user_id");
@@ -62,14 +65,19 @@ var Transaction = {
       }
       else {
         jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-destroy").val(false);
-        jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val(Transaction.splitAmount());
+      var split_amount_final =  (((benefactors_count - Math.abs(ref_count) - 1) >= i) || ref_count == 0 ? split_amount : (split_amount - ((ref_count > 0 ? 1 : (ref_count < 0 ? -1 : 0)) * 0.01)));
+        jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val(split_amount_final);
       }
     })
   },
   setEqualAmount: function(){
+    var benefactors_count = Transaction.getBenefactorsCount();
+    var split_amount = Transaction.splitAmount();
+    var ref_count = Math.round(((split_amount * benefactors_count) - Transaction.getExpenseAmount())/0.01);
     jQuery("#mg-split-equally .list-group-item .col-xs-4 span").text("0.00");
     jQuery("#mg-split-equally .list-group-item .col-xs-2").children(".icon-stack:not(.hidden)").each(function(i){
-      jQuery(this).parent().siblings('.col-xs-4').children('span').text(Transaction.splitAmount());
+      var split_amount_final =  (((benefactors_count - Math.abs(ref_count) - 1) >= i) || ref_count == 0 ? split_amount : (split_amount - ((ref_count > 0 ? 1 : (ref_count < 0 ? -1 : 0)) * 0.01)));
+      jQuery(this).parent().siblings('.col-xs-4').children('span').text(split_amount_final);
     });
   },
   splitUnEqually: function(e){
@@ -99,8 +107,11 @@ var Transaction = {
     jQuery('#mg-amount-left').text((Transaction.getExpenseAmount() - exact_amount_sum).toFixed(2));
   },
   setPersonalTransaction: function(){
-    Transaction.cleanUpTransactionUsers();
     var user_id = jQuery("#transaction_user_id").val();
+    Transaction.setUserAmount(user_id);
+  },
+  setUserAmount: function(user_id){
+    Transaction.cleanUpTransactionUsers();
     jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-destroy").val(false);
     jQuery("#mg-expense-users-" + user_id + " .mg-txn-user-amount").val(Transaction.getExpenseAmount());
   },
@@ -116,14 +127,17 @@ var Transaction = {
   },
   splitAmount: function() {
     var amount = Transaction.getExpenseAmount();
-    var benefactors = jQuery("#mg-split-equally .list-group-item .col-xs-2 .icon-stack:not(.hidden)").length;
+    var benefactors = Transaction.getBenefactorsCount();
     return (amount/benefactors).toFixed(2);
+  },
+  getBenefactorsCount: function() {
+    return jQuery("#mg-split-equally .list-group-item .col-xs-2 .icon-stack:not(.hidden)").length;
   },
   getExpenseAmount: function(){
     var amount = parseFloat(jQuery("#transaction_amount").val());
     if(isNaN(amount))
       amount = 0.00;
-    return amount;
+    return amount.toFixed(2);
   },
   toggleModalSwitch: function(toggleId){
     if(jQuery(toggleId).hasClass('off'))
@@ -148,8 +162,8 @@ var Transaction = {
     jQuery(id).select2({
       placeholder: placeholderText,
       dropdownCssClass: "transaction_category_tags list-group",
-      multiple: true,
-      closeOnSelect: false,
+      multiple: false,
+      closeOnSelect: true,
       tags: [],
       ajax: { 
           url: path,
@@ -179,7 +193,7 @@ var Transaction = {
           'icon_class': 'icon-exclamation'
         };
       }
-    });
+    }).on("change", function(e) { jQuery(this).select2('open') });
     if(typeof selectedData != 'undefined')
       jQuery(id).select2("data", selectedData);
   },

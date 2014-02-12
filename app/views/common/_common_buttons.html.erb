@@ -19,9 +19,18 @@
     </ul>
   </div>
   <div class="col-xs-3 remove-left-gutter remove-right-gutter">
-    <button type="button" class="btn btn-success btn-sm">
+    <%= link_to(settle_up_transactions_path, :class => "btn btn-success btn-sm dropdown-toggle", :id =>"mg-settle-expense-button", "data-toggle" => "dropdown") do %>
       Settle Up
-    </button>
+    <% end %>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="mg-settle-expense-button">
+      <% current_user.user_groups.each do |group| %>
+        <li role="presentation">
+          <%= link_to(settle_up_transactions_path(:groupid => group.id), :role => "menuitem", :tabindex=>"-1") do %>
+            <% group.name %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
   </div>
   <div class="col-xs-3 remove-left-gutter remove-right-gutter">
     <%= link_to(recent_activities_comments_path, :class => "btn btn-info btn-sm") do %>

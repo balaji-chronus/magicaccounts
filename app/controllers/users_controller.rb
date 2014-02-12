@@ -87,4 +87,10 @@ class UsersController < ApplicationController
   def dashboard
     
   end
+
+  def autocomplete_friends
+    entries = current_user.autocomplete_users(params[:term], params[:page], params[:page_limit], params[:selection])
+    @entries_array = entries.collect{|entry| {"icon_class" => "icon-user", "text" => entry.user_name.capitalize, "id" => entry.user_id }} if entries
+    render :inline => @entries_array.to_json
+  end
 end

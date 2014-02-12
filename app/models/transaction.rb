@@ -51,7 +51,7 @@ class Transaction < ActiveRecord::Base
     "outing" => 'sun'
   }
 
-  TRANSACTION_TYPES = ["", "Split Equally", "Split by Exact Amount", "Record a personal transaction"]
+  TRANSACTION_TYPES = ["", "Split Equally", "Split by Exact Amount", "Record a personal transaction", "Settlement"]
 
   acts_as_taggable
 
@@ -73,7 +73,12 @@ class Transaction < ActiveRecord::Base
 
   def self.search_transactions(options = {})
     # Get rid of this LIKE query
-    return Transaction.where("actors like '%|#{options[:user_id]}|%'").order("txndate desc").includes(:transactions_users)
+    transactions = Transaction.where("actors like '%|#{options[:user_id]}|%'").order("txndate desc").includes(:transactions_users)
+    transactions = transactions.where("txndate between ? AND ?", options[:start], options[:end])
+    transactions = transactions.select{|transaction| (transaction.transactions_users.collect(&:user_id) & options[:friends].collect(&:to_i)).count > 0} if options[:friends].present?
+    transactions = transactions.select{|transaction| (transaction.tag_list & options[:groups]).count > 0} if options[:groups].present?
+    transactions = transactions.select{|transaction| (/#{options[:expense_search_query]}/ =~ transaction.remarks.downcase).present? } if options[:expense_search_query].present?
+    return transactions
   end
 
   def self.view_transactions(user, params)
@@ -119,7 +124,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.get_user_transactions(user)
-    Transaction.joins("JOIN transactions_users TU ON transactions.id = TU.transaction_id").where("transactions.user_id = ? OR TU.user_id = ?", user.id, user.id).order("transactions.txndate DESC, transactions.updated_at DESC")
+    Transaction.joins("JOIN transactions_users TU ON transactions.id = TU.transaction_id").where("TU.user_id = ?", user.id)
   end
 
   def self.user_balance(group)
@@ -135,6 +140,10 @@ class Transaction < ActiveRecord::Base
 
   def expense_users
     self.transactions_users.collect(&:user).push(self.user)
+  end
+
+  def tag_list
+    (self.category || "").split(",").collect(&:strip)
   end
 
   private

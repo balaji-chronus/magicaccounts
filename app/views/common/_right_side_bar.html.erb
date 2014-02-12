@@ -1,0 +1,11 @@
+<div id="mg-right-bar">
+  <ul id="mg-right-bar-tabs" class="nav nav-tabs">
+    <li class="active"><a href="#mg-search-expense" data-toggle="tab"><i class="text-primary icon-search"></i></a></li>
+    <li><a href="#mg-overall-balance" data-toggle="tab"><i class="text-primary icon-exchange"></i></a></li>
+  </ul>
+
+  <div id="mg-right-bar-content" class="tab-content">
+    <%= render :partial => "common/expense_search" %>
+    <%= render :partial => "common/user_balance" %>
+  </div>
+</div>

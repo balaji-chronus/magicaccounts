@@ -1,0 +1,14 @@
+<div class="tab-pane fade" id="mg-overall-balance">
+  <fieldset>
+    <legend class="text-center">Balances</legend>
+    <div class="text-center text-muted col-lg-4">
+      You Owe<br/><h4><span class="lead label label-success"><%= @master_balance[:investments] %></span></h4>
+    </div>
+    <div class="text-center text-muted col-lg-4">
+      You Paid<br/><h4><span class="lead label label-danger"><%= @master_balance[:expenses] %></span></h4>
+    </div>
+    <div class="text-center text-muted col-lg-4">
+      Balance<br/><h4><span class="lead label label-<%= @master_balance[:master_balance] > 0 ? "success" : (@master_balance[:master_balance] < 0 ? "danger" : "default") %>"><%= @master_balance[:master_balance].abs %></span></h4>
+    </div>
+  </fieldset>
+</div>

@@ -1,20 +1,28 @@
 <% transaction_user = entry.transactions_users.select{|transaction_user| transaction_user.user_id == current_user.id}.first %>
-<tr class="mg-transaction-entry accordion-toggle" data-toggle="collapse" id="#mg-entry-<%= entry.id %>" data-target="#collapse_<%= entry.id %>">
-  <td class="text-center hidden-xs">
+<tr  style="position: relative;" class="mg-transaction-entry accordion-toggle" data-toggle="collapse" id="#mg-entry-<%= entry.id %>" data-target="#collapse_<%= entry.id %>">
+  <td class="text-center hidden-xs mg-category-icon">
     <span class="icon-stack icon-2x">
       <i class="icon-sign-blank icon-stack-base"></i>
       <i class="icon-<%= Transaction::CATEGORY_ICON_MAPPING[((entry.category || "").split(",").first) || "miscellaneous"] %> icon-light icon-child"></i>
     </span>
   </td>
   <td> 
-    <div class="col-sm-12">
-      <b><%= entry.remarks %></b>
+    <div class="mg-expense-list-remarks col-sm-12 remove-left-gutter remove-right-gutter">
+      <h5><b><%= entry.remarks %></b></h5>
     </div>
-    <div class="col-sm-12">
-      <span class="label label-default">
-        View Details
+
+    <%= link_to edit_transaction_path(entry), :class => "mg-edit-expense-link" do %>
+      <span class="icon-stack text-muted">
+        <i class="icon-sign-blank icon-stack-base"></i>
+        <i class="icon-pencil icon-light"></i>
       </span>
-    </div>
+    <% end %>
+    <%= link_to transaction_path(entry), :method => :delete, :class => "mg-delete-expense-link" do %>
+      <span class="icon-stack text-danger">
+        <i class="icon-sign-blank icon-stack-base"></i>
+        <i class="icon-trash icon-light"></i>
+      </span>
+    <% end %>
   </td>
   <td class="text-center">
     <%= render_user_transaction_balance(transaction_user) %>
@@ -48,4 +56,12 @@
   });
 
   jQuery(".collapse").collapse({parent: '#mg-transactions-index'});
+
+  jQuery(document).on('click', '.mg-edit-expense-link', function(e){
+    e.stopPropagation();
+  })
+
+  jQuery(document).on('click', '.mg-delete-expense-link', function(e){
+    e.stopPropagation();
+  })
 </script>

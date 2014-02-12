@@ -68,8 +68,15 @@ class User < ActiveRecord::Base
     self.user_type == "Admin"
   end
 
-  def self.get_userlist_for_current_user(current_user)
-    User.joins("JOIN groups_users UG ON users.id = UG.user_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)",current_user).select("DISTINCT users.id user_id, users.name user_name")
+  def get_userlist_for_current_user
+    User.joins("JOIN groups_users UG ON users.id = UG.user_id").where("UG.group_id IN (SELECT DISTINCT group_id FROM groups_users where user_id = ?)", self.id).select("DISTINCT users.id user_id, users.name user_name")
+  end
+
+  def autocomplete_users(term, page = 1, per_page = 10, selection = [])
+    users = self.get_userlist_for_current_user
+    (users = users.select{|user| (/#{term.downcase}/ =~ user.user_name.downcase).present?}) if term.present?
+    (users = users.select{|user| !selection.include?(user.user_id)}) if selection.present?
+    return (users || []).paginate(:page => page, :per_page => per_page)
   end
 
   def ability

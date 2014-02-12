@@ -1,0 +1,7 @@
+<% @page_title = "Settle Up" %>
+<%= render :partial => "common/page_title", :locals => {:page_title => @page_title} %>
+<div class="clearfix">
+  <%= form_for @transaction, :validate => true, :remote => true, :url => transactions_path, :method => :post, :html => { :class => "form form-horizontal" } do |f| -%>
+    <%= render :partial => "settle_form", :locals => {:f => f} %>
+  <% end -%>
+</div>
