@@ -51,8 +51,8 @@ class Group < ActiveRecord::Base
     end
   end
 
- def self.autocomplete_results(named_query,user)
-      results = user.contacts.find(:all, :conditions => ['email LIKE ?', "%#{named_query}%"])
+ def self.autocomplete_results(named_query,user,page_limit = 10,page = 1)
+      results = user.contacts.paginate(:page => page, :per_page => page_limit,:conditions => ['email LIKE ?', "%#{named_query}%"])
   end
 
 end

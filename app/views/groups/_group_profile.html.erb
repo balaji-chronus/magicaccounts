@@ -1,0 +1,55 @@
+<a href="#" data-toggle="modal" data-target="#modal3" class="pull-center">
+  <% if current_user.can?(:invite_friends, @group) %>
+  <div class="col-sm-12">
+    <div class="col-sm-9">
+      <a href="#" data-toggle="modal" data-target="#modal3">
+      <button id="email_invite" type="button" class="btn btn-success" style="width: 100%;" >
+        <span class="icon-stack">
+      <i class="icon icon-circle icon-stack-base" ></i>
+        <i class="icon-envelope icon-dark"></i>
+      </span>    
+      Invite friends to this Group
+    </button></a></div>
+    <div class="col-sm-3">
+      <a href= "/contacts/gmail">
+      <button class="btn btn-danger gmail" data-container="body" data-toggle="popover"  data-button="CLOSE" data-placement="right" data-html=true data-content='<button type="button" id="close" class="close" >&times;</button>Import contacts from Gmail and then easily add them to this group  '>
+        <span class="icon-stack">
+      <i class="icon-cloud icon-stack-base"></i><i class="icon-google-plus icon-dark"></i> </span>   From Gmail
+    </button></a></div></div>
+<% end %>
+</a>
+
+<div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= render :partial => "groups/send_invites" %>
+</div>
+<table class="table table-condensed">
+  <thead>
+    <tr>
+    <th class="col-sm-9">User</th>
+    <th class="col-sm-3">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @group.users.each do |user| %>
+    <tr>
+    <td  class="col-sm-9"> 
+      <%= render_user_image(user,:size => 42,:class_name => "img-circle group-user").html_safe %></td>
+      <td class="col-sm-3">
+         <span class="badge <%= user.invite_status == 'registered' ? "positive" : "warning" %>" >
+              <%= user.translate_status(user.invite_status)%></span></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+  jQuery('.group-user').tooltip();
+
+ $(document).click(function(e) {
+         if(e.target.id=="close")              
+         {
+              $('.btn').popover('destroy'); 
+         }
+})
+</script>
+

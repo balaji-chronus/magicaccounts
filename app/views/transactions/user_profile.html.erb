@@ -7,13 +7,13 @@
     <button class="btn primary" onClick="Utilities.redirectTo(event,'<%= new_group_path %>');" type="button">Create Group</button>
   </div>
 </div>
-<% if @usergroups.blank? %>
+<% if current_user.groups.blank? %>
   <div class="wellempty">
     New to Magic Accounts ? Start over by creating a Group !
   </div>
 <% else %>
   <div id="group_tree" class="accordion">
-    <% @usergroups.each_with_index do |group,index| -%>
+    <% current_user.groups.each_with_index do |group,index| -%>
       <div class="accordion-group">
         <div class="accordion-heading"  group_id="<%= group.id %>">
           <a <%= "href='#group_#{group.id}' data-parent='#group_tree' data-toggle='collapse' class='accordion-toggle'"%>>
@@ -36,7 +36,7 @@
         </div>
         <div <%= "class='accordian-body #{index == 0 ? "in' style='height: auto;'" : "collapse'"} id='group_#{group.id}'" %>>
           <div class="accordion-inner">
-            <% transactions_by_group = @balance.select {|bal| bal if (group.id == bal.group_id) }%>
+            <% transactions_by_group = @user_group_balance.try(:select) {|bal| bal if (group.id == bal.group_id) }%>
             <% if transactions_by_group.blank? %>
               <div class="wellempty account_block">
                 You have no transactions for this group. <%= link_to "Add Transactions", transactions_path(:groupid => group.id, :open_new_form => true) %>

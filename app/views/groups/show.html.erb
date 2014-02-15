@@ -6,7 +6,6 @@
       <li class="active"><a href="#group-balance" data-toggle="tab"><i class="icon-exchange"></i></a></li>
       <li class=""><a href="#profile" data-toggle="tab"><i class="icon-info"></i></a></li>
     </ul>
-
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane fade active in" id="group-balance">
         <table class="table table-condensed">
@@ -25,33 +24,7 @@
         </table>
       </div>
       <div class="tab-pane fade" id="profile">
-      </br>
-        <a href="#" data-toggle="modal" data-target="#modal3" class="pull-center">
- <button id="invite" type="button" class="btn btn-success col-sm-12 "><i class="icon-group icon-2x"></i> &nbsp; Invite Friends</button></a></br></br>
-
- <div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <%= render :partial => "groups/add_friends" %>
-        </div>
-
-        <table class="table table-condensed">
-          <thead>
-            <tr>
-            <th class="col-xs-3">Image</th>
-            <th class="text-center col-xs-6">Name</th>
-            <th class="col-xs-3">State</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @group.users.each do |user| %>
-            <tr>
-            <td  class="col-xs-3"> 
-              <%= render_user_image(user,:size => 42,:class_name => "img-circle").html_safe %></td>
-            <td class="text-center col-xs-6"><%= link_to user.name, user_path(user) %></td>
-            <td "col-xs-3"><%= user.translate_status(user.invite_status)%></td>
-            </tr>
-            <% end %>
-          </tbody>
-        </table>
+         <%= render :partial => 'group_profile' %>
       </div>
     </div>
   </div>
@@ -60,21 +33,27 @@
 <script type="text/javascript">
   jQuery('#myTab a').click(function (e) {
     e.preventDefault();
-    jQuery(this).tab('show');
+    jQuery(this).tab('show')
+
+
   })
 
   jQuery(function() {
       var hash = window.location.hash;
       hash == "#profil" && $('ul.nav a[href="#profile"]').tab('show');
       hash == "#profile" && $('ul.nav a[href="' + hash + '"]').tab('show');
-      hash == "#profile" && jQuery(".modal-dialog").replaceWith('<%= escape_javascript(render(:partial => 'groups/send_invites'))%>');
       hash == "#profile" && jQuery('#modal3').modal('show');
     });
+
+      <% if Group.find_by_id(params[:id]).popover %> 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      jQuery('.btn').popover('show'); 
+})
+          <% end %>
+
+
+
 </script>
 
-<script type="text/javascript">
-   jQuery('#invite').click(function () {
-  jQuery(".modal-dialog").replaceWith('<%= escape_javascript(render(:partial => 'groups/add_friends'))%>');
-     })
-</script>
+
 

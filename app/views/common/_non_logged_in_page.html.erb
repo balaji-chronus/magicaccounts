@@ -6,14 +6,13 @@
     <% else %>
       <h1>Managing expenses made easy</h1>
       <%= render :partial => "common/user_testimonials" %>
-
-      <a data-toggle="modal" href="/users/new" data-target="#modal" class="btn btn-danger btn-lg" data-placement="top" data-toggle="tooltip" data-original-title="Via Email"> Sign Up
+      <a data-toggle="modal" href="/users/new" data-target="#modal" class="btn btn-danger" data-placement="bottom" data-toggle="tooltip" data-original-title="Via Email"> Sign Up
       </a>
-      <a href="/auth/facebook" data-placement="top" data-toggle="tooltip" data-original-title="Facebook">
-        <%= image_tag "facebook_64.png",:size =>"54x54",:alt=>"Facebook"%>
+      <a class="btn" href="/auth/facebook" data-placement="bottom" data-toggle="tooltip" data-original-title="Facebook">
+        <i class="icon-facebook-sign icon-dark icon-3x"></i>
       </a>
-      <a href= "/auth/google_oauth2" data-placement="top" data-toggle="tooltip" data-original-title="Google">
-        <%= image_tag "google_64.png",:size => "54x54",:alt=> "Google" %>
+      <a class="btn" href= "/auth/google_oauth2" data-placement="bottom" data-toggle="tooltip" data-original-title="Google">
+        <i class="icon-google-plus-sign icon-3x"></i>
       </a>
     <% end %> 
   </div>

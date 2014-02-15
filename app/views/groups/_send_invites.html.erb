@@ -1,13 +1,18 @@
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-body">
-      <h3><span class="help-inline"><i class="icon-user"></i> &nbsp; Invite your friends to this group</span><br/></h3>
-      <%= form_tag({:action => "sendinvites"}, :method => "post", :class => "well", :id => "form_invite") do -%>
-        <%= hidden_field_tag :groupid, @group.id, :class => 'text_field' %>
-        <%= text_field_tag :emailids, params[:emailids] %></br></br>
-        <button id="send_mail" type="submit" class="btn btn-success">Send Invites</button>
-      <%end%>
+    <div class="modal-header">
+      <h4><span class="help-inline"><i class="icon-user"></i> &nbsp; Invite your friends to this group</span></h4>
     </div>
+    <div class="modal-body">
+        <%= form_tag({:action => "sendinvites"}, :method => "post", :id => "form_invite") do -%>
+        <%= hidden_field_tag :groupid, @group.id, :class => 'text_field' %>
+        <%= text_field_tag :emailids, params[:emailids] %>
+      <div class="text-center ">
+        <br/>
+        <button id="send_mail" type="submit" class="btn btn-primary">Send Invites</button>
+      </div>
+    </div>
+        <%end%>
   </div>
 </div>
 

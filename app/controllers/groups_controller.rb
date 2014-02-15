@@ -191,8 +191,8 @@ class GroupsController < ApplicationController
   end
 
   def autocomplete
-    @entries = Group.autocomplete_results(params[:term],current_user)
-    @entries = @entries.collect{|e| {id: e.id || params[:term], text: e.email || params[:term]}}
+    @entries = Group.autocomplete_results(params[:term],current_user,params[:page_limit], params[:page])
+    @entries = @entries.collect{|e| {id: e.id || params[:term], avatar: Digest::MD5::hexdigest(e.email) ,text: e.email || params[:term]}}
     render :inline => @entries.to_json
   end
 

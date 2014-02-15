@@ -100,6 +100,7 @@ class UsersController < ApplicationController
 
   def contacts
     @contacts = request.env['omnicontacts.contacts']
+    debugger
     @contacts.each do |contact|
       current_user.contacts << Contact.new(:name => contact[:name], :email => contact[:email])
     end

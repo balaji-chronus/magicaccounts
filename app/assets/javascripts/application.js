@@ -32,10 +32,19 @@ var Utilities = {
 
 var Group = {
         autocomplete: function(path,id,placeholder) {
+           function format(email) {
+// optgroup
+    return get_avatar(email.avatar) + " " + email.text;
+    }
           $(id).select2({
+             formatResult: format,
+    formatSelection: format,
+    escapeMarkup: function(m) { return m; },
+             
             placeholder: placeholder,
             allowClear: true,
-            width: '300px',
+            width: '100%',
+          
             tags: [],
             ajax: { 
               url: path,
@@ -61,7 +70,18 @@ var Group = {
             text:jQuery.trim(term)
             };
             }
-          })
+          });
+  
+  function get_avatar(avatar_id) {
+    return "<img src = 'http://gravatar.com/avatar/" + avatar_id + ".png' height = '32' />" ;
+    }
+
+
+
+  
+   
+
+
         }
       }
 

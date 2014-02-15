@@ -51,6 +51,9 @@ class Ability
       can :view, Group do |group|
         user.user_groups.include?(group)
       end
+      can :invite_friends, Group do |group|
+          group.user == user
+      end
     end
   end
 end
