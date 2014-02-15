@@ -19,7 +19,7 @@ class Transaction < ActiveRecord::Base
   ]
 
   CATEGORY_ICON_MAPPING = {
-    "general" => "puzzle-piece",
+    "general" => "exclamation",
     "food" => "food",
     "fuel" => "tint",
     "household" => "home",
@@ -30,10 +30,10 @@ class Transaction < ActiveRecord::Base
     "entertainment" => "ticket",
     "settlement" => "money",
     "telephone" => "phone-sign",
-    "miscellaneous" => "puzzle-piece",
+    "miscellaneous" => "cloud",
     "games" => "gamepad",
     "coffee" => "coffee",
-    "sports" => "dribble",
+    "sports" => "dribbble",
     "loan" => "money",
     "insurance" => "money",
     "movies" => "film",
@@ -46,22 +46,19 @@ class Transaction < ActiveRecord::Base
     "music" => "music",
     "rent" => "building",
     "stationary" => "pushpin",
-    "loan-emi" => "calender",
-    "groceries" => "shopping-cart"
+    "emi" => "calendar",
+    "groceries" => "shopping-cart",
+    "outing" => 'sun'
   }
 
-  TRANSACTION_TYPES = [
-    ["Track a Personal Expense","1"],
-    ["Group - Split Equally", "2"],
-    ["Group - Not Split Equally", "3"]
-  ]
+  TRANSACTION_TYPES = ["", "Split Equally", "Split by Exact Amount", "Record a personal transaction", "Settlement"]
 
   acts_as_taggable
 
   validates :txndate, :remarks, :presence => {:message => "cannot be blank"}
-  validates :user_id, :presence => {:message => "/Expense spender cannot be blank"}
-  validates :transactions_users, :presence => {:message => ": one or more expense benefactors should have an amount more than zero"}
-  validate  :check_group_user_access
+  validates :user_id, :presence => {:message => "/Expense spender must be selected"}
+  validates :transactions_users, :presence => {:message => "- one or more expense benefactors should have an amount more than zero"}
+  validate  :transaction_validations
 
   belongs_to  :user
   belongs_to  :entered_user, :foreign_key => "enteredby", :class_name => "User" 
@@ -69,14 +66,19 @@ class Transaction < ActiveRecord::Base
   has_many    :comments, :as => :commentable
   has_many    :users, :through => :transactions_users
   has_many    :transactions_users, :dependent => :destroy
-  accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? }, :allow_destroy => true  
+  accepts_nested_attributes_for :transactions_users, :reject_if => lambda { |a| a[:amount].blank? && a[:amount_paid].blank? }, :allow_destroy => true  
 
   before_save  :set_actors
   
 
   def self.search_transactions(options = {})
     # Get rid of this LIKE query
-    return Transaction.where("actors like '%|#{options[:user_id]}|%'").order("txndate desc").includes(:transactions_users)
+    transactions = Transaction.where("actors like '%|#{options[:user_id]}|%'").order("txndate desc").includes(:transactions_users)
+    transactions = transactions.where("txndate between ? AND ?", options[:start], options[:end])
+    transactions = transactions.select{|transaction| (transaction.transactions_users.collect(&:user_id) & options[:friends].collect(&:to_i)).count > 0} if options[:friends].present?
+    transactions = transactions.select{|transaction| (transaction.tag_list & options[:groups]).count > 0} if options[:groups].present?
+    transactions = transactions.select{|transaction| (/#{options[:expense_search_query]}/ =~ transaction.remarks.downcase).present? } if options[:expense_search_query].present?
+    return transactions
   end
 
   def self.view_transactions(user, params)
@@ -122,7 +124,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.get_user_transactions(user)
-    Transaction.joins("JOIN transactions_users TU ON transactions.id = TU.transaction_id").where("transactions.user_id = ? OR TU.user_id = ?", user.id, user.id).order("transactions.txndate DESC, transactions.updated_at DESC")
+    Transaction.joins("JOIN transactions_users TU ON transactions.id = TU.transaction_id").where("TU.user_id = ?", user.id)
   end
 
   def self.user_balance(group)
@@ -130,22 +132,38 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.get_autocomplete_tags(term, page = 1, per_page = 10, selection = [])
-    tags = Transaction.tag_counts_on(:tags)
-    tags = tags.where("LOWER(name) LIKE '%#{term.downcase}%'") if term.present?
-    tags = tags.where("name NOT IN (?)", selection) if selection.present?
+    tags = (Transaction.tag_counts_on(:tags).collect(&:name) + CATEGORY_ICON_MAPPING.keys).uniq.sort
+    (tags = tags.select{|tag| (/#{term.downcase}/ =~ tag.downcase).present?}) if term.present?
+    tags = tags.select{|tag| !selection.include?(tag)} if selection.present?
     return (tags || []).paginate(:page => page, :per_page => per_page)
+  end
+
+  def expense_users
+    self.transactions_users.collect(&:user).push(self.user)
+  end
+
+  def tag_list
+    (self.category || "").split(",").collect(&:strip)
   end
 
   private
   
-  def check_group_user_access
-    if !(Group.get_groups_for_current_user(self.user_id).collect(&:id).include?(self.group_id))
-      errors.add(:Expense, "spender does not belong to this group")
-    else
-      players = self.transactions_users.collect(&:user_id).push(self.user_id).uniq
-      if !(players & Group.find_by_id(self.group_id).users.collect(&:id) == players.uniq)
-        errors.add(:one, " or more benefactors does not belong to this group")
-      end
+  def transaction_validations
+    if (self.amount || 0.00) <= 0
+      errors.add(:expense, " amount must be greater than zero")
+    end
+
+    players = self.expense_users.collect(&:id).compact.uniq || []
+    if players.count > 0 && (players - Group.find_by_id(self.group_id).users.collect(&:id)).count > 0
+      errors.add(:some, " of the users in the expense don't belong to this group")
+    end
+
+    if (self.amount || 0.00 > 0) && self.amount != self.transactions_users.collect(&:amount).compact.sum
+      errors.add(:expense, " benefactor amounts don't add up with the expense amount")
+    end
+
+    if players.count > 0 && !players.include?(self.enteredby.to_i)
+      errors.add(:you, " cannot add this expense. You should be part of this expense")
     end
   end
 

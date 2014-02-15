@@ -1,0 +1,67 @@
+<%= f.hidden_field :transaction_type, :value => f.object.transaction_type %>
+<%= f.fields_for :transactions_users do |tu_form| %>
+  <div id="mg-expense-users-<%= tu_form.object.user_id %>">
+    <%= tu_form.hidden_field :user_id, :value => tu_form.object.user_id %>
+    <%= tu_form.hidden_field :transaction_id, :value => tu_form.object.transaction_id %>
+    <%= tu_form.hidden_field :amount, :value => tu_form.object.amount, :class => "mg-txn-user-amount" %>
+    <%= tu_form.hidden_field :amount_paid, :value => tu_form.object.amount_paid, :class => "mg-txn-user-amount-paid" %>
+    <%= tu_form.hidden_field :_destroy, :value => tu_form.object.amount.blank?, :class => "mg-txn-user-destroy" %>
+  </div>
+<% end %>
+
+<!-- _expense_benefactors.html.erb -->
+<div class="modal fade" id="mg-expense-beneficiary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title text-center lead" id="myModalLabel"><strong>Expense Benefactors</strong></h4>
+      </div>
+      <div class="modal-body clearfix">
+        <h4 class="text-center lead text-muted">Record a Settlement (<span class=" mg-transaction-total-amount"><%= f.object.amount || 0 %></span>)</h4>
+        <div class="list-group">
+          <% f.object.transactions_users.each do |transaction_user| %>
+            <a href="javascript:void(0)" class="clearfix list-group-item" benefactor_name="<%= transaction_user.user.name %>" benefactor_id="<%= transaction_user.user.id %>">
+              <div class="col-xs-10">
+                <%= render_user_image(transaction_user.user, {:class_name => "img-circle", :user_name_class => "username"}).html_safe %>
+              </div>
+              <div class="col-xs-2">
+                <span class="icon-stack text-success pull-right <%= (transaction_user.amount || 0.00) > 0 ? "" : "hidden" %> benefactor_<%= transaction_user.user.id %>">
+                  <i class="icon-circle icon-stack-base"></i>
+                  <i class="icon-ok icon-light icon-child"></i>
+                </span>
+              </div>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+jQuery(document).on('click', "#mg-expense-beneficiary .list-group-item", function(e){
+    var user_id = jQuery(this).attr('benefactor_id');
+    var user_name = jQuery(this).attr('benefactor_name');
+    jQuery("#mg-expense-beneficiary .list-group-item .icon-stack").addClass("hidden");
+    jQuery(".benefactor_" + user_id).removeClass("hidden");
+    
+    // Set the benefactor amount
+    Transaction.setUserAmount(user_id);
+
+    // Set amount paid for spender
+    Transaction.setAmountPaid();
+    jQuery('#mg-expense-beneficiary').modal('hide');
+  });
+
+  jQuery('#mg-expense-beneficiary').on('hide.bs.modal', function(e){
+    var user_name = jQuery("#mg-expense-beneficiary .list-group-item .icon-stack:not(.hidden)").parents(".list-group-item").attr('benefactor_name');
+    
+    if(user_name != "" && user_name != undefined)
+    {
+      jQuery('#mgexpensebeneficiary .toggle-on').text("Paid to " + user_name).siblings('label').removeClass('toggle-off');
+    }
+    else
+      jQuery('#mgexpensebeneficiary').click();
+  });
+</script>

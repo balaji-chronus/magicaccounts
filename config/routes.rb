@@ -41,10 +41,15 @@ Magicaccounts::Application.routes.draw do
     collection do
       get :get_group_balance
       get :autocomplete_category_tags
+      get :settle_up
     end
   end
 
   resources :users do
+    collection do
+      get :autocomplete_friends
+    end
+
     member do
       get :dashboard
     end

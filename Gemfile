@@ -20,12 +20,10 @@ group :assets do
   gem 'jquery-ui-rails'
   gem 'sass-rails', '>= 3.2'
   gem 'less-rails'
-  # twitter bootstrap css & javascript toolkit
   gem 'twitter-bootswatch-rails', '~> 3.0.0'
-  # twitter bootstrap helpers gem, e.g., alerts etc...
   gem 'twitter-bootswatch-rails-helpers'
-
   gem "font-awesome-rails"
+  gem 'ejs'
 end
 
 gem 'client_side_validations'

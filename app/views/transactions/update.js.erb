@@ -1,0 +1,6 @@
+<% if @transaction.errors.blank? || @show_error %>
+  window.location = '<%= transactions_path %>'
+<% else %>
+  jQuery('.flash-container').replaceWith('<%= escape_javascript(render(:partial => 'common/flashdisplay', :locals => {:flash => flash} ))%>');
+<% end %>
+

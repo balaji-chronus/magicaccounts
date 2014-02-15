@@ -14,9 +14,12 @@
       $toggle.removeClass('off');
       $toggle.trigger({type: "switch-on"});
     } else {
-      $toggle.attr('class', 'toggle ' + $toggle.find('.toggle-off').attr('class').replace(/toggle-off/g,''))
-      $input.prop('checked', false);
-      $toggle.addClass('off');
+      if($toggle.find('.toggle-off').attr('class') != undefined)
+      {
+        $toggle.attr('class', 'toggle ' + $toggle.find('.toggle-off').attr('class').replace(/toggle-off/g,''));
+        $input.prop('checked', false);
+        $toggle.addClass('off');
+      }
     }
   });
 }(window.jQuery);

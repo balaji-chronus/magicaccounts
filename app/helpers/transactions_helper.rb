@@ -1,6 +1,6 @@
 module TransactionsHelper
   def render_user_transaction_balance(transaction)
-    amount = transaction.amount_paid - transaction.amount
+    amount = transaction.amount_paid - (transaction.amount || 0)
 
     if amount < 0
       display_string = "You Pay"
@@ -20,7 +20,7 @@ module TransactionsHelper
   end
 
   def render_user_transaction_balance_detail(transaction)
-    amount = transaction.amount_paid - transaction.amount
+    amount = transaction.amount_paid - (transaction.amount || 0)
 
     if amount < 0
       display_string = "Owes #{amount.abs.to_s}"

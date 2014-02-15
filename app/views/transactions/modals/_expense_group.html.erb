@@ -32,15 +32,6 @@
 <script type="text/javascript">
   jQuery(document).on('click', "#mg-expense-group .list-group-item", function(e){
     var group_id = jQuery(this).attr('group_id');
-    Utilities.redirectTo(e, '<%= new_transaction_path %>?groupid='+group_id);
-  });
-
-  jQuery('#mg-expense-group').on('hide.bs.modal', function(e){
-    var group_name = jQuery("#transaction_group_id").attr("group_name");
-    
-    if(group_name != "" && group_name != undefined)
-      jQuery('#mgexpensegroup .toggle-on').text(group_name);
-    else
-      jQuery('#mgexpensegroup').click();
+    Utilities.redirectTo(e, '<%= redirect_path %>?groupid='+group_id);
   });
 </script>

@@ -1,31 +1,33 @@
 <div id="mg-left-sidebar">
   <ul class="nav nav-pills nav-stacked">
-    <li class="active"><a href="#">
-      <span class="icon-stack">
-        <i class="icon-sign-blank icon-stack-base"></i>
-        <i class="icon-dashboard icon-dark icon-child"></i>
-      </span>
-      <span class="mg-navigation-text">&nbsp; Dashboard</a></span>
+    <li class="<%= active_tab?(params[:controller], 'users') ? "active" : "" %>">
+      <%= link_to user_path(current_user) do %>
+        <span class="icon-stack">
+          <i class="icon-sign-blank icon-stack-base"></i>
+          <i class="icon-dashboard icon-<%= active_tab?(params[:controller], 'users') ? "dark" : "light" %> icon-child"></i>
+        </span>
+        <span class="mg-navigation-text">&nbsp; Dashboard</a></span>
+      <% end %>
     </li>
-    <li>
+    <li class="<%= active_tab?(params[:controller], 'transactions') ? "active" : "" %>">
       <%= link_to transactions_path do %>
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-inr icon-light icon-child"></i>
+          <i class="icon-inr icon-<%= active_tab?(params[:controller], 'transactions') ? "dark" : "light" %> icon-child"></i>
         </span>
         <span class="mg-navigation-text">&nbsp; Expenses</span>
       <% end %>
     </li>
-    <li class="dropdown">
+    <li class="dropdown <%= active_tab?(params[:controller], 'groups') ? "active" : "" %>">
       <%= link_to groups_path do %>
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-group icon-light icon-child"></i>
+          <i class="icon-sitemap icon-<%= active_tab?(params[:controller], 'groups') ? "dark" : "light" %> icon-child"></i>
         </span>
         <span class="mg-navigation-text">&nbsp; Groups</span>
       <% end %>
     </li>
-    <li>
+    <li class="<%= active_tab?(params[:controller], 'tofillup') ? "active" : "" %>">
       <a href="#">
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>

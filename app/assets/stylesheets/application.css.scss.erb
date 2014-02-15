@@ -15,6 +15,19 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
   margin-right: 0px !important;  
 }
 
+::-webkit-input-placeholder { /* WebKit browsers */
+  color: #CCC  ;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: #CCC;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #CCC;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: #CCC;
+}
+
 html {
   overflow-y: scroll; 
 }
@@ -26,10 +39,6 @@ body, html {
 .circled {
   border-radius: 50% !important;
   -webkit-border-radius: 50%  !important;
-}
-
-.dropdown-menu {
-  min-width: 325px !important;
 }
 
 .action-group {
@@ -95,6 +104,14 @@ body, html {
   transition: height 1s;
 }
 
+.remove-gutter {
+  padding: 0 !important;  
+}
+
+.remove-margin-gutter {
+  margin: 0 !important;  
+}
+
 .remove-left-gutter {
   padding-left: 0 !important;
 }
@@ -116,6 +133,10 @@ body, html {
   color: #FFF;
 }
 
+legend {
+  margin-top: 25px !important;
+  padding: 8px 0 7px !important;
+}
 /******* Common App Styles *****************/
 
 .mg-date{
@@ -228,6 +249,31 @@ table.shadow-row tr td {
 /****** Common Logged-in Page Styles *********/
 
 /**** Logged-in Header Styles *****/
+.select2-container {
+  width: 100%;
+  display: block !important;
+  margin-bottom: 15px !important;
+
+  .select2-choices {
+    min-height: 43px !important;
+    padding: 4px !important;
+    border: 2px solid #dce4ec !important;
+
+    .select2-input {
+      text-align: center !important;
+      font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    }
+
+    .select2-default {
+      color: #ADB4BF !important;
+    }
+  }
+}
+
+.select2-results .select2-highlighted {
+  background: #ecf0f1 !important;
+  color: inherit !important;
+}
 
 #mg-recent-activity {
   .panel-body { padding: 0 5px;}
@@ -250,6 +296,14 @@ table.shadow-row tr td {
       line-height: normal;
     }
 
+    li.active a {
+      color: #FFFFFF;
+    }
+
+    a {
+      color: #2c3e50;
+    }
+
     .icon-child {
      line-height: 2em; 
     }
@@ -268,10 +322,11 @@ table.shadow-row tr td {
 
   #mg-app-buttons {
     div {
-      padding: 5px;
+      padding: 5px 0;
 
       button, a {
         width: 100%;
+        border-radius: 0;
       }
     }
   }
@@ -314,6 +369,18 @@ table.shadow-row tr td {
 
   .mg-transaction-entry {
     cursor: pointer;
+    height: 80px;
+
+    .mg-expense-list-remarks {
+      h5 {
+        margin: 5px 0;
+        font-weight: normal;
+      }
+    }
+
+    td.mg-category-icon {
+      vertical-align: middle;
+    }
   }
 
   .transaction_detail_entry {
@@ -327,6 +394,10 @@ table.shadow-row tr td {
 
     .mg-category-tags {
       margin: 20px 0 30px;
+
+      span {
+        margin-right: 5px;
+      }
     }
 
     .list-group-item {
@@ -353,7 +424,18 @@ table.shadow-row tr td {
 
 /*********** Groups Index *************/
 #mg-group-entries {
-  
+  .mg-group-entry{
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  .mg-group-name {
+      h5 {
+        margin: 3px 0;
+        font-weight: normal;
+      }
+    }
 }
 
 /*********** Groups Show *************/
@@ -391,10 +473,11 @@ table.shadow-row tr td {
 /************ Transactions Create *************/
 #mg-transaction-create {
   .btn-lg {
-    padding: 18px 27px;
+    padding: 25px 25px;
     font-size: 13px;
     line-height: 0.33;
     border: 1px solid;
+    text-transform: capitalize;
   }
 
   .toggle-handle {
