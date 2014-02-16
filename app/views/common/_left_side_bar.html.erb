@@ -1,7 +1,7 @@
 <div id="mg-left-sidebar">
   <ul class="nav nav-pills nav-stacked">
     <li class="<%= active_tab?(params[:controller], 'users') ? "active" : "" %>">
-      <%= link_to user_path(current_user) do %>
+      <%= link_to profile_url do %>
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>
           <i class="icon-dashboard icon-<%= active_tab?(params[:controller], 'users') ? "dark" : "light" %> icon-child"></i>

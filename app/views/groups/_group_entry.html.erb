@@ -11,7 +11,7 @@
         <h5><b><%= entry.name %></b></h5>
       <% end %>
     </div>
-    
+    <% if can?(:invite_friends,entry) %>
     <%= link_to edit_group_path(entry), :class => "mg-edit-link" do %>
       <span class="icon-stack text-muted">
         <i class="icon-sign-blank icon-stack-base"></i>
@@ -23,6 +23,7 @@
         <i class="icon-sign-blank icon-stack-base"></i>
         <i class="icon-trash icon-light"></i>
       </span>
+    <% end %>
     <% end %>
   </td>
 
