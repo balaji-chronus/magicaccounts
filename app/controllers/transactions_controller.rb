@@ -28,6 +28,23 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def user_profile
+	tu_array = []
+	current_user.transactions_users.each do |tu|
+		if tu[:amount_paid] > 0
+			tu_array << TransactionsUser.joins("JOIN transactions t ON t.id = transaction_id AND t.actors  LIKE '%|#{tu[:user_id]}|%' AND transactions_users.user_id != #{tu[:user_id]} AND transaction_id = #{tu[:transaction_id]} AND transactions_users.amount != amount_paid").map{|x| {:amount => x.amount, :id => x.user_id}}.reduce
+		else
+			tu_array.push({ :amount => -tu[:amount], :id => Transaction.find(tu[:transaction_id]).user_id})
+		end
+	end
+	grouped = tu_array.compact.group_by{|x| x[:id]}
+	keys = grouped.keys
+	@summary = keys.map{|k| [k,grouped[k].reduce(0) {|t,h| t+h[:amount]}]}
+	@s_left = @summary.select{|s| s[1] > 0}
+	@s_right = @summary.select{|s| s[1] < 0}
+	@summary = @s_left.length > @s_right.length ? @s_left.zip(@s_right) : @s_right.zip(@s_left)
+  end
+
   def settle_up
     @transaction = Transaction.new
     @transaction.user = current_user

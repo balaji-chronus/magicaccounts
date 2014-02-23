@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(:version => 20140215112915) do
     t.string   "code"
     t.string   "status"
     t.text     "remarks"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "group_id"
     t.integer  "user_id"
   end
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(:version => 20140215112915) do
     t.string   "name"
     t.string   "status"
     t.integer  "user_id"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "code"
     t.boolean  "popover",    :default => true
   end
@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20140215112915) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
@@ -120,8 +120,8 @@ ActiveRecord::Schema.define(:version => 20140215112915) do
     t.decimal  "amount",         :precision => 14, :scale => 2
     t.string   "category"
     t.text     "remarks"
-    t.datetime "created_at",                                                   :null => false
-    t.datetime "updated_at",                                                   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "enteredby"
     t.integer  "beneficiary_id"
   end
@@ -130,8 +130,8 @@ ActiveRecord::Schema.define(:version => 20140215112915) do
     t.integer  "transaction_id"
     t.integer  "user_id"
     t.decimal  "amount",         :precision => 14, :scale => 2
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.decimal  "amount_paid",    :precision => 14, :scale => 2, :default => 0.0
   end
 
@@ -143,8 +143,8 @@ ActiveRecord::Schema.define(:version => 20140215112915) do
     t.string   "phone"
     t.text     "address"
     t.string   "company"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "user_type"
     t.string   "invite_status",   :default => "not_registered"
   end

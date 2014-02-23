@@ -34,8 +34,6 @@
   jQuery('#myTab a').click(function (e) {
     e.preventDefault();
     jQuery(this).tab('show')
-
-
   })
 
   jQuery(function() {
@@ -45,14 +43,11 @@
       hash == "#profile" && jQuery('#modal3').modal('show');
     });
 
-      <% if Group.find_by_id(params[:id]).popover %> 
+  <% if Group.find_by_id(params[:id]).popover %> 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      jQuery('.btn').popover('show'); 
-})
-          <% end %>
-
-
-
+    jQuery('.btn').popover('show'); 
+		})
+  <% end %>
 </script>
 
 

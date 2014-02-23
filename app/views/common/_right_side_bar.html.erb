@@ -1,6 +1,6 @@
-  	<% if @group.present? %>
-<%= render :partial => "groups/group_balance.html.erb" %>
-  	  	<% else %>
+<% if params[:controller] == "groups" && params[:action] == "show" %>
+	<%= render :partial => "groups/group_balance.html.erb" %>
+<% else %>
 
 <div id="mg-right-bar">
   <ul id="mg-right-bar-tabs" class="nav nav-tabs">

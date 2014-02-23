@@ -113,6 +113,4 @@ class User < ActiveRecord::Base
     string_to_hash = pwd + "takraw" + salt
     Digest::SHA2.hexdigest(string_to_hash)
   end
-
-  
 end

@@ -1,6 +1,6 @@
 class TransactionsUser < ActiveRecord::Base   
   belongs_to :user
-  belongs_to :transaction
+  belongs_to :transaction, :dependent => :destroy
 
   after_save :calculate_transaction_amount
 

@@ -17,6 +17,7 @@ class GroupsController < ApplicationController
         :display_class => entry.balance > 0 ? "positive" : "negative"
       }
     end
+    @user_balance = @balances.select{|x| x[:user_id] == current_user.id}.first
     respond_to do |format|
       if true
         format.html # show.html.erb
@@ -140,12 +141,14 @@ class GroupsController < ApplicationController
   end
 
   def sendinvites
+    debugger
     @toemail = params[:emailids]
     @group = Group.find_by_id(params[:groupid].to_i)
     error_msg = []
-    @toemail.split(',').each do |email|
+    if @toemail.present?
+      @toemail.split(',').each do |email|
       begin
-        if email =~ /[0-9]*/ 
+        if email =~ /[0-9]+/ 
           email = Contact.where(:id => email.to_i).first.try(:email) || email
         end
         if email && email != "" && email =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/
@@ -160,7 +163,11 @@ class GroupsController < ApplicationController
       rescue Exception
         flash.now[:error] = "Error sending invites"
       end
+      end
+    else
+      error_msg << "Enter atleast one email"
     end
+
       if error_msg.empty?
         flash[:notice] = "Invites sent successfully"
       else
@@ -193,6 +200,11 @@ class GroupsController < ApplicationController
     @entries = Group.autocomplete_results(params[:term],current_user,params[:page_limit], params[:page])
     @entries = @entries.collect{|e| {id: e.id || params[:term], avatar: Digest::MD5::hexdigest(e.email) ,text: e.email || params[:term]}}
     render :inline => @entries.to_json
+  end
+
+  def close_popover
+    Group.find_by_user_id(current_user.id).update_attribute(:popover, false)
+    render :nothing => true
   end
 
 end

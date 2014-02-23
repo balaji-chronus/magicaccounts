@@ -1,19 +1,19 @@
 <div id="mg-left-sidebar">
   <ul class="nav nav-pills nav-stacked">
-    <li class="<%= active_tab?(params[:controller], 'users') ? "active" : "" %>">
+    <li class="<%= active_tab?(params[:action], 'user_profile') ? "active" : "" %>">
       <%= link_to profile_url do %>
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-dashboard icon-<%= active_tab?(params[:controller], 'users') ? "dark" : "light" %> icon-child"></i>
+          <i class="icon-dashboard icon-<%= active_tab?(params[:action], 'user_profile') ? "dark" : "light" %> icon-child"></i>
         </span>
         <span class="mg-navigation-text">&nbsp; Dashboard</a></span>
       <% end %>
     </li>
-    <li class="<%= active_tab?(params[:controller], 'transactions') ? "active" : "" %>">
+    <li class="<%= active_tab?(params[:controller], 'transactions') && params[:action] != 'user_profile' ? "active" : "" %>">
       <%= link_to transactions_path do %>
         <span class="icon-stack">
           <i class="icon-sign-blank icon-stack-base"></i>
-          <i class="icon-inr icon-<%= active_tab?(params[:controller], 'transactions') ? "dark" : "light" %> icon-child"></i>
+          <i class="icon-inr icon-<%= active_tab?(params[:controller], 'transactions') && params[:action] != 'user_profile' ? "dark" : "light" %> icon-child"></i>
         </span>
         <span class="mg-navigation-text">&nbsp; Expenses</span>
       <% end %>

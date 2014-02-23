@@ -23,7 +23,7 @@ Magicaccounts::Application.routes.draw do
     end
   end
 
-  root :to => 'users#dashboard'
+  root :to => 'transactions#user_profile'
   match 'groups/:code/adduser' => 'groups#adduser'
   match 'transactions/new/:groupid' => 'transactions#new'
   match 'profile' => "transactions#user_profile"
@@ -35,7 +35,11 @@ Magicaccounts::Application.routes.draw do
     get   'logout' => :destroy
   end
 
-  resources :groups
+  resources :groups do
+    collection do 
+       put :close_popover
+     end
+   end
 
   resources :transactions do
     collection do
@@ -51,7 +55,7 @@ Magicaccounts::Application.routes.draw do
     end
 
     member do
-      get :dashboard
+		get :dashboard
     end
   end
 end

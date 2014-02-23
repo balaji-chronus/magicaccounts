@@ -13,4 +13,3 @@ en:
   errors:
     messages:
       email: "is not valid. Please enter a valid email. ex: johndoe@mail.com"
- 

@@ -32,59 +32,51 @@ var Utilities = {
 }
 
 var Group = {
-        autocomplete: function(path,id,placeholder) {
-           function format(email) {
-// optgroup
-    return get_avatar(email.avatar) + " " + email.text;
-    }
-          $(id).select2({
-             formatResult: format,
-    formatSelection: format,
-    escapeMarkup: function(m) { return m; },
-             
-            placeholder: placeholder,
-            allowClear: true,
-            width: '100%',
-          
-            tags: [],
-            ajax: { 
-              url: path,
-              data: function (term, page) {
-                return {
-                  term: term, // search term
-                  page_limit: 10,
-                  page: page,
-                  selection: jQuery(id).select2("val")
-                };
-              },
-              results: function (data, page) {
-                var more = (data.length == 10);
-                return {
-                  results: data,
-                  more: more
-                };
-              }
-            },
-            createSearchChoice:function(term) {
-            return {
-            id:jQuery.trim(term),
-            text:jQuery.trim(term)
-            };
-            }
-          });
-  
-  function get_avatar(avatar_id) {
-    return "<img src = 'http://gravatar.com/avatar/" + avatar_id + ".png' height = '32' />" ;
-    }
+	autocomplete: function(path,id,placeholder) {
+		function format(email) {
+			return get_avatar(email.avatar) + " " + "<span class = 'pull-right'><h4 class='text-primary'>" + email.text + "</h4></span>";
+		}
+		$(id).select2({
+			formatResult: format,
+			formatSelection: Transaction.formatItemselection,
+      		formatResultCssClass: function () { return "list-group-item"; },
+			escapeMarkup: function(m) { return m; },
+			placeholder: placeholder,
+			allowClear: true,
+			width: '100%',
+			tags: [],
+			ajax: { 
+				url: path,
+				data: function (term, page) {
+					return {
+					term: term, // search term
+					page_limit: 10,
+					page: page,
+					selection: jQuery(id).select2("val")
+					};
+				},
+				results: function (data, page) {
+					var more = (data.length == 10);
+					return {
+						results: data,
+						more: more
+					};
+				}
+			},
+			createSearchChoice:function(term) {
+			return {
+			id:jQuery.trim(term),
+			text:jQuery.trim(term)
+			};
+			}
 
+		});
 
-
-  
-   
-
-
-        }
-      }
+		function get_avatar(avatar_id) {
+			return "<span><img src = 'http://gravatar.com/avatar/" + avatar_id + ".png' height = '64' /></span>" ;
+		}
+	}
+  }
 
 var Transaction = {
   setTransactionUserAmount: function(){

@@ -47,7 +47,6 @@ class Group < ActiveRecord::Base
         MagicMailer.group_invite(self,attributes[:email]).deliver
       end
       self.users << user
-
     end
   end
 
@@ -56,5 +55,3 @@ class Group < ActiveRecord::Base
   end
 
 end
-
-

@@ -14,4 +14,3 @@
 //= require twitter/bootstrap/scrollspy
 //= require twitter/bootstrap/tab
 //= require twitter/bootstrap/affix
-

@@ -16,7 +16,6 @@ skip_before_filter :authorize
         redirect_to login_url
       end
     end
-     
   end
 
 

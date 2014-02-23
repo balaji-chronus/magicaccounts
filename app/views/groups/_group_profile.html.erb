@@ -12,10 +12,16 @@
     </button></a></div>
     <div class="col-sm-3">
       <a href= "/contacts/gmail">
-      <button class="btn btn-danger gmail" data-container="body" data-toggle="popover"  data-button="CLOSE" data-placement="right" data-html=true data-content='<button type="button" id="close" class="close" >&times;</button>Import contacts from Gmail and then easily add them to this group  '>
+      <button class="btn btn-danger gmail" data-container="body" data-toggle="popover"  data-button="CLOSE" data-placement="top" data-html=true data-content='<button type="button" id="close" class="close"  >&times;</button><i>Import contacts from Gmail'>
         <span class="icon-stack">
       <i class="icon-cloud icon-stack-base"></i><i class="icon-google-plus icon-dark"></i> </span>   From Gmail
-    </button></a></div></div>
+    </button></a>
+	</div>
+	</div>
+    <div id = "popover">
+		<%= form_for @group, :url => close_popover_groups_path, :html=> {:id =>"popover_form"}, :remote => true do %>
+		<% end %>
+    </div>
 <% end %>
 </a>
 
@@ -25,17 +31,17 @@
 <table class="table table-condensed">
   <thead>
     <tr>
-    <th class="col-sm-9">User</th>
-    <th class="col-sm-3">Status</th>
+    <th class="col-sm-9 text-center">User</th>
+    <th class="col-sm-3 text-center">Status</th>
     </tr>
   </thead>
   <tbody>
     <% @group.users.each do |user| %>
     <tr>
-    <td  class="col-sm-9"> 
-      <%= render_user_image(user,:size => 42,:class_name => "img-circle group-user").html_safe %></td>
-      <td class="col-sm-3">
-         <span class="badge <%= user.invite_status == 'registered' ? "positive" : "warning" %>" >
+		<td  class="col-sm-9 text-center"> 
+      		<%= render_user_image(user,:size => 42,:class_name => "img-circle group-user").html_safe %></td>
+     	<td class="col-sm-3 text-center">
+        	<span class="badge <%= user.invite_status == 'registered' ? "positive" : "warning" %>" >
               <%= user.translate_status(user.invite_status)%></span></td>
     </tr>
     <% end %>
@@ -43,13 +49,15 @@
 </table>
 
 <script type="text/javascript">
-  jQuery('.group-user').tooltip();
-
- $(document).click(function(e) {
-         if(e.target.id=="close")              
-         {
-              $('.btn').popover('destroy'); 
-         }
-})
+	jQuery('.group-user').tooltip();
+	$(document).click(function(e) {
+		if(e.target.id=="close")              
+		{
+			$('.btn').popover('hide'); 
+		}
+	})
+	$('.btn').on('hidden.bs.popover', function () {
+		$("#popover_form").submit();
+	})
 </script>
 

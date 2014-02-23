@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.json
   def new
-    @user = User.new 
+    @user = User.new
   end
 
   # GET /users/1/edit
@@ -91,6 +91,7 @@ class UsersController < ApplicationController
   end
 
   def dashboard
+    
   end
 
   def oauth_failure
@@ -100,7 +101,6 @@ class UsersController < ApplicationController
 
   def contacts
     @contacts = request.env['omnicontacts.contacts']
-    debugger
     @contacts.each do |contact|
       current_user.contacts << Contact.new(:name => contact[:name], :email => contact[:email])
     end
