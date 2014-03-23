@@ -128,8 +128,16 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.user_balance(group)
-    Transaction.joins("JOIN transactions_users tu ON transactions.id = tu.transaction_id AND transactions.group_id = #{group.id}").group("tu.user_id").order("(SUM(amount_paid) - SUM(tu.amount)) DESC").select("tu.user_id, (SUM(amount_paid) - SUM(tu.amount)) balance, COUNT(distinct transaction_id) transactions")
+    Transaction.joins("JOIN transactions_users tu ON transactions.id = tu.transaction_id AND transactions.group_id = #{group.id}").group("tu.user_id").order("(SUM(amount_paid) - SUM(tu.amount)) DESC").select("tu.user_id, (COALESCE(SUM(amount_paid),0) - COALESCE(SUM(tu.amount),0)) balance, COUNT(distinct transaction_id) transactions")
   end
+
+	def self.user_group_balance(group,user)
+		self.user_balance(group).select {|x| x[:user_id] == user.id}.first do |entry|
+		 { :user_id => entry.user_id,
+		   :balance => entry.balance
+		 }
+	  	end
+	end
 
   def self.get_autocomplete_tags(term, page = 1, per_page = 10, selection = [])
     tags = (Transaction.tag_counts_on(:tags).collect(&:name) + CATEGORY_ICON_MAPPING.keys).uniq.sort

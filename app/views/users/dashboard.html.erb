@@ -1,0 +1,18 @@
+
+<div  class="hidden-xs">
+  <br/><br/>
+  <%= render :partial => "weight_balance.html.erb" %>
+</div>
+
+<%= render :partial => "summary" %>
+
+<script type="text/javascript">
+ jQuery(document).ready(function(){
+
+ setTimeout(
+    jQuery('#weight-bal').each(function() {
+      jQuery(this).css("transform", jQuery(this).attr("deg"));
+      jQuery(this).css("transition", "all 0.5s ease-in-out");
+    }), 1000);
+});
+</script>

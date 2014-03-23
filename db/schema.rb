@@ -11,15 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131214045105) do
+ActiveRecord::Schema.define(:version => 20140215112915) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
     t.string   "code"
     t.string   "status"
     t.text     "remarks"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "group_id"
     t.integer  "user_id"
   end
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
     t.string   "uid"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "token"
   end
 
   create_table "comments", :force => true do |t|
@@ -39,17 +40,26 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
     t.integer  "group_id"
     t.integer  "commentable_id"
     t.string   "commentable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  create_table "contacts", :force => true do |t|
+    t.string   "email"
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.string   "status"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.string   "code"
+    t.boolean  "popover",    :default => true
   end
 
   create_table "groups_users", :id => false, :force => true do |t|
@@ -60,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
@@ -91,8 +101,8 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
     t.decimal  "amount",                           :precision => 14, :scale => 2
     t.string   "category"
     t.text     "remarks"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.string   "enteredby"
     t.integer  "transaction_type"
     t.integer  "group_id"
@@ -110,8 +120,8 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
     t.decimal  "amount",         :precision => 14, :scale => 2
     t.string   "category"
     t.text     "remarks"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                   :null => false
+    t.datetime "updated_at",                                                   :null => false
     t.string   "enteredby"
     t.integer  "beneficiary_id"
   end
@@ -120,8 +130,8 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
     t.integer  "transaction_id"
     t.integer  "user_id"
     t.decimal  "amount",         :precision => 14, :scale => 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                     :null => false
+    t.datetime "updated_at",                                                     :null => false
     t.decimal  "amount_paid",    :precision => 14, :scale => 2, :default => 0.0
   end
 
@@ -133,8 +143,8 @@ ActiveRecord::Schema.define(:version => 20131214045105) do
     t.string   "phone"
     t.text     "address"
     t.string   "company"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.string   "user_type"
     t.string   "invite_status",   :default => "not_registered"
   end

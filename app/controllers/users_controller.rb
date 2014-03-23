@@ -85,7 +85,10 @@ class UsersController < ApplicationController
   end
 
   def dashboard
-    
+    @paystructure = []
+  	current_user.groups.each do |group|
+    	@paystructure << PaySuggestions::PaySystem.create(group) if group.users.count > 1
+  	end
   end
 
   def autocomplete_friends
