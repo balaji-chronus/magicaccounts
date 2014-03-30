@@ -1,0 +1,6 @@
+<div class="remove-gutter col-sm-6">
+	<% left.each do |entry| %>
+		<div class="col-xs-6"><%= raw(entry[:statement]) %></div>
+		<div class="col-xs-6 mstatement" ><%= raw(entry[:mstatement]) %></div>
+	<% end %>
+</div>

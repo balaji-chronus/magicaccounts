@@ -1,9 +1,0 @@
-<div id="weight-bal" deg="<%= @master_balance[:expenses] > @master_balance[:investments] ? "rotate(-5deg)" : @master_balance[:expenses] < @master_balance[:investments]? "rotate(5deg)" : "" %>">
-  <div class="text-primary" id="text-owe">	You Owe<br/></div>
-  <div class="btn btn-danger" id="btn-owed"><%= @master_balance[:expenses] %></div>
-  <div class="btn pull-right btn-success" id="btn-owe"><%= @master_balance[:investments] %></div>
-  <div class="text-primary pull-right" id="text-owed">You Paid<br/></div>
-  <br/>
-  <div class="btn btn-primary" id="bar"></div><br/>
-  </div>
-  <div id="triangle"></div>

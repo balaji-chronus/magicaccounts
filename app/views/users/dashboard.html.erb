@@ -1,18 +1,38 @@
+<% if current_user.groups.present? %>
+	<% if current_user.transactions_users.present? %>
+	<div  class="hidden-xs">
+	  <br/><br/>
+	  <div class="progress">
+		<span class="progress-bar progress-bar-danger" width-value="<%= get_width(0) %>" ><%= @master_balance[:expenses] %></span>
+		<span class="progress-bar progress-bar-success" width-value="<%= get_width(1) %>"><%= @master_balance[:investments] %></span>
+		</div>
+	  <h4>
+	  <div class="pull-left text-danger col-xs-6" id="summary-header"> You Owe </div>
+	  <div class="pull-right text-right text-success col-xs-6"  id="summary-header"> You are Owed </div><br/><br/>
+	</h4>
+	</div>
 
-<div  class="hidden-xs">
-  <br/><br/>
-  <%= render :partial => "weight_balance.html.erb" %>
-</div>
+	<%= render :partial => "summary" %>
 
-<%= render :partial => "summary" %>
-
-<script type="text/javascript">
- jQuery(document).ready(function(){
-
- setTimeout(
-    jQuery('#weight-bal').each(function() {
-      jQuery(this).css("transform", jQuery(this).attr("deg"));
-      jQuery(this).css("transition", "all 0.5s ease-in-out");
-    }), 1000);
-});
-</script>
+	<script type="text/javascript">
+	 jQuery(document).ready(function(){
+		setTimeout(
+	      jQuery('.progress-bar').each(function() {
+	          jQuery(this).css("width", jQuery(this).attr("width-value"));
+	    }), 250);
+	});
+	</script>
+	<% else %>
+	<div class="well text-center" style="margin: 15px;">
+	  <h3><b>
+	  You have not added any transactions
+	  </b></h3>
+	</div>
+	<% end %>
+<% else %>
+	<div class="well text-center" style="margin: 15px;">
+	  <h3><b>
+	  You have not added any groups
+	  </b></h3>
+	</div>
+<% end %>

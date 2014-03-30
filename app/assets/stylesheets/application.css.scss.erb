@@ -314,6 +314,37 @@ table.shadow-row tr td {
 
 
   #mg-main-pane-container {
+  .remove-gutter {
+    &.right-col {
+      box-shadow: 5px 0px 5px -5px rgba(0, 0, 0, 0.25) inset;
+    }
+    .mstatement {
+      min-height: 60px;
+    }
+    .user_name{
+      font-size: 16px;
+    }
+    .balance{
+    font-size:12px; 
+      float: left;
+    }
+    .user_image {
+      float: left;
+    }
+    .mg-user-image {
+      vertical-align: -24px;
+    }
+    li {
+      &.left {
+        font-size: 11px;
+        color: rgb(153, 153, 153);
+      }
+      &.right{
+        font-size: 11px;
+        color: rgb(153, 153, 153);
+      }
+    }
+  }
     .well {
       margin-bottom: 0;
     }
@@ -322,51 +353,19 @@ table.shadow-row tr td {
       h3 { margin: 0;}
     }
 
-	.half-width {
-	  width: 50%;
-	}
+    #summary-header {
+      line-height: 2em;
+      font-weight: bold;
+      text-shadow: 0px 1px 0px rgb(187, 187, 187), 0px -1px 0px grey;
+      box-shadow: 0px -5px 5px -5px rgba(0, 0, 0, 0.25) inset;
+      }
 
-  #weight-bal {
-    #text-owe{
-    margin-left: 15%;
+    .progress {
+      height: 20px;
+      width:90%;
+      margin-left:32px;
+      border-radius: 7px;
     }
-    #btn-owed {
-    width: 12%;
-    margin-left: 14%;
-    margin-bottom: -10px;
-    }
-    #btn-owe {
-    width: 12%;
-    margin-right: 110px;
-    margin-bottom: -10px;
-    }
-    #text-owed {
-    margin-right:-67px;
-    margin-top: -20px;
-    }
-    #bar {
-    width: 70%;
-    padding: 4px 10px;
-    margin-left: 14%;
-    margin-bottom: -7px;
-    }
-  }
-
-  #triangle {
-    margin-left: 47%;
-    width: 0;
-    height: 0;
-    border-left: 22px solid transparent;
-    border-right: 22px solid transparent;
-    border-bottom: 45px solid;
-    }
-
-  #summary-header {
-  line-height: 2em;
-  font-weight: bold;
-  text-shadow: 0px 1px 0px rgb(187, 187, 187), 0px -1px 0px rgb(0, 0, 0);
-  box-shadow: 4px 4px 5px rgb(136, 136, 136);
-}
   }
 
   #mg-main-page-content {

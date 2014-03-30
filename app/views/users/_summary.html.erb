@@ -1,44 +1,7 @@
-<h4>
-  <div class="pull-left half-width label-danger text-center col-md-6" id="summary-header"> You Owe </div>
-  <div class="pull-right half-width label-success text-center col-md-6"  id="summary-header"> You are Owed </div><br/><br/>
-</h4>
 
-<% if current_user.groups.present? %>
-  <% summary = [] %>
-  <% @paystructure.each do |group_ps| %>
-    <% summary = transaction_statement(group_ps,summary) %>
-    <% end %>
-    <% get = [] %>
-    <% pay = [] %>
-    <% if summary.empty? %>
-      <div class="well text-center" style="margin: 15px;">
-        <h3><b>You are all settled up</b></h3>
-      </div>
-    <% else %>
-      <% summary.each do |s| %>
-        <% s.include?("owes") ? get << s : pay << s %>
-      <% end %>
-      <% i = 0 %>
-      <% get.each do |g| %>
-        <div class="col-md-6  pay half-width" style="float: left">
-          <%= raw(pay[i]) %>
-          <% i += 1 %>
-        </div>
-        <div class="col-md-6  get half-width" style="float: right; border-left: 1px solid;">
-          <%= raw(g) %>
-        </div><br/><br/>
-      <% end %>
-      <% (pay.length-i).times do %>
-        <div class="pay col-md-6" style="float: left; border-right: 1px solid;">
-          <%= raw(pay[i]) %>
-          <% i += 1 %>
-        </div><br/><br/>
-    <% end %>
-  <% end %>
-<% else %>
-<div class="well text-center" style="margin: 15px;">
-  <h3><b>
-  You have not added any groups
-  </b></h3>
-</div>
-<% end %>
+<% array = compute_summary(@paystructure) %>
+<% left = [] %>
+<% right = [] %>
+<% transaction_statement(array,left,right) %>
+<%= render :partial => "left", :locals => {:left => left} %>
+<%= render :partial => "right", :locals => {:right => right} %>
